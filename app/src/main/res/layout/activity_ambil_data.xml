@@ -1,24 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent" android:layout_height="match_parent">
+    android:layout_width="match_parent" android:layout_height="match_parent"
+    android:background="#808080">
 
-    <Button
+    <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/btn_kirim_data"
-        android:id="@+id/btn_proses_ambil_data"
-        android:textColor="#ffffff"
-        android:background="@drawable/button_shape"
-        android:height="150px"
-        android:width="350px"
+        android:id="@+id/text_view_team"
+        android:text="Team"
+        android:gravity="center"
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="40dp"
         android:textSize="24dp"
-        android:layout_gravity="center_vertical"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true"
-        android:layout_marginRight="87dp"
-        android:layout_marginEnd="87dp"
-        android:layout_marginBottom="77dp" />
+        android:singleLine="true"/>
 
     <Spinner
         android:layout_width="wrap_content"
@@ -26,8 +20,45 @@
         android:id="@+id/spinner"
         android:entries="@array/country_arrays"
         android:prompt="@string/country_prompt"
-        android:layout_marginTop="77dp"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true" />
+        android:gravity="center"
+        android:layout_centerVertical="true"
+        android:layout_alignParentRight="true"
+        android:spinnerMode="dropdown"
+        android:layout_marginLeft="120dp"
+        android:layout_marginRight="30dp"/>
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Proses"
+        android:id="@+id/btn_proses"
+        android:textColor="#ffffff"
+        android:background="@drawable/button_shape"
+        android:height="80dp"
+        android:width="150dp"
+        android:textSize="24dp"
+        android:layout_gravity="center_vertical"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginRight="40dp"
+        android:layout_marginBottom="80dp" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Keluar"
+        android:id="@+id/btn_keluar"
+        android:textColor="#ffffff"
+        android:background="@drawable/button_shape_red"
+        android:height="80dp"
+        android:width="150dp"
+        android:textSize="24dp"
+        android:layout_gravity="center_vertical"
+        android:layout_toLeftOf="@+id/btn_proses"
+        android:layout_alignParentBottom="true"
+        android:layout_marginRight="40dp"
+        android:layout_marginBottom="80dp"
+        android:onClick="onBtnKeluarClick"/>
 
 </RelativeLayout>

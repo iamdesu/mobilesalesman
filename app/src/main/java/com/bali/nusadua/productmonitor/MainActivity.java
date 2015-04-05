@@ -39,7 +39,7 @@ public class MainActivity extends ActionBarActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    public void onButtonCloseClick() {
+    public void onButtonCloseClick(View view) {
         finish();
         System.exit(0);
     }
