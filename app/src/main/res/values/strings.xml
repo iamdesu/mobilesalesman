@@ -8,7 +8,7 @@
     <string name="btn_kirim_data">3. Kirim Data</string>
     <string name="btn_kembali">Kembali</string>
 
-    <string name="country_prompt">Choose a country</string>
+    <string name="team_prompt">Pilih Team</string>
     <string-array name="country_arrays">
         <item>Malaysia</item>
         <item>United States</item>

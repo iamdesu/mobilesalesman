@@ -17,15 +17,24 @@
     <Spinner
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/spinner"
-        android:entries="@array/country_arrays"
-        android:prompt="@string/country_prompt"
+        android:id="@+id/spinnerTeam"
+        android:prompt="@string/team_prompt"
         android:gravity="center"
         android:layout_centerVertical="true"
         android:layout_alignParentRight="true"
         android:spinnerMode="dropdown"
         android:layout_marginLeft="120dp"
         android:layout_marginRight="30dp"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/tv_selected_team"
+        android:text="Selected Team"
+        android:textSize="24dp"
+        android:layout_marginLeft="40dp"
+        android:singleLine="true"
+        android:layout_below="@+id/text_view_team"/>
 
     <Button
         android:layout_width="wrap_content"
