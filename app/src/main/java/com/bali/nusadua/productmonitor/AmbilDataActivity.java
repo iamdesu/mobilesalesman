@@ -74,5 +74,6 @@ public class AmbilDataActivity extends Activity implements AdapterView.OnItemSel
         mSpinnerTeam.setAdapter(adapter);
 
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        
     }
 }
