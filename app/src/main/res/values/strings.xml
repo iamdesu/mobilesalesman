@@ -7,6 +7,16 @@
     <string name="btn_transaksi">2. Transaksi</string>
     <string name="btn_kirim_data">3. Kirim Data</string>
     <string name="btn_kembali">Kembali</string>
+    <string name="btn_batal">Batal</string>
+    <string name="btn_proses">Proses</string>
+    <string name="hint_kode">Kode</string>
+    <string name="hint_nama_barang">Nama Brg</string>
+    <string name="hint_kode_nama_barang">Kode Nama Brg</string>
+    <string name="hint_harga">Harga</string>
+    <string name="hint_qty">Qty</string>
+    <string name="hint_unit">Unit</string>
+    <string name="hint_qty_unit">Qty / Unit</string>
+    <string name="hint_subtotal">Subtotal</string>
 
     <string name="team_prompt">Pilih Team</string>
     <string-array name="country_arrays">
