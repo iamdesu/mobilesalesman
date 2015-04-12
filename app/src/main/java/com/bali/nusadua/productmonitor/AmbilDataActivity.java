@@ -8,9 +8,9 @@ import android.widget.AdapterView;
 import android.widget.Spinner;
 import android.widget.TextView;
 
-import com.bali.nusadua.productmonitor.com.bali.nusadua.productmonitor.adapter.SpinnerTeamAdapter;
-import com.bali.nusadua.productmonitor.com.bali.nusadua.productmonitor.model.Team;
-import com.bali.nusadua.productmonitor.com.bali.nusadua.productmonitor.model.TeamRepo;
+import com.bali.nusadua.productmonitor.adapter.SpinnerTeamAdapter;
+import com.bali.nusadua.productmonitor.model.Team;
+import com.bali.nusadua.productmonitor.repo.TeamRepo;
 
 import java.util.List;
 
@@ -43,7 +43,7 @@ public class AmbilDataActivity extends Activity implements AdapterView.OnItemSel
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
         if(parent == findViewById(R.id.spinnerTeam)){
             Team selectedTeam = (Team) parent.getItemAtPosition(position);
-            mTvSelectedTeam.setText(selectedTeam.getTeamName());
+            mTvSelectedTeam.setText(selectedTeam.getName());
         }
     }
 
@@ -54,12 +54,13 @@ public class AmbilDataActivity extends Activity implements AdapterView.OnItemSel
 
     private void insertDummyData(){
         TeamRepo repo = new TeamRepo(this);
-        repo.deleteAll();
+        //repo.deleteAll();
+        repo.delete();
 
         for(int i = 0; i < 5; i++){
             Team team = new Team();
-            team.setTeamId(i);
-            team.setTeamName("Team " + i);
+            team.setGuid("");
+            team.setName("Team " + i);
 
             repo.insert(team);
         }
