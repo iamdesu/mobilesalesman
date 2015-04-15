@@ -3,6 +3,7 @@ package com.bali.nusadua.productmonitor;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Spinner;
@@ -35,8 +36,13 @@ public class AmbilDataActivity extends Activity implements AdapterView.OnItemSel
     }
 
     public void onBtnKeluarClick(View view) {
-        Intent intent = new Intent(AmbilDataActivity.this, MainActivity.class);
-        startActivity(intent);
+        //kalo mau pindah ke halaman sebelumnya,
+        //cukup panggil method finish() buat matiin activity
+        //nanti otomatis kembali ke halaman sebelumnya
+        //asal activity sebelumnya masih nyala
+        finish();
+//        Intent intent = new Intent(AmbilDataActivity.this, MainActivity.class);
+//        startActivity(intent);
     }
 
     @Override
@@ -57,12 +63,15 @@ public class AmbilDataActivity extends Activity implements AdapterView.OnItemSel
         //repo.deleteAll();
         repo.delete();
 
+        Log.i("Starting insert data", "data");
         for(int i = 0; i < 5; i++){
             Team team = new Team();
+            team.setId(i);
             team.setGuid("");
             team.setName("Team " + i);
-
-            repo.insert(team);
+            Log.i("inserting team name : ", "Team " + i);
+            String guid = repo.insert(team);
+            Log.i("Team GUID : ", guid);
         }
     }
 
@@ -70,6 +79,11 @@ public class AmbilDataActivity extends Activity implements AdapterView.OnItemSel
         SpinnerTeamAdapter adapter = null;
         TeamRepo repo = new TeamRepo(getApplicationContext());
         List<Team> teams = repo.getAll();
+        int size = teams.size();
+        Log.i("List size : ", Integer.toString(size));
+        for(int i = 0; i < size; i++){
+            Log.i("Teams", teams.get(i).getName());
+        }
         adapter = new SpinnerTeamAdapter(AmbilDataActivity.this,
                 android.R.layout.simple_spinner_item, teams);
         mSpinnerTeam.setAdapter(adapter);

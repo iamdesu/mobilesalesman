@@ -8,11 +8,21 @@ public class Team {
     public static final String TABLE = "Team";
 
     //Labels table column names
+    public static final String ID = "id";
     public static final String GUID = "guid";
     public static final String NAME = "name";
 
+    private int id;
     private String guid;
     private String name;
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
 
     public String getGuid() {
         return guid;
