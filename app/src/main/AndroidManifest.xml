@@ -24,6 +24,10 @@
             android:name=".AmbilDataActivity"
             android:label="@string/app_name" >
         </activity>
+        <activity
+            android:name=".OrderPenjualanActivity"
+            android:label="@string/app_name" >
+        </activity>
     </application>
 
 </manifest>

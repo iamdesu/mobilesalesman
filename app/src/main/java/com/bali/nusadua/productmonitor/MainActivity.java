@@ -48,4 +48,9 @@ public class MainActivity extends ActionBarActivity {
         Intent intent = new Intent(MainActivity.this, AmbilDataActivity.class);
         startActivity(intent);
     }
+
+    public void onOrderPenjualanClick(View view) {
+        Intent intent = new Intent(MainActivity.this, OrderPenjualanActivity.class);
+        startActivity(intent);
+    }
 }

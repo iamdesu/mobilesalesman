@@ -54,6 +54,7 @@
             <EditText
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:inputType="numberSigned"
                 android:id="@+id/order_unit"
                 android:layout_weight="10"
                 android:hint="@string/hint_unit"/>
@@ -130,6 +131,7 @@
             android:layout_height="wrap_content"
             android:textColor="#ffffff"
             android:background="@drawable/button_shape_red"
+            android:id="@+id/button_batal"
             android:text="Batal" />
 
         <Space
@@ -142,6 +144,7 @@
             android:layout_height="wrap_content"
             android:textColor="#ffffff"
             android:background="@drawable/button_shape"
+            android:id="@+id/button_proses"
             android:text="Proses" />
 
     </LinearLayout>
