@@ -8,6 +8,8 @@ import android.database.sqlite.SQLiteDatabase;
 import com.bali.nusadua.productmonitor.model.Order;
 import com.bali.nusadua.productmonitor.sqlitedb.DBHelper;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 /**
@@ -35,6 +37,28 @@ public class OrderRepo {
         long order_id = db.insert(Order.TABLE, null, values);
         db.close();
         return (int) order_id;
+    }
+
+    public void insertAll(List<Order> orders){
+        SQLiteDatabase db = dbHelper.getWritableDatabase();
+
+        int size = orders.size();
+        for(int i = 0; i < size; i++){
+            Order order = new Order();
+            ContentValues contentValues = new ContentValues();
+            order = orders.get(i);
+            order.setGuid(UUID.randomUUID().toString());
+            contentValues.put(Order.GUID, order.getGuid());
+            contentValues.put(Order.KODE, order.getKode());
+            contentValues.put(Order.GUID, order.getGuid());
+            contentValues.put(Order.NAMA_BARANG, order.getNamaBarang());
+            contentValues.put(Order.HARGA, order.getHarga());
+            contentValues.put(Order.QTY, order.getQty());
+            contentValues.put(Order.UNIT, order.getUnit());
+
+            db.insert(Order.TABLE, null, contentValues);
+        }
+        db.close();
     }
 
     public void deleteAll() {
@@ -89,5 +113,34 @@ public class OrderRepo {
         cursor.close();
         db.close();
         return order;
+    }
+
+    //Retrieve all records and populate List<Order>
+    public List<Order> getAll() {
+        SQLiteDatabase db = dbHelper.getReadableDatabase();
+        String selectQuery = "SELECT * FROM " + Order.TABLE;
+
+        List<Order> listOrder = new ArrayList<Order>();
+        Cursor cursor = db.rawQuery(selectQuery, null);
+
+        //Looping through all rows and adding to list  (cursor.getColumnIndex(Team.ID
+        if(cursor.moveToFirst()){
+            do {
+                Order order = new Order();
+                order.setId((int) cursor.getLong(cursor.getColumnIndex(Order.ID)));
+                order.setUnit(cursor.getString(cursor.getColumnIndex(Order.UNIT)));
+                order.setHarga(cursor.getInt(cursor.getColumnIndex(Order.HARGA)));
+                order.setNamaBarang(cursor.getString(cursor.getColumnIndex(Order.NAMA_BARANG)));
+                order.setGuid(cursor.getString(cursor.getColumnIndex(Order.GUID)));
+                order.setQty(cursor.getInt(cursor.getColumnIndex(Order.QTY)));
+                order.setKode(cursor.getString(cursor.getColumnIndex(Order.KODE)));
+
+                listOrder.add(order);
+            } while(cursor.moveToNext());
+        }
+
+        cursor.close();
+        db.close();
+        return listOrder;
     }
 }

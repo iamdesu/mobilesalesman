@@ -31,7 +31,7 @@ public class DBHelper extends SQLiteOpenHelper{
 
         db.execSQL(CREATE_TABLE_TEAM);
 
-        String CREATE_TABLE_ORDER = "CREATE TABLE " + Order.TABLE + "( "
+        String CREATE_TABLE_ORDER = "CREATE TABLE " + Order.TABLE + " ( "
                 + Order.ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
                 + Order.GUID + " TEXT, "
                 + Order.KODE + " TEXT, "

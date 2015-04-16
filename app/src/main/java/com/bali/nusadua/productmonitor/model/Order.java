@@ -4,7 +4,7 @@ package com.bali.nusadua.productmonitor.model;
  * Created by desu sudarsana on 4/15/2015.
  */
 public class Order {
-    public static final String TABLE = "Order";
+    public static final String TABLE = "OrderPenjualan";
     public static final String ID = "id";
     public static final String GUID = "guid";
     public static final String KODE = "kode";

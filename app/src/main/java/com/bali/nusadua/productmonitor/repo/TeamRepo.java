@@ -8,6 +8,7 @@ import android.database.sqlite.SQLiteDatabase;
 import com.bali.nusadua.productmonitor.model.Team;
 import com.bali.nusadua.productmonitor.sqlitedb.DBHelper;
 
+import java.awt.font.TextAttribute;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -43,6 +44,12 @@ public class TeamRepo {
     //Retrieve all records and populate List<Team>
     public List<Team> getAll() {
         SQLiteDatabase db = dbHelper.getReadableDatabase();
+//        String selectQuery = "SELECT " +
+//                Team.ID + ", " +
+//                Team.GUID + ", " +
+//                Team.NAME +
+//                " FROM " + Team.TABLE;
+
         String selectQuery = "SELECT * FROM " + Team.TABLE;
 
         List<Team> listTeam = new ArrayList<Team>();
@@ -52,7 +59,7 @@ public class TeamRepo {
         if(cursor.moveToFirst()){
             do {
                 Team team = new Team();
-                team.setId((int) cursor.getLong(cursor.getColumnIndex(Team.ID)));
+                team.setId((int)cursor.getLong(cursor.getColumnIndex(Team.ID)));
                 team.setGuid(cursor.getString(cursor.getColumnIndex(Team.GUID)));
                 team.setName(cursor.getString(cursor.getColumnIndex(Team.NAME)));
                 listTeam.add(team);

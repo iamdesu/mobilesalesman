@@ -2,12 +2,19 @@ package com.bali.nusadua.productmonitor;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
+
+import com.bali.nusadua.productmonitor.model.Order;
+import com.bali.nusadua.productmonitor.repo.OrderRepo;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by desu sudarsana on 4/13/2015.
@@ -17,6 +24,9 @@ public class OrderPenjualanActivity extends Activity implements android.view.Vie
     private Button btnAdd, btnProses, btnBatal;
     private TableLayout theGrid;
     private EditText tvCode, tvName, tvPrice, tvQty, tvUnit;
+
+    private List<Order> orders = new ArrayList<Order>();
+    OrderRepo orderRepo = new OrderRepo(this);
 
 
     @Override
@@ -38,10 +48,14 @@ public class OrderPenjualanActivity extends Activity implements android.view.Vie
         btnAdd.setOnClickListener(this);
         btnProses.setOnClickListener(this);
         btnBatal.setOnClickListener(this);
+
+        orders = orderRepo.getAll();
+        Log.i("Jumlah order penjualan di database : ", Integer.toString(orders.size()));
     }
 
     @Override
     public void onClick(View view) {
+        Order order = new Order();
         if(view == findViewById(R.id.button_add)){
             int count = theGrid.getChildCount();
             TableRow tableRow = new TableRow(this);
@@ -51,32 +65,43 @@ public class OrderPenjualanActivity extends Activity implements android.view.Vie
             labelCode.setId(200+count+1);
             labelCode.setText(tvCode.getText());
             tableRow.addView(labelCode);
+            order.setKode(tvCode.getText().toString());
 
             TextView labelName = new TextView(this);
             labelName.setId(200+count+1);
             labelName.setText(tvName.getText());
             tableRow.addView(labelName);
+            order.setNamaBarang(tvName.getText().toString());
 
             TextView labelPrice = new TextView(this);
             labelPrice.setId(200+count+1);
             labelPrice.setText(tvPrice.getText());
             tableRow.addView(labelPrice);
+            order.setHarga(Integer.valueOf(tvPrice.getText().toString()));
 
             TextView labelQty = new TextView(this);
             labelQty.setId(200+count+1);
             labelQty.setText(tvQty.getText());
             tableRow.addView(labelQty);
+            order.setQty(Integer.valueOf(tvQty.getText().toString()));
 
             TextView labelUnit = new TextView(this);
             labelUnit.setId(200+count+1);
             labelUnit.setText(tvUnit.getText());
             tableRow.addView(labelUnit);
+            order.setUnit(tvUnit.getText().toString());
 
             theGrid.addView(tableRow, new TableLayout.LayoutParams(TableLayout.LayoutParams.MATCH_PARENT, TableLayout.LayoutParams.WRAP_CONTENT));
+            orders.add(order);
         } else if(view == findViewById(R.id.button_proses)) {
+            saveAllOrder();
 
         } else if(view == findViewById(R.id.button_batal)) {
             finish();
         }
+    }
+
+    private void saveAllOrder(){
+        orderRepo.insertAll(orders);
     }
 }
