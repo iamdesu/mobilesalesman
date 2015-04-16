@@ -27,7 +27,7 @@ public class TeamRepo {
     }
 
     //Insert team records
-    public String insert(Team team) {
+    public long insert(Team team) {
         SQLiteDatabase db = dbHelper.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
         team.setGuid(UUID.randomUUID().toString());
@@ -35,15 +35,15 @@ public class TeamRepo {
         contentValues.put(Team.NAME, team.getName());
 
         //Inserting Row
-        db.insert(Team.TABLE, null, contentValues);
+        long id = db.insert(Team.TABLE, null, contentValues);
         db.close();
-        return team.getGuid();
+        return (int) id;
     }
 
     //Retrieve all records and populate List<Team>
     public List<Team> getAll() {
         SQLiteDatabase db = dbHelper.getReadableDatabase();
-        String selectQuery = "SELECT " + Team.GUID + ", " + Team.NAME + " FROM " + Team.TABLE;
+        String selectQuery = "SELECT * FROM " + Team.TABLE;
 
         List<Team> listTeam = new ArrayList<Team>();
         Cursor cursor = db.rawQuery(selectQuery, null);
@@ -52,8 +52,10 @@ public class TeamRepo {
         if(cursor.moveToFirst()){
             do {
                 Team team = new Team();
+                team.setId((int) cursor.getLong(cursor.getColumnIndex(Team.ID)));
                 team.setGuid(cursor.getString(cursor.getColumnIndex(Team.GUID)));
                 team.setName(cursor.getString(cursor.getColumnIndex(Team.NAME)));
+                listTeam.add(team);
             } while(cursor.moveToNext());
         }
 

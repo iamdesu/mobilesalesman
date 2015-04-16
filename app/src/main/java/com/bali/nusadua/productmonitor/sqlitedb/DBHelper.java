@@ -25,7 +25,8 @@ public class DBHelper extends SQLiteOpenHelper{
     @Override
     public void onCreate(SQLiteDatabase db) {
         String CREATE_TABLE_TEAM = "CREATE TABLE " + Team.TABLE + "( "
-                + Team.GUID + " TEXT PRIMARY KEY, "
+                + Team.ID +  " INTEGER PRIMARY KEY AUTOINCREMENT, "
+                + Team.GUID + " TEXT, "
                 + Team.NAME + " TEXT )";
 
         db.execSQL(CREATE_TABLE_TEAM);

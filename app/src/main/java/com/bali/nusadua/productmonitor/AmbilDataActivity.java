@@ -69,9 +69,7 @@ public class AmbilDataActivity extends Activity implements AdapterView.OnItemSel
             team.setId(i);
             team.setGuid("");
             team.setName("Team " + i);
-            Log.i("inserting team name : ", "Team " + i);
-            String guid = repo.insert(team);
-            Log.i("Team GUID : ", guid);
+            long guid = repo.insert(team);
         }
     }
 
