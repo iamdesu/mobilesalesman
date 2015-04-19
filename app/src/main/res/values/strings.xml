@@ -17,6 +17,9 @@
     <string name="hint_unit">Unit</string>
     <string name="hint_qty_unit">Qty / Unit</string>
     <string name="hint_subtotal">Subtotal</string>
+    <string name="transaksi_order">Order Penjualan :</string>
+    <string name="transaksi_retur">Retur :</string>
+    <string name="transaksi_pelunasan">Pelunasan :</string>
 
     <string name="team_prompt">Pilih Team</string>
     <string-array name="country_arrays">

@@ -1,6 +1,7 @@
 package com.bali.nusadua.productmonitor;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -24,6 +25,7 @@ public class OrderPenjualanActivity extends Activity implements android.view.Vie
     private Button btnAdd, btnProses, btnBatal;
     private TableLayout theGrid;
     private EditText tvCode, tvName, tvPrice, tvQty, tvUnit;
+    private String teamGuid;
 
     private List<Order> orders = new ArrayList<Order>();
     OrderRepo orderRepo = new OrderRepo(this);
@@ -49,6 +51,10 @@ public class OrderPenjualanActivity extends Activity implements android.view.Vie
         btnProses.setOnClickListener(this);
         btnBatal.setOnClickListener(this);
 
+        Intent intent = getIntent();
+        teamGuid = intent.getStringExtra("team_guid");
+        Log.i("Team GUID : ", teamGuid);
+
         orders = orderRepo.getAll();
         Log.i("Jumlah order penjualan di database : ", Integer.toString(orders.size()));
     }
@@ -63,15 +69,16 @@ public class OrderPenjualanActivity extends Activity implements android.view.Vie
 
             TextView labelCode = new TextView(this);
             labelCode.setId(200+count+1);
-            labelCode.setText(tvCode.getText());
+            labelCode.setText(tvCode.getText()+ " " + tvName.getText());
             tableRow.addView(labelCode);
             order.setKode(tvCode.getText().toString());
+            order.setNamaBarang(tvName.getText().toString());
 
-            TextView labelName = new TextView(this);
+            /*TextView labelName = new TextView(this);
             labelName.setId(200+count+1);
             labelName.setText(tvName.getText());
             tableRow.addView(labelName);
-            order.setNamaBarang(tvName.getText().toString());
+            order.setNamaBarang(tvName.getText().toString());*/
 
             TextView labelPrice = new TextView(this);
             labelPrice.setId(200+count+1);
@@ -81,20 +88,28 @@ public class OrderPenjualanActivity extends Activity implements android.view.Vie
 
             TextView labelQty = new TextView(this);
             labelQty.setId(200+count+1);
-            labelQty.setText(tvQty.getText());
+            labelQty.setText(tvQty.getText() +"/"+ tvUnit.getText());
             tableRow.addView(labelQty);
             order.setQty(Integer.valueOf(tvQty.getText().toString()));
+            order.setUnit(tvUnit.getText().toString());
 
-            TextView labelUnit = new TextView(this);
+            /*TextView labelUnit = new TextView(this);
             labelUnit.setId(200+count+1);
             labelUnit.setText(tvUnit.getText());
             tableRow.addView(labelUnit);
-            order.setUnit(tvUnit.getText().toString());
+            order.setUnit(tvUnit.getText().toString());*/
+
+            TextView labelSummary = new TextView(this);
+            labelSummary.setId(200+count+1);
+            Integer summary = Integer.valueOf(tvQty.getText().toString()) * Integer.valueOf(tvPrice.getText().toString());
+            labelSummary.setText(summary.toString());
+            tableRow.addView(labelSummary);
 
             theGrid.addView(tableRow, new TableLayout.LayoutParams(TableLayout.LayoutParams.MATCH_PARENT, TableLayout.LayoutParams.WRAP_CONTENT));
             orders.add(order);
         } else if(view == findViewById(R.id.button_proses)) {
             saveAllOrder();
+            finish();
 
         } else if(view == findViewById(R.id.button_batal)) {
             finish();

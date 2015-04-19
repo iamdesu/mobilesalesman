@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/text_view_outlet"
+                android:text="Outlet : "
+                android:textSize="24dp"
+                android:singleLine="true"/>
+
+            <Spinner
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/spinnerOutlet"
+                android:prompt="@string/team_prompt"
+                android:spinnerMode="dropdown"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:orientation="horizontal"
+            android:background="@drawable/button_shape"
+            android:id="@+id/block_order">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="3"
+                android:id="@+id/text_view_order_penjualan"
+                android:text="@string/transaksi_order"
+                android:textSize="24dp"
+                android:singleLine="true"
+                android:textColor="#ffffff"
+                android:layout_gravity="center_vertical"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:id="@+id/text_view_order_status"
+                android:text="[o]/[x]"
+                android:textSize="24dp"
+                android:singleLine="true"
+                android:textColor="#ffffff"
+                android:layout_gravity="center_vertical"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:orientation="horizontal"
+            android:background="@drawable/button_shape"
+            android:id="@+id/block_retur">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="3"
+                android:id="@+id/text_view_retur"
+                android:text="@string/transaksi_retur"
+                android:textSize="24dp"
+                android:singleLine="true"
+                android:textColor="#ffffff"
+                android:layout_gravity="center_vertical"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:id="@+id/text_view_retur_status"
+                android:text="[o]/[x]"
+                android:textSize="24dp"
+                android:singleLine="true"
+                android:textColor="#ffffff"
+                android:layout_gravity="center_vertical"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:orientation="horizontal"
+            android:background="@drawable/button_shape"
+            android:layout_gravity="center_vertical"
+            android:id="@+id/block_pelunasan">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="3"
+                android:id="@+id/text_view_pelunasan"
+                android:text="@string/transaksi_pelunasan"
+                android:textSize="24dp"
+                android:singleLine="true"
+                android:textColor="#ffffff"
+                android:layout_gravity="center_vertical"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:id="@+id/text_view_pelunasan_status"
+                android:text="[o]/[x]"
+                android:textSize="24dp"
+                android:singleLine="true"
+                android:textColor="#ffffff"
+                android:layout_gravity="center_vertical"/>
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <Button
+            android:layout_width="100dp"
+            android:layout_height="wrap_content"
+            android:text="Summary"
+            android:id="@+id/btn_summary"
+            android:textColor="#ffffff"
+            android:background="@drawable/button_shape"
+            android:onClick="onBtnKeluarClick"/>
+
+        <Space
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_weight="1" />
+
+        <Button
+            android:layout_width="100dp"
+            android:layout_height="wrap_content"
+            android:text="Proses"
+            android:id="@+id/btn_proses"
+            android:textColor="#ffffff"
+            android:background="@drawable/button_shape"/>
+
+    </LinearLayout>
+
+</LinearLayout>

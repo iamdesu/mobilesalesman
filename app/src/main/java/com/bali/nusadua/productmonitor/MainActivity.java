@@ -49,8 +49,8 @@ public class MainActivity extends ActionBarActivity {
         startActivity(intent);
     }
 
-    public void onOrderPenjualanClick(View view) {
-        Intent intent = new Intent(MainActivity.this, OrderPenjualanActivity.class);
+    public void onTransaksiClick(View view) {
+        Intent intent = new Intent(MainActivity.this, TransaksiActivity.class);
         startActivity(intent);
     }
 }
