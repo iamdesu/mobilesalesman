@@ -5,7 +5,10 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
 import com.bali.nusadua.productmonitor.model.Order;
+import com.bali.nusadua.productmonitor.model.Outlet;
 import com.bali.nusadua.productmonitor.model.Team;
+
+import java.util.UUID;
 
 /**
  * Created by desu sudarsana on 4/12/2015.
@@ -38,9 +41,38 @@ public class DBHelper extends SQLiteOpenHelper{
                 + Order.NAMA_BARANG + " TEXT, "
                 + Order.HARGA + " INTEGER, "
                 + Order.QTY + " INTEGER, "
-                + Order.UNIT + " TEXT ) ";
+                + Order.UNIT + " TEXT, "
+                + Order.CREATE_DATE + " TEXT ) ";
 
         db.execSQL(CREATE_TABLE_ORDER);
+
+        String CREATE_TABLE_OUTLET = "CREATE TABLE " + Outlet.TABLE + " ( "
+                + Outlet.ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
+                + Outlet.GUID + " TEXT, "
+                + Outlet.KODE + " TEXT, "
+                + Outlet.NAME + " TEXT ) ";
+
+        db.execSQL(CREATE_TABLE_OUTLET);
+
+        //Insert Team
+        String INSERT_TEAM_A = "INSERT INTO  " + Team.TABLE + " (" + Team.GUID + ", " + Team.NAME + ") values ( '" + UUID.randomUUID().toString() + "','Team A')";
+        db.execSQL(INSERT_TEAM_A);
+        String INSERT_TEAM_B = "INSERT INTO  " + Team.TABLE + " (" + Team.GUID + ", " + Team.NAME + ") values ( '" + UUID.randomUUID().toString() + "','Team B')";
+        db.execSQL(INSERT_TEAM_B);
+        String INSERT_TEAM_C = "INSERT INTO  " + Team.TABLE + " (" + Team.GUID + ", " + Team.NAME + ") values ( '" + UUID.randomUUID().toString() + "','Team C')";
+        db.execSQL(INSERT_TEAM_C);
+        String INSERT_TEAM_D = "INSERT INTO  " + Team.TABLE + " (" + Team.GUID + ", " + Team.NAME + ") values ( '" + UUID.randomUUID().toString() + "','Team D')";
+        db.execSQL(INSERT_TEAM_D);
+        String INSERT_TEAM_E = "INSERT INTO  " + Team.TABLE + " (" + Team.GUID + ", " + Team.NAME + ") values ( '" + UUID.randomUUID().toString() + "','Team E')";
+        db.execSQL(INSERT_TEAM_E);
+
+        //Insert Outlet
+        String INSERT_OUTLET_1 = "INSERT INTO  " + Outlet.TABLE + " (" + Outlet.GUID + ", " + Outlet.KODE + ", " + Outlet.NAME + ") values ( '" + UUID.randomUUID().toString() + "', '111', 'Outlet 1')";
+        db.execSQL(INSERT_OUTLET_1);
+        String INSERT_OUTLET_2 = "INSERT INTO  " + Outlet.TABLE + " (" + Outlet.GUID + ", " + Outlet.KODE + ", " + Outlet.NAME + ") values ( '" + UUID.randomUUID().toString() + "', '112', 'Outlet 2')";
+        db.execSQL(INSERT_OUTLET_2);
+        String INSERT_OUTLET_3 = "INSERT INTO  " + Outlet.TABLE + " (" + Outlet.GUID + ", " + Outlet.KODE + ", " + Outlet.NAME + ") values ( '" + UUID.randomUUID().toString() + "', '115', 'Outlet 3')";
+        db.execSQL(INSERT_OUTLET_3);
     }
 
     @Override

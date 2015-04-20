@@ -10,9 +10,9 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
 
-import com.bali.nusadua.productmonitor.adapter.SpinnerTeamAdapter;
-import com.bali.nusadua.productmonitor.model.Team;
-import com.bali.nusadua.productmonitor.repo.TeamRepo;
+import com.bali.nusadua.productmonitor.adapter.SpinnerOutletAdapter;
+import com.bali.nusadua.productmonitor.model.Outlet;
+import com.bali.nusadua.productmonitor.repo.OutletRepo;
 
 import java.util.List;
 
@@ -24,7 +24,7 @@ public class TransaksiActivity extends Activity implements View.OnClickListener,
     private Button btnSummary, btnProses;
     private LinearLayout blockOrderPenjualan, blockRetur, blockPelunasan;
     private Spinner spinnerOutlet;
-    private Team team = null;
+    private Outlet outlet = null;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -42,29 +42,29 @@ public class TransaksiActivity extends Activity implements View.OnClickListener,
         blockOrderPenjualan.setOnClickListener(this);
         spinnerOutlet.setOnItemSelectedListener(this);
 
-        loadTeam();
+        loadOutlet();
     }
 
     @Override
     public void onClick(View view) {
-        if(view == findViewById(R.id.block_order) && team != null) {
+        if(view == findViewById(R.id.block_order) && outlet != null) {
             Intent intent = new Intent(TransaksiActivity.this, OrderPenjualanActivity.class);
-            intent.putExtra("team_guid", team.getGuid());
+            intent.putExtra("outlet_guid", outlet.getGuid());
             startActivity(intent);
         }
     }
 
-    private void loadTeam() {
-        SpinnerTeamAdapter adapter = null;
-        TeamRepo repo = new TeamRepo(getApplicationContext());
-        List<Team> teams = repo.getAll();
-        int size = teams.size();
+    private void loadOutlet() {
+        SpinnerOutletAdapter adapter = null;
+        OutletRepo repo = new OutletRepo(getApplicationContext());
+        List<Outlet> outlets = repo.getAll();
+        int size = outlets.size();
         Log.i("List size : ", Integer.toString(size));
         for(int i = 0; i < size; i++){
-            Log.i("Teams", teams.get(i).getName());
+            Log.i("Outlets", outlets.get(i).getName());
         }
-        adapter = new SpinnerTeamAdapter(TransaksiActivity.this,
-                android.R.layout.simple_spinner_item, teams);
+        adapter = new SpinnerOutletAdapter(TransaksiActivity.this,
+                android.R.layout.simple_spinner_item, outlets);
         spinnerOutlet.setAdapter(adapter);
 
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -73,14 +73,14 @@ public class TransaksiActivity extends Activity implements View.OnClickListener,
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
         if(parent == findViewById(R.id.spinnerOutlet)){
-            Team selectedTeam = (Team) parent.getItemAtPosition(position);
-            team = selectedTeam;
-            Log.i("Team GUID : ", team.getGuid());
+            Outlet selectedOutlet = (Outlet) parent.getItemAtPosition(position);
+            outlet = selectedOutlet;
+            Log.i("Team GUID : ", outlet.getGuid());
         }
     }
 
     @Override
     public void onNothingSelected(AdapterView<?> parent) {
-        team = null;
+        outlet = null;
     }
 }

@@ -1,5 +1,7 @@
 package com.bali.nusadua.productmonitor.model;
 
+import java.util.Date;
+
 /**
  * Created by desu sudarsana on 4/15/2015.
  */
@@ -12,6 +14,7 @@ public class Order {
     public static final String HARGA = "harga";
     public static final String QTY = "qty";
     public static final String UNIT = "unit";
+    public static final String CREATE_DATE = "create_date";
 
     private int id;
     private String guid;
@@ -20,6 +23,7 @@ public class Order {
     private int harga;
     private int qty;
     private String unit;
+    private Date createDate;
 
     public int getId() {
         return id;
@@ -75,5 +79,13 @@ public class Order {
 
     public void setUnit(String unit) {
         this.unit = unit;
+    }
+
+    public Date getCreateDate() {
+        return createDate;
+    }
+
+    public void setCreateDate(Date createDate) {
+        this.createDate = createDate;
     }
 }

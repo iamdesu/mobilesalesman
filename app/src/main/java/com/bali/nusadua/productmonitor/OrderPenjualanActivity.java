@@ -25,7 +25,7 @@ public class OrderPenjualanActivity extends Activity implements android.view.Vie
     private Button btnAdd, btnProses, btnBatal;
     private TableLayout theGrid;
     private EditText tvCode, tvName, tvPrice, tvQty, tvUnit;
-    private String teamGuid;
+    private String outletGuid;
 
     private List<Order> orders = new ArrayList<Order>();
     OrderRepo orderRepo = new OrderRepo(this);
@@ -52,8 +52,8 @@ public class OrderPenjualanActivity extends Activity implements android.view.Vie
         btnBatal.setOnClickListener(this);
 
         Intent intent = getIntent();
-        teamGuid = intent.getStringExtra("team_guid");
-        Log.i("Team GUID : ", teamGuid);
+        outletGuid = intent.getStringExtra("outlet_guid");
+        Log.i("Outlet GUID : ", outletGuid);
 
         orders = orderRepo.getAll();
         Log.i("Jumlah order penjualan di database : ", Integer.toString(orders.size()));

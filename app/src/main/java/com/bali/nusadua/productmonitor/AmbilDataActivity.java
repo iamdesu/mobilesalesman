@@ -1,7 +1,6 @@
 package com.bali.nusadua.productmonitor;
 
 import android.app.Activity;
-import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -31,7 +30,7 @@ public class AmbilDataActivity extends Activity implements AdapterView.OnItemSel
         mSpinnerTeam = (Spinner) findViewById(R.id.spinnerTeam);
         mSpinnerTeam.setOnItemSelectedListener(this);
 
-        insertDummyData();
+        //insertDummyData();
         loadTeam();
     }
 

@@ -8,7 +8,10 @@ import android.database.sqlite.SQLiteDatabase;
 import com.bali.nusadua.productmonitor.model.Order;
 import com.bali.nusadua.productmonitor.sqlitedb.DBHelper;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
@@ -17,6 +20,7 @@ import java.util.UUID;
  */
 public class OrderRepo {
     private DBHelper dbHelper;
+    private SimpleDateFormat sdf = new SimpleDateFormat("dd-M-yyyy hh:mm:ss");
 
     public OrderRepo(Context context) {
         dbHelper = new DBHelper(context);
@@ -32,6 +36,7 @@ public class OrderRepo {
         values.put(Order.HARGA, order.getHarga());
         values.put(Order.QTY, order.getQty());
         values.put(Order.UNIT, order.getUnit());
+        values.put(Order.CREATE_DATE, sdf.format(new Date()));
 
         //Inserting row
         long order_id = db.insert(Order.TABLE, null, values);
@@ -50,11 +55,11 @@ public class OrderRepo {
             order.setGuid(UUID.randomUUID().toString());
             contentValues.put(Order.GUID, order.getGuid());
             contentValues.put(Order.KODE, order.getKode());
-            contentValues.put(Order.GUID, order.getGuid());
             contentValues.put(Order.NAMA_BARANG, order.getNamaBarang());
             contentValues.put(Order.HARGA, order.getHarga());
             contentValues.put(Order.QTY, order.getQty());
             contentValues.put(Order.UNIT, order.getUnit());
+            contentValues.put(Order.CREATE_DATE, sdf.format(new Date()));
 
             db.insert(Order.TABLE, null, contentValues);
         }
@@ -91,7 +96,8 @@ public class OrderRepo {
                 Order.NAMA_BARANG + ", " +
                 Order.HARGA + ", " +
                 Order.QTY + ", " +
-                Order.UNIT + " FROM " +
+                Order.UNIT + ", " +
+                Order.CREATE_DATE + " FROM " +
                 Order.TABLE + " WHERE " +
                 Order.GUID + " = ?";
 
@@ -107,6 +113,14 @@ public class OrderRepo {
                 order.setHarga(cursor.getInt(cursor.getColumnIndex(Order.HARGA)));
                 order.setQty(cursor.getInt(cursor.getColumnIndex(Order.QTY)));
                 order.setUnit(cursor.getString(cursor.getColumnIndex(Order.UNIT)));
+
+                try {
+                    Date createDate = sdf.parse(cursor.getString(cursor.getColumnIndex(Order.CREATE_DATE)));
+                    order.setCreateDate(createDate);
+                } catch (ParseException e) {
+                    order.setCreateDate(null);
+                }
+
             } while (cursor.moveToNext());
         }
 
@@ -134,6 +148,13 @@ public class OrderRepo {
                 order.setGuid(cursor.getString(cursor.getColumnIndex(Order.GUID)));
                 order.setQty(cursor.getInt(cursor.getColumnIndex(Order.QTY)));
                 order.setKode(cursor.getString(cursor.getColumnIndex(Order.KODE)));
+
+                try {
+                    Date createDate = sdf.parse(cursor.getString(cursor.getColumnIndex(Order.CREATE_DATE)));
+                    order.setCreateDate(createDate);
+                } catch (ParseException e) {
+                    order.setCreateDate(null);
+                }
 
                 listOrder.add(order);
             } while(cursor.moveToNext());
