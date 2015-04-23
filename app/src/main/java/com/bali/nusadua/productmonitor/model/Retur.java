@@ -3,10 +3,10 @@ package com.bali.nusadua.productmonitor.model;
 import java.util.Date;
 
 /**
- * Created by desu sudarsana on 4/15/2015.
+ * Created by desu sudarsana on 4/23/2015.
  */
-public class Order {
-    public static final String TABLE = "OrderPenjualan";
+public class Retur {
+    public static final String TABLE = "ReturPenjualan";
     public static final String ID = "id";
     public static final String GUID = "guid";
     public static final String KODE = "kode";

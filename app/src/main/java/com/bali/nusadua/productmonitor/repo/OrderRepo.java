@@ -36,6 +36,7 @@ public class OrderRepo {
         values.put(Order.HARGA, order.getHarga());
         values.put(Order.QTY, order.getQty());
         values.put(Order.UNIT, order.getUnit());
+        values.put(Order.KODE_OUTLET, order.getKodeOutlet());
         values.put(Order.CREATE_DATE, sdf.format(new Date()));
 
         //Inserting row
@@ -59,6 +60,7 @@ public class OrderRepo {
             contentValues.put(Order.HARGA, order.getHarga());
             contentValues.put(Order.QTY, order.getQty());
             contentValues.put(Order.UNIT, order.getUnit());
+            contentValues.put(Order.KODE_OUTLET, order.getKodeOutlet());
             contentValues.put(Order.CREATE_DATE, sdf.format(new Date()));
 
             db.insert(Order.TABLE, null, contentValues);
@@ -81,6 +83,7 @@ public class OrderRepo {
         values.put(Order.HARGA, order.getHarga());
         values.put(Order.QTY, order.getQty());
         values.put(Order.UNIT, order.getUnit());
+        values.put(Order.KODE_OUTLET, order.getKodeOutlet());
 
         // It's a good practice to use parameter ?, instead of concatenate string
         db.update(Order.TABLE, values, Order.GUID + "= ?", new String[] { order.getGuid() });
@@ -97,6 +100,7 @@ public class OrderRepo {
                 Order.HARGA + ", " +
                 Order.QTY + ", " +
                 Order.UNIT + ", " +
+                Order.KODE_OUTLET + ", " +
                 Order.CREATE_DATE + " FROM " +
                 Order.TABLE + " WHERE " +
                 Order.GUID + " = ?";
@@ -113,6 +117,7 @@ public class OrderRepo {
                 order.setHarga(cursor.getInt(cursor.getColumnIndex(Order.HARGA)));
                 order.setQty(cursor.getInt(cursor.getColumnIndex(Order.QTY)));
                 order.setUnit(cursor.getString(cursor.getColumnIndex(Order.UNIT)));
+                order.setKodeOutlet(cursor.getString(cursor.getColumnIndex(Order.KODE_OUTLET)));
 
                 try {
                     Date createDate = sdf.parse(cursor.getString(cursor.getColumnIndex(Order.CREATE_DATE)));
@@ -148,6 +153,7 @@ public class OrderRepo {
                 order.setGuid(cursor.getString(cursor.getColumnIndex(Order.GUID)));
                 order.setQty(cursor.getInt(cursor.getColumnIndex(Order.QTY)));
                 order.setKode(cursor.getString(cursor.getColumnIndex(Order.KODE)));
+                order.setKodeOutlet(cursor.getString(cursor.getColumnIndex(Order.KODE_OUTLET)));
 
                 try {
                     Date createDate = sdf.parse(cursor.getString(cursor.getColumnIndex(Order.CREATE_DATE)));

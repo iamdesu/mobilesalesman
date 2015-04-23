@@ -6,6 +6,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 import com.bali.nusadua.productmonitor.model.Order;
 import com.bali.nusadua.productmonitor.model.Outlet;
+import com.bali.nusadua.productmonitor.model.Retur;
 import com.bali.nusadua.productmonitor.model.Team;
 
 import java.util.UUID;
@@ -42,9 +43,23 @@ public class DBHelper extends SQLiteOpenHelper{
                 + Order.HARGA + " INTEGER, "
                 + Order.QTY + " INTEGER, "
                 + Order.UNIT + " TEXT, "
+                + Order.KODE_OUTLET + " TEXT, "
                 + Order.CREATE_DATE + " TEXT ) ";
 
         db.execSQL(CREATE_TABLE_ORDER);
+
+        String CREATE_TABLE_RETUR = "CREATE TABLE " + Retur.TABLE + " ( "
+                + Retur.ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
+                + Retur.GUID + " TEXT, "
+                + Retur.KODE + " TEXT, "
+                + Retur.NAMA_BARANG + " TEXT, "
+                + Retur.HARGA + " INTEGER, "
+                + Retur.QTY + " INTEGER, "
+                + Retur.UNIT + " TEXT, "
+                + Retur.KODE_OUTLET + " TEXT, "
+                + Retur.CREATE_DATE + " TEXT ) ";
+
+        db.execSQL(CREATE_TABLE_RETUR);
 
         String CREATE_TABLE_OUTLET = "CREATE TABLE " + Outlet.TABLE + " ( "
                 + Outlet.ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
@@ -79,7 +94,9 @@ public class DBHelper extends SQLiteOpenHelper{
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         //Drop older table if existed, all data will be gone
         db.execSQL("DROP TABLE IF EXISTS " + Team.TABLE);
+        db.execSQL("DROP TABLE IF EXISTS " + Outlet.TABLE);
         db.execSQL("DROP TABLE IF EXISTS " + Order.TABLE);
+        db.execSQL("DROP TABLE IF EXISTS " + Retur.TABLE);
 
         //Create tables again
         onCreate(db);

@@ -35,11 +35,13 @@ public class TransaksiActivity extends Activity implements View.OnClickListener,
         btnProses = (Button) findViewById(R.id.btn_proses);
         btnSummary = (Button) findViewById(R.id.btn_summary);
         blockOrderPenjualan = (LinearLayout) findViewById(R.id.block_order);
+        blockRetur = (LinearLayout) findViewById(R.id.block_retur);
         spinnerOutlet = (Spinner) findViewById(R.id.spinnerOutlet);
 
         btnProses.setOnClickListener(this);
         btnSummary.setOnClickListener(this);
         blockOrderPenjualan.setOnClickListener(this);
+        blockRetur.setOnClickListener(this);
         spinnerOutlet.setOnItemSelectedListener(this);
 
         loadOutlet();
@@ -49,7 +51,11 @@ public class TransaksiActivity extends Activity implements View.OnClickListener,
     public void onClick(View view) {
         if(view == findViewById(R.id.block_order) && outlet != null) {
             Intent intent = new Intent(TransaksiActivity.this, OrderPenjualanActivity.class);
-            intent.putExtra("outlet_guid", outlet.getGuid());
+            intent.putExtra("kode_outlet", outlet.getKode());
+            startActivity(intent);
+        } else if(view == findViewById(R.id.block_retur) && outlet != null) {
+            Intent intent = new Intent(TransaksiActivity.this, ReturPenjualanActivity.class);
+            intent.putExtra("kode_outlet", outlet.getKode());
             startActivity(intent);
         }
     }
@@ -60,12 +66,14 @@ public class TransaksiActivity extends Activity implements View.OnClickListener,
         List<Outlet> outlets = repo.getAll();
         int size = outlets.size();
         Log.i("List size : ", Integer.toString(size));
-        for(int i = 0; i < size; i++){
+        /*for(int i = 0; i < size; i++){
             Log.i("Outlets", outlets.get(i).getName());
-        }
+        }*/
         adapter = new SpinnerOutletAdapter(TransaksiActivity.this,
                 android.R.layout.simple_spinner_item, outlets);
         spinnerOutlet.setAdapter(adapter);
+
+        outlet = outlets.get(0);
 
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
     }
@@ -75,7 +83,7 @@ public class TransaksiActivity extends Activity implements View.OnClickListener,
         if(parent == findViewById(R.id.spinnerOutlet)){
             Outlet selectedOutlet = (Outlet) parent.getItemAtPosition(position);
             outlet = selectedOutlet;
-            Log.i("Team GUID : ", outlet.getGuid());
+            Log.i("Outlet KODE : ", outlet.getKode());
         }
     }
 

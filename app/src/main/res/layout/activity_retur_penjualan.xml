@@ -68,53 +68,58 @@
 
         </TableRow>
     </TableLayout>
-    <TableLayout
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        android:id="@+id/tableLayoutData"
+    <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1"
-        android:shrinkColumns="*"
-        android:stretchColumns="*">
+        android:layout_weight="1">
 
-        <TableRow android:id="@+id/tableRowData1"
+        <TableLayout
+            xmlns:android="http://schemas.android.com/apk/res/android"
+            android:id="@+id/tableLayoutData"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_width="match_parent">
+            android:shrinkColumns="*"
+            android:stretchColumns="*">
 
-            <TextView
-                android:layout_width="wrap_content"
+            <TableRow android:id="@+id/tableRowData1"
                 android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceMedium"
-                android:text="@string/hint_kode_nama_barang"
-                android:id="@+id/textView_head_kode"
-                android:layout_weight="40"/>
+                android:layout_width="match_parent">
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceMedium"
-                android:text="@string/hint_harga"
-                android:id="@+id/textView_head_price"
-                android:layout_weight="20"/>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:text="@string/hint_kode_nama_barang"
+                    android:id="@+id/textView_head_kode"
+                    android:layout_weight="40"/>
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceMedium"
-                android:text="@string/hint_qty_unit"
-                android:id="@+id/textView_head_qty_unit"
-                android:layout_weight="20"/>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:text="@string/hint_harga"
+                    android:id="@+id/textView_head_price"
+                    android:layout_weight="20"/>
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceMedium"
-                android:text="@string/hint_subtotal"
-                android:id="@+id/textView_head_subtotal"
-                android:layout_weight="20"/>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:text="@string/hint_qty_unit"
+                    android:id="@+id/textView_head_qty_unit"
+                    android:layout_weight="20"/>
 
-        </TableRow>
-    </TableLayout>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:text="@string/hint_subtotal"
+                    android:id="@+id/textView_head_subtotal"
+                    android:layout_weight="20"/>
+
+            </TableRow>
+        </TableLayout>
+    </ScrollView>
 
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
@@ -125,18 +130,20 @@
             android:layout_height="wrap_content"
             android:textColor="#ffffff"
             android:background="@drawable/button_shape_red"
+            android:id="@+id/button_batal"
             android:text="Batal" />
 
         <Space
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:layout_weight="1" />
+            android:layout_weight="1"/>
 
         <Button
             android:layout_width="100dp"
             android:layout_height="wrap_content"
             android:textColor="#ffffff"
             android:background="@drawable/button_shape"
+            android:id="@+id/button_proses"
             android:text="Proses" />
 
     </LinearLayout>
