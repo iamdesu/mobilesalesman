@@ -49,6 +49,11 @@
             android:screenOrientation="landscape">
         </activity>
         <activity
+            android:name=".ReturPenjualanActivity"
+            android:label="@string/app_name"
+            android:screenOrientation="landscape">
+        </activity>
+        <activity
             android:name=".TransaksiActivity"
             android:label="@string/app_name"
             android:screenOrientation="landscape">
