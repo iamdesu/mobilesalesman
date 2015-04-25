@@ -62,50 +62,50 @@ public class OrderPenjualanActivity extends Activity implements android.view.Vie
     @Override
     public void onClick(View view) {
         Order order = new Order();
-        if(view == findViewById(R.id.button_add)){
+        if (view == findViewById(R.id.button_add)) {
             int count = theGrid.getChildCount();
             TableRow tableRow = new TableRow(this);
-            tableRow.setId(count+1);
+            tableRow.setId(count + 1);
 
             TextView labelCode = new TextView(this);
-            labelCode.setId(200+count+1);
-            labelCode.setText(tvCode.getText()+ " " + tvName.getText());
+            labelCode.setId(200 + count + 1);
+            labelCode.setText(tvCode.getText() + " " + tvName.getText());
             tableRow.addView(labelCode);
             order.setKode(tvCode.getText().toString());
             order.setNamaBarang(tvName.getText().toString());
 
             TextView labelPrice = new TextView(this);
-            labelPrice.setId(200+count+1);
+            labelPrice.setId(200 + count + 1);
             labelPrice.setText(tvPrice.getText());
             tableRow.addView(labelPrice);
             order.setHarga(Integer.valueOf(tvPrice.getText().toString()));
 
             TextView labelQty = new TextView(this);
-            labelQty.setId(200+count+1);
-            labelQty.setText(tvQty.getText() +"/"+ tvUnit.getText());
+            labelQty.setId(200 + count + 1);
+            labelQty.setText(tvQty.getText() + "/" + tvUnit.getText());
             tableRow.addView(labelQty);
             order.setQty(Integer.valueOf(tvQty.getText().toString()));
             order.setUnit(tvUnit.getText().toString());
             order.setKodeOutlet(kodeOutlet);
 
             TextView labelSummary = new TextView(this);
-            labelSummary.setId(200+count+1);
+            labelSummary.setId(200 + count + 1);
             Integer summary = Integer.valueOf(tvQty.getText().toString()) * Integer.valueOf(tvPrice.getText().toString());
             labelSummary.setText(summary.toString());
             tableRow.addView(labelSummary);
 
             theGrid.addView(tableRow, new TableLayout.LayoutParams(TableLayout.LayoutParams.MATCH_PARENT, TableLayout.LayoutParams.WRAP_CONTENT));
             orders.add(order);
-        } else if(view == findViewById(R.id.button_proses)) {
+        } else if (view == findViewById(R.id.button_proses)) {
             saveAllOrder();
             finish();
 
-        } else if(view == findViewById(R.id.button_batal)) {
+        } else if (view == findViewById(R.id.button_batal)) {
             finish();
         }
     }
 
-    private void saveAllOrder(){
+    private void saveAllOrder() {
         orderRepo.insertAll(orders);
     }
 }

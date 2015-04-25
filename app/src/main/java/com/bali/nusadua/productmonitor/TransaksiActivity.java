@@ -57,6 +57,9 @@ public class TransaksiActivity extends Activity implements View.OnClickListener,
             Intent intent = new Intent(TransaksiActivity.this, ReturPenjualanActivity.class);
             intent.putExtra("kode_outlet", outlet.getKode());
             startActivity(intent);
+        } else if(view == findViewById(R.id.btn_summary)) {
+            Intent intent = new Intent(TransaksiActivity.this, SummaryActivity.class);
+            startActivity(intent);
         }
     }
 
