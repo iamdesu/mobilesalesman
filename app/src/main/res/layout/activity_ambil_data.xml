@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="#808080">
+    android:background="#4285f4">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -51,11 +51,13 @@
         android:orientation="horizontal">
 
         <Button
-            android:layout_width="100dp"
-            android:layout_height="wrap_content"
-            android:text="Keluar"
             android:id="@+id/btn_keluar"
-            android:textColor="#ffffff"
+            android:layout_width="110dp"
+            android:layout_height="wrap_content"
+            android:padding="10dp"
+            android:layout_margin="4dp"
+            android:text="@string/btn_kembali"
+            style="@style/ButtonTextCenter"
             android:background="@drawable/button_shape_red"
             android:onClick="onBtnKeluarClick"/>
 
@@ -65,12 +67,14 @@
             android:layout_weight="1" />
 
         <Button
-            android:layout_width="100dp"
-            android:layout_height="wrap_content"
-            android:text="Proses"
             android:id="@+id/btn_proses"
-            android:textColor="#ffffff"
-            android:background="@drawable/button_shape"/>
+            android:layout_width="110dp"
+            android:layout_height="wrap_content"
+            android:padding="10dp"
+            android:layout_margin="4dp"
+            android:text="@string/btn_proses"
+            style="@style/ButtonTextCenter"
+            android:background="@drawable/button_shape_blue"/>
 
     </LinearLayout>
 
