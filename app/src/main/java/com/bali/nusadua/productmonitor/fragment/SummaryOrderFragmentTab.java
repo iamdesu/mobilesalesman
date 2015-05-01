@@ -37,7 +37,7 @@ public class SummaryOrderFragmentTab extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_summary_order, container, false);
         context = getActivity();
-        orderRepo  = new OrderRepo(context);
+        orderRepo = new OrderRepo(context);
         orders = orderRepo.getAll();
         Log.i("Summary order di database : ", Integer.toString(orders.size()));
 

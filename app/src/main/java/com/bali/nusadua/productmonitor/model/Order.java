@@ -27,6 +27,9 @@ public class Order {
     private String kodeOutlet;
     private Date createDate;
 
+    /* Object aggregate */
+    private Outlet outlet;
+
     public int getId() {
         return id;
     }
@@ -97,5 +100,13 @@ public class Order {
 
     public void setCreateDate(Date createDate) {
         this.createDate = createDate;
+    }
+
+    public Outlet getOutlet() {
+        return outlet;
+    }
+
+    public void setOutlet(Outlet outlet) {
+        this.outlet = outlet;
     }
 }

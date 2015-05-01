@@ -6,6 +6,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
 import com.bali.nusadua.productmonitor.model.Order;
+import com.bali.nusadua.productmonitor.model.Outlet;
 import com.bali.nusadua.productmonitor.sqlitedb.DBHelper;
 
 import java.text.ParseException;
@@ -161,6 +162,66 @@ public class OrderRepo {
                 } catch (ParseException e) {
                     order.setCreateDate(null);
                 }
+
+                listOrder.add(order);
+            } while(cursor.moveToNext());
+        }
+
+        cursor.close();
+        db.close();
+        return listOrder;
+    }
+
+    public List<Order> getAllWithOutlet() {
+        SQLiteDatabase db = dbHelper.getReadableDatabase();
+        //String selectQuery = "SELECT * FROM " + Order.TABLE + " order join " + Outlet.TABLE + " outlet ON order.kode_outlet = outlet.kode";
+        String selectQuery = "SELECT " +
+                Order.TABLE + "." + Order.ID + ", " +
+                Order.TABLE + "." + Order.GUID + ", " +
+                Order.TABLE + "." + Order.KODE + ", " +
+                Order.TABLE + "." + Order.NAMA_BARANG + ", " +
+                Order.TABLE + "." + Order.HARGA + ", " +
+                Order.TABLE + "." + Order.QTY + ", " +
+                Order.TABLE + "." + Order.UNIT + ", " +
+                Order.TABLE + "." + Order.KODE_OUTLET + ", " +
+                Order.TABLE + "." + Order.CREATE_DATE + ", " +
+                Outlet.TABLE + "." + Outlet.ID + " as outletID, " +
+                Outlet.TABLE + "." + Outlet.GUID + " as outletGUID, " +
+                Outlet.TABLE + "." + Outlet.KODE + " as outletKode, " +
+                Outlet.TABLE + "." + Outlet.NAME + " as outletName" +
+                " FROM " + Order.TABLE + " LEFT JOIN " + Outlet.TABLE +
+                " ON "+ Order.TABLE + "." + Order.KODE_OUTLET +" = "+ Outlet.TABLE + "." + Outlet.KODE;
+
+        List<Order> listOrder = new ArrayList<Order>();
+        Cursor cursor = db.rawQuery(selectQuery, null);
+
+        //Looping through all rows and adding to list  (cursor.getColumnIndex(Team.ID
+        if(cursor.moveToFirst()){
+            do {
+                Order order = new Order();
+                order.setId((int) cursor.getLong(cursor.getColumnIndex(Order.ID)));
+                order.setUnit(cursor.getString(cursor.getColumnIndex(Order.UNIT)));
+                order.setHarga(cursor.getInt(cursor.getColumnIndex(Order.HARGA)));
+                order.setNamaBarang(cursor.getString(cursor.getColumnIndex(Order.NAMA_BARANG)));
+                order.setGuid(cursor.getString(cursor.getColumnIndex(Order.GUID)));
+                order.setQty(cursor.getInt(cursor.getColumnIndex(Order.QTY)));
+                order.setKode(cursor.getString(cursor.getColumnIndex(Order.KODE)));
+                order.setKodeOutlet(cursor.getString(cursor.getColumnIndex(Order.KODE_OUTLET)));
+
+                try {
+                    Date createDate = sdf.parse(cursor.getString(cursor.getColumnIndex(Order.CREATE_DATE)));
+                    order.setCreateDate(createDate);
+                } catch (ParseException e) {
+                    order.setCreateDate(null);
+                }
+
+                Outlet outlet = new Outlet();
+                outlet.setId((int) cursor.getLong(cursor.getColumnIndex("outletID")));
+                outlet.setGuid(cursor.getString(cursor.getColumnIndex("outletGUID")));
+                outlet.setKode(cursor.getString(cursor.getColumnIndex("outletKode")));
+                outlet.setName(cursor.getString(cursor.getColumnIndex("outletName")));
+
+                order.setOutlet(outlet);
 
                 listOrder.add(order);
             } while(cursor.moveToNext());

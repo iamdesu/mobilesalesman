@@ -61,18 +61,7 @@ public class MainActivity extends ActionBarActivity {
         // Display the proper UI state if logged in or not
         setLoggedIn(dropboxApi.getSession().isLinked());
 
-        // This logs you out if you're logged in, or vice versa
-        if (mLoggedIn) {
-            //logOut();
-        } else {
-            // Start the remote authentication
-            if (USE_OAUTH1) {
-                dropboxApi.getSession().startAuthentication(MainActivity.this);
-            } else {
-                dropboxApi.getSession().startOAuth2Authentication(MainActivity.this);
-            }
-        }
-        //dropboxApi.getSession().startOAuth2Authentication(MainActivity.this);
+        connectDropbox();
     }
 
 
@@ -263,5 +252,19 @@ public class MainActivity extends ActionBarActivity {
     private void showToast(String msg) {
         Toast error = Toast.makeText(this, msg, Toast.LENGTH_LONG);
         error.show();
+    }
+
+    private void connectDropbox(){
+        // This logs you out if you're logged in, or vice versa
+        if (mLoggedIn) {
+            //logOut();
+        } else {
+            // Start the remote authentication
+            if (USE_OAUTH1) {
+                dropboxApi.getSession().startAuthentication(MainActivity.this);
+            } else {
+                dropboxApi.getSession().startOAuth2Authentication(MainActivity.this);
+            }
+        }
     }
 }
