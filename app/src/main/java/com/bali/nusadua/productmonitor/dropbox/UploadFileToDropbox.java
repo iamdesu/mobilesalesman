@@ -11,6 +11,10 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
 
 /**
  * Created by Langit_P on 4/21/2015.
@@ -26,6 +30,7 @@ public class UploadFileToDropbox extends AsyncTask<Void, Void, Boolean> {
         this.dropbox = dropbox;
         this.path = path;
     }
+
     @Override
     protected Boolean doInBackground(Void... params) {
         final File tempDir = context.getCacheDir();
@@ -37,8 +42,11 @@ public class UploadFileToDropbox extends AsyncTask<Void, Void, Boolean> {
             fr.write("Test upload files");
             fr.close();
 
+            Date date = new Date();
+            DateFormat df = new SimpleDateFormat("yyyy-MM-dd", Locale.US);
+
             FileInputStream fileInputStream = new FileInputStream(tempFile);
-            dropbox.putFile(path + "textfile.txt", fileInputStream,
+            dropbox.putFile(path + "TeamA-"+df.format(date)+".txt", fileInputStream,
                     tempFile.length(), null, null);
             tempFile.delete();
             return true;
