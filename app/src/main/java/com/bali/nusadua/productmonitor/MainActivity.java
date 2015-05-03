@@ -108,9 +108,11 @@ public class MainActivity extends ActionBarActivity {
     }
 
     private void uploadFileToDropBox() {
+        mBtnKirimData.setEnabled(false);
         UploadFileToDropbox upload = new UploadFileToDropbox(this, dropboxApi,
                 FILE_DIR_EXPORT);
         upload.execute();
+        mBtnKirimData.setEnabled(true);
     }
 
     @Override

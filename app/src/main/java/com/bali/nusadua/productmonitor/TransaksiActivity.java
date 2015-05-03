@@ -36,12 +36,14 @@ public class TransaksiActivity extends Activity implements View.OnClickListener,
         btnSummary = (Button) findViewById(R.id.btn_summary);
         blockOrderPenjualan = (LinearLayout) findViewById(R.id.block_order);
         blockRetur = (LinearLayout) findViewById(R.id.block_retur);
+        blockPelunasan = (LinearLayout) findViewById(R.id.block_pelunasan);
         spinnerOutlet = (Spinner) findViewById(R.id.spinnerOutlet);
 
         btnProses.setOnClickListener(this);
         btnSummary.setOnClickListener(this);
         blockOrderPenjualan.setOnClickListener(this);
         blockRetur.setOnClickListener(this);
+        blockPelunasan.setOnClickListener(this);
         spinnerOutlet.setOnItemSelectedListener(this);
 
         loadOutlet();
@@ -49,15 +51,19 @@ public class TransaksiActivity extends Activity implements View.OnClickListener,
 
     @Override
     public void onClick(View view) {
-        if(view == findViewById(R.id.block_order) && outlet != null) {
+        if (view == findViewById(R.id.block_order) && outlet != null) {
             Intent intent = new Intent(TransaksiActivity.this, OrderPenjualanActivity.class);
             intent.putExtra("kode_outlet", outlet.getKode());
             startActivity(intent);
-        } else if(view == findViewById(R.id.block_retur) && outlet != null) {
+        } else if (view == findViewById(R.id.block_retur) && outlet != null) {
             Intent intent = new Intent(TransaksiActivity.this, ReturPenjualanActivity.class);
             intent.putExtra("kode_outlet", outlet.getKode());
             startActivity(intent);
-        } else if(view == findViewById(R.id.btn_summary)) {
+        } else if (view == findViewById(R.id.block_pelunasan) && outlet != null) {
+            Intent intent = new Intent(TransaksiActivity.this, SettlementActivity.class);
+            intent.putExtra("kode_outlet", outlet.getKode());
+            startActivity(intent);
+        } else if (view == findViewById(R.id.btn_summary)) {
             Intent intent = new Intent(TransaksiActivity.this, SummaryActivity.class);
             startActivity(intent);
         }
@@ -83,7 +89,7 @@ public class TransaksiActivity extends Activity implements View.OnClickListener,
 
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-        if(parent == findViewById(R.id.spinnerOutlet)){
+        if (parent == findViewById(R.id.spinnerOutlet)) {
             Outlet selectedOutlet = (Outlet) parent.getItemAtPosition(position);
             outlet = selectedOutlet;
             Log.i("Outlet KODE : ", outlet.getKode());

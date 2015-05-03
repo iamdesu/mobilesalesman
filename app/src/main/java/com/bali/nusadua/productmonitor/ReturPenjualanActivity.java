@@ -15,7 +15,9 @@ import com.bali.nusadua.productmonitor.model.Retur;
 import com.bali.nusadua.productmonitor.repo.ReturRepo;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by desu sudarsana on 4/23/2015.
@@ -27,7 +29,7 @@ public class ReturPenjualanActivity extends Activity implements android.view.Vie
     private EditText tvCode, tvName, tvPrice, tvQty, tvUnit;
     private String kodeOutlet;
 
-    private List<Retur> returs = new ArrayList<Retur>();
+    private Map<String, Retur> mapReturs = new HashMap<String, Retur>();
     private ReturRepo returRepo = new ReturRepo(this);
 
     @Override
@@ -54,14 +56,14 @@ public class ReturPenjualanActivity extends Activity implements android.view.Vie
         kodeOutlet = intent.getStringExtra("kode_outlet");
         Log.i("Outlet GUID : ", kodeOutlet);
 
-        returs = returRepo.getAll();
-        Log.i("Jumlah retur penjualan di database : ", Integer.toString(returs.size()));
+        /*returs = returRepo.getAll();
+        Log.i("Jumlah retur penjualan di database : ", Integer.toString(returs.size()));*/
     }
 
     @Override
     public void onClick(View view) {
         Retur retur = new Retur();
-        if (view == findViewById(R.id.button_add)) {
+        if (view == findViewById(R.id.button_add) && mapReturs.get(tvCode.getText().toString()) == null) {
             int count = theGrid.getChildCount();
             TableRow tableRow = new TableRow(this);
             tableRow.setId(count + 1);
@@ -94,7 +96,7 @@ public class ReturPenjualanActivity extends Activity implements android.view.Vie
             tableRow.addView(labelSummary);
 
             theGrid.addView(tableRow, new TableLayout.LayoutParams(TableLayout.LayoutParams.MATCH_PARENT, TableLayout.LayoutParams.WRAP_CONTENT));
-            returs.add(retur);
+            mapReturs.put(retur.getKode(), retur);
         } else if (view == findViewById(R.id.button_proses)) {
             saveAllRetur();
             finish();
@@ -105,6 +107,7 @@ public class ReturPenjualanActivity extends Activity implements android.view.Vie
     }
 
     private void saveAllRetur() {
+        List<Retur> returs = new ArrayList<Retur>(mapReturs.values());
         returRepo.insertAll(returs);
     }
 }

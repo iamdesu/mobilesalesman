@@ -16,12 +16,9 @@ import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
-/**
- * Created by desu sudarsana on 4/15/2015.
- */
 public class OrderRepo {
     private DBHelper dbHelper;
-    private SimpleDateFormat sdf = new SimpleDateFormat("dd-M-yyyy hh:mm:ss");
+    private SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy hh:mm:ss");
 
     public OrderRepo(Context context) {
         dbHelper = new DBHelper(context);
@@ -195,7 +192,7 @@ public class OrderRepo {
         List<Order> listOrder = new ArrayList<Order>();
         Cursor cursor = db.rawQuery(selectQuery, null);
 
-        //Looping through all rows and adding to list  (cursor.getColumnIndex(Team.ID
+        //Looping through all rows and adding to list
         if(cursor.moveToFirst()){
             do {
                 Order order = new Order();

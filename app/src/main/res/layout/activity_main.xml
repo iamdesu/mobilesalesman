@@ -60,7 +60,7 @@
             android:layout_margin="4dp"
             android:background="@drawable/button_shape_red"
             style="@style/ButtonText"
-            android:text="@string/btn_kembali"
+            android:text="@string/btn_exit"
             android:onClick="onButtonCloseClick"
             android:focusableInTouchMode="false"/>
     </LinearLayout>

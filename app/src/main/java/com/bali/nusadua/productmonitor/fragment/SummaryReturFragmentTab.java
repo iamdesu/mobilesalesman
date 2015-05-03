@@ -12,18 +12,19 @@ import android.widget.TableRow;
 import android.widget.TextView;
 
 import com.bali.nusadua.productmonitor.R;
-import com.bali.nusadua.productmonitor.model.Order;
-import com.bali.nusadua.productmonitor.repo.OrderRepo;
+import com.bali.nusadua.productmonitor.model.Retur;
+import com.bali.nusadua.productmonitor.repo.ReturRepo;
 
-import java.util.ArrayList;
 import java.util.List;
 
-public class SummaryOrderFragmentTab extends Fragment {
+public class SummaryReturFragmentTab extends Fragment {
 
-    private TableLayout orderGrid;
-    private OrderRepo orderRepo;
+    private ReturRepo returRepo;
+
+    /* Widget */
+    private TableLayout returGrid;
     private Context context;
-    private List<Order> orders = new ArrayList<Order>();
+    private List<Retur> returs;
 
     @Override
     public void onCreate(Bundle savedInstaceState) {
@@ -31,17 +32,17 @@ public class SummaryOrderFragmentTab extends Fragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View v = inflater.inflate(R.layout.fragment_summary_order, container, false);
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstaceState) {
+        View v = inflater.inflate(R.layout.fragment_summary_retur, container, false);
         context = getActivity();
-        orderRepo = new OrderRepo(context);
-        orders = orderRepo.getAll();
-        Log.i("Summary order di database : ", Integer.toString(orders.size()));
+        returRepo = new ReturRepo(context);
+        returs = returRepo.getAll();
+        Log.i("Summary Retur di database : ", Integer.toString(returs.size()));
 
-        orderGrid = (TableLayout) v.findViewById(R.id.tableLayoutData);
+        returGrid = (TableLayout) v.findViewById(R.id.tableLayoutData);
 
-        for(Order order : orders) {
-            int count = orderGrid.getChildCount();
+        for(Retur order : returs) {
+            int count = returGrid.getChildCount();
             TableRow tableRow = new TableRow(context);
             tableRow.setId(count + 1);
 
@@ -66,7 +67,7 @@ public class SummaryOrderFragmentTab extends Fragment {
             labelSummary.setText(summary.toString());
             tableRow.addView(labelSummary);
 
-            orderGrid.addView(tableRow, new TableLayout.LayoutParams(TableLayout.LayoutParams.MATCH_PARENT, TableLayout.LayoutParams.WRAP_CONTENT));
+            returGrid.addView(tableRow, new TableLayout.LayoutParams(TableLayout.LayoutParams.MATCH_PARENT, TableLayout.LayoutParams.WRAP_CONTENT));
         }
 
         return v;

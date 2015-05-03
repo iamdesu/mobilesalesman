@@ -52,7 +52,7 @@
 
         <Button
             android:id="@+id/btn_keluar"
-            android:layout_width="110dp"
+            android:layout_width="120dp"
             android:layout_height="wrap_content"
             android:padding="10dp"
             android:layout_margin="4dp"
@@ -68,13 +68,13 @@
 
         <Button
             android:id="@+id/btn_proses"
-            android:layout_width="110dp"
+            android:layout_width="120dp"
             android:layout_height="wrap_content"
             android:padding="10dp"
             android:layout_margin="4dp"
             android:text="@string/btn_proses"
             style="@style/ButtonTextCenter"
-            android:background="@drawable/button_shape_blue"/>
+            android:background="@drawable/button_shape"/>
 
     </LinearLayout>
 

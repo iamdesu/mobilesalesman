@@ -2,9 +2,6 @@ package com.bali.nusadua.productmonitor.model;
 
 import java.util.Date;
 
-/**
- * Created by desu sudarsana on 4/23/2015.
- */
 public class Retur {
     public static final String TABLE = "ReturPenjualan";
     public static final String ID = "id";
@@ -26,6 +23,9 @@ public class Retur {
     private String unit;
     private String kodeOutlet;
     private Date createDate;
+
+    /* Object aggregate */
+    private Outlet outlet;
 
     public int getId() {
         return id;
@@ -97,5 +97,13 @@ public class Retur {
 
     public void setCreateDate(Date createDate) {
         this.createDate = createDate;
+    }
+
+    public void setOutlet(Outlet outlet) {
+        this.outlet = outlet;
+    }
+
+    public Outlet getOutlet() {
+        return outlet;
     }
 }

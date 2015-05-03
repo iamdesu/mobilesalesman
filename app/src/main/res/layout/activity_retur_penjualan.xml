@@ -59,12 +59,14 @@
                 android:hint="@string/hint_unit"/>
 
             <Button
+                android:id="@+id/button_add"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:text="+"
-                android:id="@+id/button_add"
                 android:layout_column="0"
-                android:layout_weight="10" />
+                android:layout_weight="10"
+                style="@style/ButtonTextCenter"
+                android:text="+"
+                android:background="@drawable/button_shape"/>
 
         </TableRow>
     </TableLayout>
@@ -126,12 +128,14 @@
         android:layout_height="wrap_content">
 
         <Button
-            android:layout_width="100dp"
-            android:layout_height="wrap_content"
-            android:textColor="#ffffff"
-            android:background="@drawable/button_shape_red"
             android:id="@+id/button_batal"
-            android:text="Batal" />
+            android:layout_width="120dp"
+            android:layout_height="wrap_content"
+            android:padding="10dp"
+            android:layout_margin="4dp"
+            style="@style/ButtonTextCenter"
+            android:text="@string/btn_batal"
+            android:background="@drawable/button_shape_red"/>
 
         <Space
             android:layout_width="wrap_content"
@@ -139,12 +143,14 @@
             android:layout_weight="1"/>
 
         <Button
-            android:layout_width="100dp"
-            android:layout_height="wrap_content"
-            android:textColor="#ffffff"
-            android:background="@drawable/button_shape"
             android:id="@+id/button_proses"
-            android:text="Proses" />
+            android:layout_width="120dp"
+            android:layout_height="wrap_content"
+            android:padding="10dp"
+            android:layout_margin="4dp"
+            style="@style/ButtonTextCenter"
+            android:text="@string/btn_proses"
+            android:background="@drawable/button_shape_blue"/>
 
     </LinearLayout>
 

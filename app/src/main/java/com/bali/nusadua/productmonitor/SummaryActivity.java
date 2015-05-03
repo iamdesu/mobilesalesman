@@ -1,16 +1,13 @@
 package com.bali.nusadua.productmonitor;
 
-import android.app.TabActivity;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentTabHost;
 
 import com.bali.nusadua.productmonitor.fragment.FragmentTab;
 import com.bali.nusadua.productmonitor.fragment.SummaryOrderFragmentTab;
+import com.bali.nusadua.productmonitor.fragment.SummaryReturFragmentTab;
 
-/**
- * Created by desu sudarsana on 4/26/2015.
- */
 public class SummaryActivity extends FragmentActivity {
 
     private FragmentTabHost mTabHost;
@@ -24,7 +21,7 @@ public class SummaryActivity extends FragmentActivity {
         mTabHost.setup(this, getSupportFragmentManager(), android.R.id.tabcontent);
 
         mTabHost.addTab(mTabHost.newTabSpec("tabOrder").setIndicator("Order", null), SummaryOrderFragmentTab.class, null);
-        mTabHost.addTab(mTabHost.newTabSpec("tabRetur").setIndicator("Retur", null), FragmentTab.class, null);
+        mTabHost.addTab(mTabHost.newTabSpec("tabRetur").setIndicator("Retur", null), SummaryReturFragmentTab.class, null);
         mTabHost.addTab(mTabHost.newTabSpec("tabLunas").setIndicator("Lunas", null), FragmentTab.class, null);
     }
 

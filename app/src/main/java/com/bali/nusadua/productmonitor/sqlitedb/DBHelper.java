@@ -7,6 +7,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 import com.bali.nusadua.productmonitor.model.Order;
 import com.bali.nusadua.productmonitor.model.Outlet;
 import com.bali.nusadua.productmonitor.model.Retur;
+import com.bali.nusadua.productmonitor.model.Settlement;
 import com.bali.nusadua.productmonitor.model.Team;
 
 import java.util.UUID;
@@ -60,6 +61,19 @@ public class DBHelper extends SQLiteOpenHelper{
                 + Retur.CREATE_DATE + " TEXT ) ";
 
         db.execSQL(CREATE_TABLE_RETUR);
+
+        String CREATE_TABLE_SETTLEMENT = "CREATE TABLE " + Settlement.TABLE + " ( "
+                + Settlement.ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
+                + Settlement.GUID + " TEXT, "
+                + Settlement.INVOICE_NUMBER + " TEXT, "
+                + Settlement.INVOICE_DATE + " TEXT, "
+                + Settlement.CREDIT + " INTEGER, "
+                + Settlement.PAYMENT_METHOD + " TEXT, "
+                + Settlement.NOMINAL_PAYMENT + " INTEGER, "
+                + Settlement.KODE_OUTLET + " TEXT, "
+                + Settlement.CREATE_DATE + " TEXT ) ";
+
+        db.execSQL(CREATE_TABLE_SETTLEMENT);
 
         String CREATE_TABLE_OUTLET = "CREATE TABLE " + Outlet.TABLE + " ( "
                 + Outlet.ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
