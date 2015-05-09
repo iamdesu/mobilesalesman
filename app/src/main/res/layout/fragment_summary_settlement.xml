@@ -43,7 +43,8 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="20"
                     android:text="@string/hint_credit"
-                    android:textAppearance="?android:attr/textAppearanceMedium" />
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:textAlignment="center" />
 
                 <TextView
                     android:id="@+id/textView_head_payment_method"
@@ -51,7 +52,8 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="20"
                     android:text="@string/hint_payment_method"
-                    android:textAppearance="?android:attr/textAppearanceMedium" />
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:textAlignment="center" />
 
                 <TextView
                     android:id="@+id/textView_head_nominal_payment"

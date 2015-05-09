@@ -7,6 +7,7 @@ import android.support.v4.app.FragmentTabHost;
 import com.bali.nusadua.productmonitor.fragment.FragmentTab;
 import com.bali.nusadua.productmonitor.fragment.SummaryOrderFragmentTab;
 import com.bali.nusadua.productmonitor.fragment.SummaryReturFragmentTab;
+import com.bali.nusadua.productmonitor.fragment.SummarySettlementFragmentTab;
 
 public class SummaryActivity extends FragmentActivity {
 
@@ -22,7 +23,7 @@ public class SummaryActivity extends FragmentActivity {
 
         mTabHost.addTab(mTabHost.newTabSpec("tabOrder").setIndicator("Order", null), SummaryOrderFragmentTab.class, null);
         mTabHost.addTab(mTabHost.newTabSpec("tabRetur").setIndicator("Retur", null), SummaryReturFragmentTab.class, null);
-        mTabHost.addTab(mTabHost.newTabSpec("tabLunas").setIndicator("Lunas", null), FragmentTab.class, null);
+        mTabHost.addTab(mTabHost.newTabSpec("tabLunas").setIndicator("Lunas", null), SummarySettlementFragmentTab.class, null);
     }
 
 }

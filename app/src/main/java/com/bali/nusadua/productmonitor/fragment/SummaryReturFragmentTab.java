@@ -41,29 +41,29 @@ public class SummaryReturFragmentTab extends Fragment {
 
         returGrid = (TableLayout) v.findViewById(R.id.tableLayoutData);
 
-        for(Retur order : returs) {
+        for(Retur retur : returs) {
             int count = returGrid.getChildCount();
             TableRow tableRow = new TableRow(context);
             tableRow.setId(count + 1);
 
             TextView labelCode = new TextView(context);
             labelCode.setId(200 + count + 1); //TODO: we need to redefine ID
-            labelCode.setText(order.getKode() + " " + order.getNamaBarang());
+            labelCode.setText(retur.getKode() + " " + retur.getNamaBarang());
             tableRow.addView(labelCode);
 
             TextView labelPrice = new TextView(context);
             labelPrice.setId(201 + count + 1);
-            labelPrice.setText(String.valueOf(order.getHarga()));
+            labelPrice.setText(String.valueOf(retur.getHarga()));
             tableRow.addView(labelPrice);
 
             TextView labelQty = new TextView(context);
             labelQty.setId(202 + count + 1);
-            labelQty.setText(String.valueOf(order.getQty()) + "/" + order.getUnit());
+            labelQty.setText(String.valueOf(retur.getQty()) + "/" + retur.getUnit());
             tableRow.addView(labelQty);
 
             TextView labelSummary = new TextView(context);
             labelSummary.setId(203 + count + 1);
-            Integer summary = order.getQty() * order.getHarga();
+            Integer summary = retur.getQty() * retur.getHarga();
             labelSummary.setText(summary.toString());
             tableRow.addView(labelSummary);
 
