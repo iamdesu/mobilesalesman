@@ -6,8 +6,10 @@ import android.widget.Toast;
 
 import com.bali.nusadua.productmonitor.model.Order;
 import com.bali.nusadua.productmonitor.model.Retur;
+import com.bali.nusadua.productmonitor.model.Settlement;
 import com.bali.nusadua.productmonitor.repo.OrderRepo;
 import com.bali.nusadua.productmonitor.repo.ReturRepo;
+import com.bali.nusadua.productmonitor.repo.SettlementRepo;
 import com.dropbox.client2.DropboxAPI;
 import com.dropbox.client2.exception.DropboxException;
 
@@ -41,7 +43,7 @@ public class UploadFileToDropbox extends AsyncTask<Void, Void, Boolean> {
         try {
             uploadOrderTable();
             uploadReturTable();
-            /*uploadLunasTable();*/
+            uploadSettlementTable();
             return true;
         } catch (IOException e) {
             e.printStackTrace();
@@ -173,6 +175,63 @@ public class UploadFileToDropbox extends AsyncTask<Void, Void, Boolean> {
 
         FileInputStream fileInputStream = new FileInputStream(tempFile);
         dropbox.putFile(path + "TeamA-Retur-"+df.format(date)+".csv", fileInputStream,
+                tempFile.length(), null, null);
+        tempFile.delete();
+    }
+
+    private void uploadSettlementTable() throws IOException, DropboxException {
+        final File tempDir = context.getCacheDir();
+        File tempFile;
+        FileWriter fr;
+
+        tempFile = File.createTempFile("file", ".csv", tempDir);
+        fr = new FileWriter(tempFile);
+        SettlementRepo settlementRepo = new SettlementRepo(context);
+        List<Settlement> settlements = settlementRepo.getAllWithOutlet();
+        DateFormat df = new SimpleDateFormat("dd-MM-yyyy");
+
+        fr.append("GUID");
+        fr.append(",");
+        fr.append("Invoice Number");
+        fr.append(",");
+        fr.append("Invoice Date");
+        fr.append(",");
+        fr.append("Credit");
+        fr.append(",");
+        fr.append("Metode Pembayaran");
+        fr.append(",");
+        fr.append("Nominal Pembayaran");
+        fr.append(",");
+        fr.append("Kode Outlet");
+        fr.append(",");
+        fr.append("Create Date");
+        fr.append('\n');
+
+        for(Settlement settlement : settlements) {
+            fr.append(settlement.getGuid());
+            fr.append(",");
+            fr.append(settlement.INVOICE_NUMBER);
+            fr.append(",");
+            fr.append(df.format(settlement.getInvoiceDate()));
+            fr.append(",");
+            fr.append(String.valueOf(settlement.getCredit()));
+            fr.append(",");
+            fr.append(settlement.getPaymentMethod());
+            fr.append(",");
+            fr.append(String.valueOf(settlement.getNominalPayment()));
+            fr.append(",");
+            fr.append(settlement.getOutlet().getKode());
+            fr.append(",");
+            fr.append(String.valueOf(settlement.getCreatedDate()));
+            fr.append('\n');
+        }
+
+        fr.close();
+
+        Date date = new Date();
+
+        FileInputStream fileInputStream = new FileInputStream(tempFile);
+        dropbox.putFile(path + "TeamA-Pelunasan-"+df.format(date)+".csv", fileInputStream,
                 tempFile.length(), null, null);
         tempFile.delete();
     }
