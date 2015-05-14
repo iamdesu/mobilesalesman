@@ -1,4 +1,5 @@
 <resources>
+    <!-- Application Context -->
     <string name="app_name">Mobile Salesman</string>
 
     <string name="hello_world">Hello world!</string>
@@ -29,7 +30,9 @@
     <string name="hint_nominal_payment">Nominal Pembayaran</string>
 
     <string name="team_prompt">Pilih Team</string>
+    <string name="download_success">File berhasil di download</string>
 
+    <!-- Style -->
     <style name="ButtonText">
         <item name="android:layout_width">fill_parent</item>
         <item name="android:layout_height">wrap_content</item>

@@ -8,6 +8,9 @@ import com.bali.nusadua.productmonitor.model.Order;
 import com.bali.nusadua.productmonitor.model.Outlet;
 import com.bali.nusadua.productmonitor.model.Retur;
 import com.bali.nusadua.productmonitor.model.Settlement;
+import com.bali.nusadua.productmonitor.model.StaffBilling;
+import com.bali.nusadua.productmonitor.model.StockBilling;
+import com.bali.nusadua.productmonitor.model.StockPrice;
 import com.bali.nusadua.productmonitor.model.Team;
 
 import java.util.UUID;
@@ -102,6 +105,11 @@ public class DBHelper extends SQLiteOpenHelper{
         db.execSQL(INSERT_OUTLET_2);
         String INSERT_OUTLET_3 = "INSERT INTO  " + Outlet.TABLE + " (" + Outlet.GUID + ", " + Outlet.KODE + ", " + Outlet.NAME + ") values ( '" + UUID.randomUUID().toString() + "', '115', 'Outlet 3')";
         db.execSQL(INSERT_OUTLET_3);
+
+        db.execSQL(StaffBilling.CREATE_TABLE());
+        db.execSQL(StockBilling.CREATE_TABLE());
+        db.execSQL(StockPrice.CREATE_TABLE());
+
     }
 
     @Override
@@ -111,6 +119,10 @@ public class DBHelper extends SQLiteOpenHelper{
         db.execSQL("DROP TABLE IF EXISTS " + Outlet.TABLE);
         db.execSQL("DROP TABLE IF EXISTS " + Order.TABLE);
         db.execSQL("DROP TABLE IF EXISTS " + Retur.TABLE);
+        db.execSQL("DROP TABLE IF EXISTS " + Settlement.TABLE);
+        db.execSQL("DROP TABLE IF EXISTS " + StaffBilling.TABLE);
+        db.execSQL("DROP TABLE IF EXISTS " + StockBilling.TABLE);
+        db.execSQL("DROP TABLE IF EXISTS " + StockPrice.TABLE);
 
         //Create tables again
         onCreate(db);

@@ -20,6 +20,8 @@ import com.dropbox.client2.android.AuthActivity;
 import com.dropbox.client2.session.AccessTokenPair;
 import com.dropbox.client2.session.AppKeyPair;
 
+import java.io.Serializable;
+
 
 public class MainActivity extends ActionBarActivity {
 

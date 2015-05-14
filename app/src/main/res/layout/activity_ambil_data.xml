@@ -74,7 +74,8 @@
             android:layout_margin="4dp"
             android:text="@string/btn_proses"
             style="@style/ButtonTextCenter"
-            android:background="@drawable/button_shape"/>
+            android:background="@drawable/button_shape"
+            android:onClick="onBtnProsesClick"/>
 
     </LinearLayout>
 

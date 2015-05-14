@@ -1,6 +1,7 @@
 package com.bali.nusadua.productmonitor;
 
 import android.app.Activity;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -9,8 +10,14 @@ import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.bali.nusadua.productmonitor.adapter.SpinnerTeamAdapter;
+import com.bali.nusadua.productmonitor.dropbox.DownloadDataFromDropbox;
+import com.bali.nusadua.productmonitor.dropbox.DropboxHelper;
 import com.bali.nusadua.productmonitor.model.Team;
 import com.bali.nusadua.productmonitor.repo.TeamRepo;
+import com.dropbox.client2.DropboxAPI;
+import com.dropbox.client2.android.AndroidAuthSession;
+import com.dropbox.client2.session.AccessTokenPair;
+import com.dropbox.client2.session.AppKeyPair;
 
 import java.util.List;
 
@@ -22,9 +29,24 @@ public class AmbilDataActivity extends Activity implements AdapterView.OnItemSel
     Spinner mSpinnerTeam;
     TextView mTvSelectedTeam;
 
+    private DropboxAPI<AndroidAuthSession> dropboxApi;
+    private boolean mLoggedIn;
+    private final static String APP_KEY = "shhgratsyvnsh4p";
+    private final static String APP_SECRET = "hfvq8mizpla3992";
+    private final static String DROPBOX_PREFS_NAME = "dropbox_prefs";
+    private static final String ACCESS_KEY_NAME = "ACCESS_KEY";
+    private static final String ACCESS_SECRET_NAME = "ACCESS_SECRET";
+    private static final boolean USE_OAUTH1 = false;
+    private final static String FILE_DIR_IMPORT = "/MobileSalesman/Import/";
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        // We create a new AuthSession so that we can use the Dropbox API.
+        AndroidAuthSession session = DropboxHelper.buildSession(AmbilDataActivity.this);
+        dropboxApi = new DropboxAPI<AndroidAuthSession>(session);
+
         setContentView(R.layout.activity_ambil_data);
         mTvSelectedTeam = (TextView) findViewById(R.id.tv_selected_team);
         mSpinnerTeam = (Spinner) findViewById(R.id.spinnerTeam);
@@ -32,6 +54,16 @@ public class AmbilDataActivity extends Activity implements AdapterView.OnItemSel
 
         //insertDummyData();
         loadTeam();
+
+        // Display the proper UI state if logged in or not
+        setLoggedIn(dropboxApi.getSession().isLinked());
+
+        DropboxHelper.connectDropbox(AmbilDataActivity.this, dropboxApi, mLoggedIn);
+    }
+
+    public void onBtnProsesClick(View view) {
+        DownloadDataFromDropbox download = new DownloadDataFromDropbox(this, dropboxApi, FILE_DIR_IMPORT);
+        download.execute();
     }
 
     public void onBtnKeluarClick(View view) {
@@ -87,5 +119,9 @@ public class AmbilDataActivity extends Activity implements AdapterView.OnItemSel
 
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         
+    }
+
+    private void setLoggedIn(boolean loggedIn) {
+        mLoggedIn = loggedIn;
     }
 }
