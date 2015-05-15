@@ -1,5 +1,6 @@
 package com.bali.nusadua.productmonitor.dropbox;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.AsyncTask;
@@ -23,22 +24,30 @@ import java.io.FileReader;
 import java.io.IOException;
 
 public class DownloadDataFromDropbox extends AsyncTask<Void, Void, Boolean> {
+    private static final String DELIMITED = "\\|";
+
     private DropboxAPI<?> dropbox;
     private String path;
     private Context context;
+    private ProgressDialog progressBar;
 
-    public DownloadDataFromDropbox(Context context, DropboxAPI<?> dropbox, String path) {
+    public DownloadDataFromDropbox(Context context, DropboxAPI<?> dropbox, String path, ProgressDialog progressBar) {
         this.context = context.getApplicationContext();
         this.dropbox = dropbox;
         this.path = path;
+        this.progressBar = progressBar;
     }
 
     @Override
     protected Boolean doInBackground(Void... params) {
         try {
             readStaffBilling();
+            progressBar.setProgress(30);
             readStockBilling();
+            progressBar.setProgress(60);
             readStockPrice();
+            progressBar.setProgress(90);
+            progressBar.dismiss();
             return true;
         } catch (IOException e) {
             e.printStackTrace();
@@ -69,7 +78,7 @@ public class DownloadDataFromDropbox extends AsyncTask<Void, Void, Boolean> {
         while ((line = br.readLine()) != null) {
 
             // use comma as separator
-            String[] country = line.split(",");
+            String[] country = line.split(DELIMITED, -1);
 
             //maps.put(country[4], country[5]);
 
@@ -101,8 +110,7 @@ public class DownloadDataFromDropbox extends AsyncTask<Void, Void, Boolean> {
                 //Log.i("Data outlet", line);
 
                 if (!first) {
-                    // use | as separator
-                    String[] data = line.split("\\|");
+                    String[] data = line.split(DELIMITED, -1);
 
                     StaffBilling staffBilling = new StaffBilling();
                     staffBilling.setStaff(data[0]);
@@ -156,8 +164,7 @@ public class DownloadDataFromDropbox extends AsyncTask<Void, Void, Boolean> {
 
                 if (!first) {
                     // use | as separator
-                    String[] data = line.split("\\|");
-                    Log.i("Data outlet", line + " = " + data.length);
+                    String[] data = line.split(DELIMITED, -1);
 
                     StockBilling stockBilling = new StockBilling();
                     stockBilling.setStockId(data[0]);
@@ -205,7 +212,7 @@ public class DownloadDataFromDropbox extends AsyncTask<Void, Void, Boolean> {
 
                 if (!first) {
                     // use | as separator
-                    String[] data = line.split("\\|");
+                    String[] data = line.split(DELIMITED, -1);
 
                     StockPrice stockPrice = new StockPrice();
                     stockPrice.setStockId(data[0]);

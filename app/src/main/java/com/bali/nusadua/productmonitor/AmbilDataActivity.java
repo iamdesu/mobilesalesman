@@ -1,6 +1,7 @@
 package com.bali.nusadua.productmonitor;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
@@ -28,6 +29,7 @@ public class AmbilDataActivity extends Activity implements AdapterView.OnItemSel
 
     Spinner mSpinnerTeam;
     TextView mTvSelectedTeam;
+    private ProgressDialog progressBar;
 
     private DropboxAPI<AndroidAuthSession> dropboxApi;
     private boolean mLoggedIn;
@@ -62,7 +64,15 @@ public class AmbilDataActivity extends Activity implements AdapterView.OnItemSel
     }
 
     public void onBtnProsesClick(View view) {
-        DownloadDataFromDropbox download = new DownloadDataFromDropbox(this, dropboxApi, FILE_DIR_IMPORT);
+        progressBar = new ProgressDialog(AmbilDataActivity.this);
+        progressBar.setCancelable(false);
+        progressBar.setMessage("File downloading ...");
+        progressBar.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
+        progressBar.setProgress(0);
+        progressBar.setMax(100);
+        progressBar.show();
+
+        DownloadDataFromDropbox download = new DownloadDataFromDropbox(this, dropboxApi, FILE_DIR_IMPORT, progressBar);
         download.execute();
     }
 
