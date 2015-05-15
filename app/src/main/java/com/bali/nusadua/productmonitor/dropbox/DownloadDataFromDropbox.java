@@ -45,14 +45,14 @@ public class DownloadDataFromDropbox extends AsyncTask<Void, Void, Boolean> {
     @Override
     protected Boolean doInBackground(Void... params) {
         try {
-            if(isAllDownload) {
+            if(isAllDownload == true) {
                 readStaffBilling();
                 progressBar.setProgress(30);
                 readStockBilling();
                 progressBar.setProgress(60);
                 readStockPrice();
                 progressBar.setProgress(90);
-                //...
+
                 progressBar.dismiss();
             } else {
                 readStaffBilling();
@@ -121,10 +121,10 @@ public class DownloadDataFromDropbox extends AsyncTask<Void, Void, Boolean> {
             br = new BufferedReader(new FileReader(tempfile));
             String line = "";
             boolean first = true; //First is column name
-            while ((line = br.readLine()) != null && br.readLine().trim() != "") {
+            while ((line = br.readLine()) != null) {
                 //Log.i("Data outlet", line);
 
-                if (!first) {
+                if (!first && line.trim() != "" && !line.isEmpty()) {
                     String[] data = line.split(DELIMITED, -1);
 
                     StaffBilling staffBilling = new StaffBilling();
@@ -142,6 +142,7 @@ public class DownloadDataFromDropbox extends AsyncTask<Void, Void, Boolean> {
                 }
 
             }
+
         } catch (IOException e) {
             e.printStackTrace();
         } finally {
@@ -175,9 +176,9 @@ public class DownloadDataFromDropbox extends AsyncTask<Void, Void, Boolean> {
             br = new BufferedReader(new FileReader(tempfile));
             String line = "";
             boolean first = true; //First is column name
-            while ((line = br.readLine()) != null && br.readLine().trim() != "") {
+            while ((line = br.readLine()) != null) {
 
-                if (!first) {
+                if (!first && line.trim() != "" && !line.isEmpty()) {
                     // use | as separator
                     String[] data = line.split(DELIMITED, -1);
 
@@ -223,9 +224,9 @@ public class DownloadDataFromDropbox extends AsyncTask<Void, Void, Boolean> {
             br = new BufferedReader(new FileReader(tempfile));
             String line = "";
             boolean first = true; //First is column name
-            while ((line = br.readLine()) != null && br.readLine().trim() != "") {
+            while ((line = br.readLine()) != null) {
 
-                if (!first) {
+                if (!first && line.trim() != "" && !line.isEmpty()) {
                     // use | as separator
                     String[] data = line.split(DELIMITED, -1);
 

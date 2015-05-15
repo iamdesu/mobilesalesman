@@ -8,10 +8,10 @@
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context=".MainActivity"
-
     android:background="#4285f4">
 
     <LinearLayout
+        android:id="@+id/lyt_menu"
         android:orientation="vertical"
         android:layout_width="250dp"
         android:layout_height="wrap_content"
@@ -64,5 +64,16 @@
             android:onClick="onButtonCloseClick"
             android:focusableInTouchMode="false"/>
     </LinearLayout>
+
+    <TextView
+        android:id="@+id/tv_staff_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text=""
+        android:textColor="#ffffff"
+        android:textSize="14sp"
+        android:layout_below="@id/lyt_menu"
+        android:layout_centerInParent="true"
+        android:paddingTop="3dp"/>
 
 </RelativeLayout>

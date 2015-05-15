@@ -12,6 +12,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bali.nusadua.productmonitor.dropbox.DownloadDataFromDropbox;
@@ -45,6 +46,7 @@ public class MainActivity extends ActionBarActivity {
 
     //Android widget
     private Button mBtnKirimData;
+    private TextView tvUsername;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,9 +62,13 @@ public class MainActivity extends ActionBarActivity {
         checkAppKeySetup();
 
         mBtnKirimData = (Button) findViewById(R.id.btn_kirim_data);
+        tvUsername = (TextView) findViewById(R.id.tv_staff_name);
 
         // Display the proper UI state if logged in or not
         setLoggedIn(dropboxApi.getSession().isLinked());
+
+        // Display Greeting
+        displayUsername();
 
         connectDropbox();
     }
@@ -97,7 +103,8 @@ public class MainActivity extends ActionBarActivity {
 
     public void onButtonAmbilDataClick(View view) {
         Intent intent = new Intent(MainActivity.this, AmbilDataActivity.class);
-        startActivity(intent);
+        startActivityForResult(intent, 0);
+        //startActivity(intent);
     }
 
     public void onTransaksiClick(View view) {
@@ -125,14 +132,23 @@ public class MainActivity extends ActionBarActivity {
 
                 // Store it locally in our app for later use
                 storeAuth(session);
-                setLoggedIn(true);
 
-                downloadFileFromDropBox();
+                if (mLoggedIn != true) {
+                    downloadFileFromDropBox();
+                }
+
+                setLoggedIn(true);
             } catch (IllegalStateException e) {
                 showToast("Couldn't authenticate with Dropbox:" + e.getLocalizedMessage());
                 Log.i(TAG, "Error authenticating", e);
             }
         }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        displayUsername();
     }
 
     private AndroidAuthSession buildSession() {
@@ -248,6 +264,14 @@ public class MainActivity extends ActionBarActivity {
         }
     }
 
+    private void displayUsername() {
+        SharedPreferences prefs = getSharedPreferences(MSConstantsIntf.MOBILESALES_PREFS_NAME, 0);
+        String staffName = prefs.getString(MSConstantsIntf.STAFF_NAME, null);
+        if (staffName == null || staffName.length() == 0) return;
+
+        tvUsername.setText("Hello, " + staffName);
+    }
+
     private void showToast(String msg) {
         Toast error = Toast.makeText(this, msg, Toast.LENGTH_LONG);
         error.show();
@@ -277,7 +301,7 @@ public class MainActivity extends ActionBarActivity {
     private void downloadFileFromDropBox() {
         ProgressDialog progressBar = new ProgressDialog(MainActivity.this);
         progressBar.setCancelable(false);
-        progressBar.setMessage(getResources().getString(R.string.file_downloading));
+        progressBar.setMessage(getResources().getString(R.string.file_setup));
         progressBar.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
         progressBar.setProgress(0);
         progressBar.setMax(100);

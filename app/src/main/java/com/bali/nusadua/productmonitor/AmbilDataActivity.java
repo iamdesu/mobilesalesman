@@ -2,6 +2,8 @@ package com.bali.nusadua.productmonitor;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
@@ -54,6 +56,8 @@ public class AmbilDataActivity extends Activity {
             progressBar.setMax(100);
             progressBar.show();
 
+            storeLogin(staffBilling);
+
             DownloadDataFromDropbox download = new DownloadDataFromDropbox(this, dropboxApi, DropboxHelper.FILE_DIR_IMPORT, true, "", progressBar);
             download.execute();
         } else {
@@ -66,6 +70,8 @@ public class AmbilDataActivity extends Activity {
         //cukup panggil method finish() buat matiin activity
         //nanti otomatis kembali ke halaman sebelumnya
         //asal activity sebelumnya masih nyala
+        Intent intent = new Intent();
+        setResult(RESULT_OK, intent);
         finish();
     }
 
@@ -86,6 +92,15 @@ public class AmbilDataActivity extends Activity {
 
     private void setLoggedIn(boolean loggedIn) {
         mLoggedIn = loggedIn;
+    }
+
+    private void storeLogin(StaffBilling staffBilling) {
+        SharedPreferences prefs = getSharedPreferences(MSConstantsIntf.MOBILESALES_PREFS_NAME, 0);
+        SharedPreferences.Editor edit = prefs.edit();
+        edit.putString(MSConstantsIntf.USER_ID, staffBilling.getUserID());
+        edit.putString(MSConstantsIntf.STAFF_NAME, staffBilling.getStaffName());
+        edit.putString(MSConstantsIntf.TEAM, staffBilling.getTeam());
+        edit.commit();
     }
 
     private void showToast(String msg) {
