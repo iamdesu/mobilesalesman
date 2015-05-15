@@ -1,5 +1,6 @@
 package com.bali.nusadua.productmonitor;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
@@ -13,14 +14,14 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
+import com.bali.nusadua.productmonitor.dropbox.DownloadDataFromDropbox;
+import com.bali.nusadua.productmonitor.dropbox.DropboxHelper;
 import com.bali.nusadua.productmonitor.dropbox.UploadFileToDropbox;
 import com.dropbox.client2.DropboxAPI;
 import com.dropbox.client2.android.AndroidAuthSession;
 import com.dropbox.client2.android.AuthActivity;
 import com.dropbox.client2.session.AccessTokenPair;
 import com.dropbox.client2.session.AppKeyPair;
-
-import java.io.Serializable;
 
 
 public class MainActivity extends ActionBarActivity {
@@ -109,14 +110,6 @@ public class MainActivity extends ActionBarActivity {
         uploadFileToDropBox();
     }
 
-    private void uploadFileToDropBox() {
-        mBtnKirimData.setEnabled(false);
-        UploadFileToDropbox upload = new UploadFileToDropbox(this, dropboxApi,
-                FILE_DIR_EXPORT);
-        upload.execute();
-        mBtnKirimData.setEnabled(true);
-    }
-
     @Override
     protected void onResume() {
         super.onResume();
@@ -133,6 +126,8 @@ public class MainActivity extends ActionBarActivity {
                 // Store it locally in our app for later use
                 storeAuth(session);
                 setLoggedIn(true);
+
+                downloadFileFromDropBox();
             } catch (IllegalStateException e) {
                 showToast("Couldn't authenticate with Dropbox:" + e.getLocalizedMessage());
                 Log.i(TAG, "Error authenticating", e);
@@ -258,7 +253,7 @@ public class MainActivity extends ActionBarActivity {
         error.show();
     }
 
-    private void connectDropbox(){
+    private void connectDropbox() {
         // This logs you out if you're logged in, or vice versa
         if (mLoggedIn) {
             //logOut();
@@ -270,5 +265,25 @@ public class MainActivity extends ActionBarActivity {
                 dropboxApi.getSession().startOAuth2Authentication(MainActivity.this);
             }
         }
+    }
+
+    private void uploadFileToDropBox() {
+        mBtnKirimData.setEnabled(false);
+        UploadFileToDropbox upload = new UploadFileToDropbox(this, dropboxApi, FILE_DIR_EXPORT);
+        upload.execute();
+        mBtnKirimData.setEnabled(true);
+    }
+
+    private void downloadFileFromDropBox() {
+        ProgressDialog progressBar = new ProgressDialog(MainActivity.this);
+        progressBar.setCancelable(false);
+        progressBar.setMessage(getResources().getString(R.string.file_downloading));
+        progressBar.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
+        progressBar.setProgress(0);
+        progressBar.setMax(100);
+        progressBar.show();
+
+        DownloadDataFromDropbox download = new DownloadDataFromDropbox(this, dropboxApi, DropboxHelper.FILE_DIR_IMPORT, false, "", progressBar);
+        download.execute();
     }
 }

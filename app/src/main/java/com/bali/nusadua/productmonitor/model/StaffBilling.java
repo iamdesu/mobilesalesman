@@ -7,7 +7,7 @@ public class StaffBilling {
     public static final String STAFFNAME = "staff_name";
     public static final String PASSWD = "password";
     public static final String LEVEL = "level";
-    public static final String UserID = "user_id";
+    public static final String USER_ID = "user_id";
     public static final String TEAM = "team";
     public static final String EXPIRE = "expire";
 
@@ -96,7 +96,7 @@ public class StaffBilling {
                 + STAFFNAME + " TEXT, "
                 + PASSWD + " TEXT, "
                 + LEVEL + " INTEGER, "
-                + UserID + " TEXT, "
+                + USER_ID + " TEXT, "
                 + TEAM + " TEXT, "
                 + EXPIRE + " INTEGER )";
 

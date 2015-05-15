@@ -26,8 +26,8 @@ public class DropboxHelper {
 
     private static final boolean USE_OAUTH1 = false;
 
-    private final static String FILE_DIR_EXPORT = "/MobileSalesman/Export/";
-    private final static String FILE_DIR_IMPORT = "/MobileSalesman/Import/";
+    public final static String FILE_DIR_EXPORT = "/MobileSalesman/Export/";
+    public final static String FILE_DIR_IMPORT = "/MobileSalesman/Import/";
 
     public static AndroidAuthSession buildSession(Context context) {
         AppKeyPair pair = new AppKeyPair(APP_KEY, APP_SECRET);

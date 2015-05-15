@@ -30,24 +30,39 @@ public class DownloadDataFromDropbox extends AsyncTask<Void, Void, Boolean> {
     private String path;
     private Context context;
     private ProgressDialog progressBar;
+    private Boolean isAllDownload = true;
+    private String team;
 
-    public DownloadDataFromDropbox(Context context, DropboxAPI<?> dropbox, String path, ProgressDialog progressBar) {
+    public DownloadDataFromDropbox(Context context, DropboxAPI<?> dropbox, String path, Boolean isAllDownload, String team, ProgressDialog progressBar) {
         this.context = context.getApplicationContext();
         this.dropbox = dropbox;
         this.path = path;
         this.progressBar = progressBar;
+        this.isAllDownload = isAllDownload;
+        this.team = team;
     }
 
     @Override
     protected Boolean doInBackground(Void... params) {
         try {
-            readStaffBilling();
-            progressBar.setProgress(30);
-            readStockBilling();
-            progressBar.setProgress(60);
-            readStockPrice();
-            progressBar.setProgress(90);
-            progressBar.dismiss();
+            if(isAllDownload) {
+                readStaffBilling();
+                progressBar.setProgress(30);
+                readStockBilling();
+                progressBar.setProgress(60);
+                readStockPrice();
+                progressBar.setProgress(90);
+                //...
+                progressBar.dismiss();
+            } else {
+                readStaffBilling();
+                progressBar.setProgress(30);
+                readStockBilling();
+                progressBar.setProgress(60);
+                readStockPrice();
+                progressBar.setProgress(90);
+                progressBar.dismiss();
+            }
             return true;
         } catch (IOException e) {
             e.printStackTrace();

@@ -25,7 +25,7 @@ public class StaffBillingRepo {
         values.put(StaffBilling.STAFFNAME, staffBilling.getStaffName());
         values.put(StaffBilling.PASSWD, staffBilling.getPassword());
         values.put(StaffBilling.LEVEL, staffBilling.getLevel());
-        values.put(StaffBilling.UserID, staffBilling.getUserID());
+        values.put(StaffBilling.USER_ID, staffBilling.getUserID());
         values.put(StaffBilling.TEAM, staffBilling.getTeam());
         values.put(StaffBilling.EXPIRE, staffBilling.getExpire());
 
@@ -53,7 +53,7 @@ public class StaffBillingRepo {
                 staffBilling.setStaffName(cursor.getString(cursor.getColumnIndex(StaffBilling.STAFFNAME)));
                 staffBilling.setPassword(cursor.getString(cursor.getColumnIndex(StaffBilling.PASSWD)));
                 staffBilling.setLevel(cursor.getInt(cursor.getColumnIndex(StaffBilling.LEVEL)));
-                staffBilling.setUserID(cursor.getString(cursor.getColumnIndex(StaffBilling.UserID)));
+                staffBilling.setUserID(cursor.getString(cursor.getColumnIndex(StaffBilling.USER_ID)));
                 staffBilling.setTeam(cursor.getString(cursor.getColumnIndex(StaffBilling.TEAM)));
                 staffBilling.setExpire(cursor.getInt(cursor.getColumnIndex(StaffBilling.EXPIRE)));
 
@@ -64,6 +64,46 @@ public class StaffBillingRepo {
         cursor.close();
         db.close();
         return listStaffBilling;
+    }
+
+    public StaffBilling getStaffBilling(String userId, String password) {
+        StaffBilling staffBilling = null;
+
+        SQLiteDatabase db = dbHelper.getReadableDatabase();
+        String selectQuery = "SELECT " +
+                StaffBilling.ID + ", " +
+                StaffBilling.STAFF + ", " +
+                StaffBilling.STAFFNAME + ", " +
+                StaffBilling.PASSWD + ", " +
+                StaffBilling.LEVEL + ", " +
+                StaffBilling.USER_ID + ", " +
+                StaffBilling.TEAM + ", " +
+                StaffBilling.EXPIRE + " FROM " +
+                StaffBilling.TABLE + " WHERE " +
+                StaffBilling.USER_ID + " = ? AND " +
+                StaffBilling.PASSWD + " = ?";
+
+        Cursor cursor = db.rawQuery(selectQuery, new String[]{ userId, password } );
+
+        if(cursor.moveToFirst()) {
+            do {
+                staffBilling = new StaffBilling();
+                staffBilling.setId(cursor.getInt(cursor.getColumnIndex(StaffBilling.ID)));
+                staffBilling.setStaff(cursor.getString(cursor.getColumnIndex(StaffBilling.STAFF)));
+                staffBilling.setStaffName(cursor.getString(cursor.getColumnIndex(StaffBilling.STAFFNAME)));
+                staffBilling.setPassword(cursor.getString(cursor.getColumnIndex(StaffBilling.PASSWD)));
+                staffBilling.setLevel(cursor.getInt(cursor.getColumnIndex(StaffBilling.LEVEL)));
+                staffBilling.setUserID(cursor.getString(cursor.getColumnIndex(StaffBilling.USER_ID)));
+                staffBilling.setTeam(cursor.getString(cursor.getColumnIndex(StaffBilling.TEAM)));
+                staffBilling.setExpire(cursor.getInt(cursor.getColumnIndex(StaffBilling.EXPIRE)));
+
+            } while (cursor.moveToNext());
+        }
+
+        cursor.close();
+        db.close();
+
+        return staffBilling;
     }
 
 }

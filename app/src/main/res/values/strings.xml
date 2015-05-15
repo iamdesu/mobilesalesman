@@ -31,6 +31,8 @@
 
     <string name="team_prompt">Pilih Team</string>
     <string name="download_success">File berhasil di download</string>
+    <string name="file_downloading">File downloading ...</string>
+    <string name="failed_login">Failed to login. Please make sure User Id and Password are valid.</string>
 
     <!-- Style -->
     <style name="ButtonText">
