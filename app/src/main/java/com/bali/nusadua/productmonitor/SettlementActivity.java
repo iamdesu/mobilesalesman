@@ -14,6 +14,7 @@ import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
 
+import com.bali.nusadua.productmonitor.model.Customer;
 import com.bali.nusadua.productmonitor.model.Settlement;
 import com.bali.nusadua.productmonitor.repo.SettlementRepo;
 
@@ -21,7 +22,6 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -33,7 +33,7 @@ public class SettlementActivity extends Activity implements View.OnClickListener
     private TableLayout theGrid;
     private EditText etInvoiceNumber, etInvoiceDate, etCredit, etPaymentMethod, etNominalPayment;
     private DatePicker datePickerField;
-    private String kodeOutlet;
+    private String customerID;
     private int initYear, initMonth, initDay;
     private DatePickerDialog.OnDateSetListener datePickerListener;
 
@@ -91,8 +91,8 @@ public class SettlementActivity extends Activity implements View.OnClickListener
         };
 
         Intent intent = getIntent();
-        kodeOutlet = intent.getStringExtra("kode_outlet");
-        Log.i("Outlet GUID : ", kodeOutlet);
+        customerID = intent.getStringExtra(Customer.CUST_ID);
+        Log.i("Customer ID : ", customerID);
     }
 
     @Override
@@ -131,7 +131,7 @@ public class SettlementActivity extends Activity implements View.OnClickListener
                 labelQty.setText(etPaymentMethod.getText());
                 tableRow.addView(labelQty);
                 settlement.setPaymentMethod(etPaymentMethod.getText().toString());
-                settlement.setKodeOutlet(kodeOutlet);
+                settlement.setKodeOutlet(customerID);
 
                 TextView labelSummary = new TextView(this);
                 labelSummary.setId(200 + count + 1);

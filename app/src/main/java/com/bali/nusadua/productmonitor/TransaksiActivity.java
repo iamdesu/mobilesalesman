@@ -8,23 +8,22 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.Spinner;
 
-import com.bali.nusadua.productmonitor.adapter.SpinnerOutletAdapter;
-import com.bali.nusadua.productmonitor.model.Outlet;
-import com.bali.nusadua.productmonitor.repo.OutletRepo;
+import com.bali.nusadua.productmonitor.adapter.SpinnerCustomerAdapter;
+import com.bali.nusadua.productmonitor.model.Customer;
+import com.bali.nusadua.productmonitor.repo.CustomerRepo;
 
 import java.util.List;
 
-/**
- * Created by desu sudarsana on 4/19/2015.
- */
 public class TransaksiActivity extends Activity implements View.OnClickListener, AdapterView.OnItemSelectedListener {
 
     private Button btnSummary, btnProses;
     private LinearLayout blockOrderPenjualan, blockRetur, blockPelunasan;
-    private Spinner spinnerOutlet;
-    private Outlet outlet = null;
+    private RelativeLayout orderCard, returCard, settlementCard;
+    private Spinner spinnerCustomer;
+    private Customer customer = null;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -34,34 +33,40 @@ public class TransaksiActivity extends Activity implements View.OnClickListener,
         //Declare component UI
         btnProses = (Button) findViewById(R.id.btn_proses);
         btnSummary = (Button) findViewById(R.id.btn_summary);
-        blockOrderPenjualan = (LinearLayout) findViewById(R.id.block_order);
+        /*blockOrderPenjualan = (LinearLayout) findViewById(R.id.block_order);
         blockRetur = (LinearLayout) findViewById(R.id.block_retur);
-        blockPelunasan = (LinearLayout) findViewById(R.id.block_pelunasan);
-        spinnerOutlet = (Spinner) findViewById(R.id.spinnerOutlet);
+        blockPelunasan = (LinearLayout) findViewById(R.id.block_pelunasan);*/
+        orderCard = (RelativeLayout) findViewById(R.id.order_card);
+        returCard = (RelativeLayout) findViewById(R.id.retur_card);
+        settlementCard = (RelativeLayout) findViewById(R.id.settlement_card);
+        spinnerCustomer = (Spinner) findViewById(R.id.spinnerOutlet);
 
         btnProses.setOnClickListener(this);
         btnSummary.setOnClickListener(this);
-        blockOrderPenjualan.setOnClickListener(this);
+        /*blockOrderPenjualan.setOnClickListener(this);
         blockRetur.setOnClickListener(this);
-        blockPelunasan.setOnClickListener(this);
-        spinnerOutlet.setOnItemSelectedListener(this);
+        blockPelunasan.setOnClickListener(this);*/
+        orderCard.setOnClickListener(this);
+        returCard.setOnClickListener(this);
+        settlementCard.setOnClickListener(this);
+        spinnerCustomer.setOnItemSelectedListener(this);
 
-        loadOutlet();
+        loadCustomer();
     }
 
     @Override
     public void onClick(View view) {
-        if (view == findViewById(R.id.block_order) && outlet != null) {
+        if (view == findViewById(R.id.order_card) && customer != null) {
             Intent intent = new Intent(TransaksiActivity.this, OrderPenjualanActivity.class);
-            intent.putExtra("kode_outlet", outlet.getKode());
+            intent.putExtra(Customer.CUST_ID, customer.getCustomerId());
             startActivity(intent);
-        } else if (view == findViewById(R.id.block_retur) && outlet != null) {
+        } else if (view == findViewById(R.id.retur_card) && customer != null) {
             Intent intent = new Intent(TransaksiActivity.this, ReturPenjualanActivity.class);
-            intent.putExtra("kode_outlet", outlet.getKode());
+            intent.putExtra(Customer.CUST_ID, customer.getCustomerId());
             startActivity(intent);
-        } else if (view == findViewById(R.id.block_pelunasan) && outlet != null) {
+        } else if (view == findViewById(R.id.settlement_card) && customer != null) {
             Intent intent = new Intent(TransaksiActivity.this, SettlementActivity.class);
-            intent.putExtra("kode_outlet", outlet.getKode());
+            intent.putExtra(Customer.CUST_ID, customer.getCustomerId());
             startActivity(intent);
         } else if (view == findViewById(R.id.btn_summary)) {
             Intent intent = new Intent(TransaksiActivity.this, SummaryActivity.class);
@@ -69,20 +74,34 @@ public class TransaksiActivity extends Activity implements View.OnClickListener,
         }
     }
 
-    private void loadOutlet() {
-        SpinnerOutletAdapter adapter = null;
-        OutletRepo repo = new OutletRepo(getApplicationContext());
-        List<Outlet> outlets = repo.getAll();
-        int size = outlets.size();
+    /*private void loadOutlet() {
+        SpinnerCustomerAdapter adapter = null;
+        CustomerRepo repo = new CustomerRepo(getApplicationContext());
+        List<Customer> customers = repo.getAll();
+        int size = customers.size();
         Log.i("List size : ", Integer.toString(size));
-        /*for(int i = 0; i < size; i++){
+        *//*for(int i = 0; i < size; i++){
             Log.i("Outlets", outlets.get(i).getName());
-        }*/
-        adapter = new SpinnerOutletAdapter(TransaksiActivity.this,
-                android.R.layout.simple_spinner_item, outlets);
+        }*//*
+        adapter = new SpinnerCustomerAdapter(TransaksiActivity.this, android.R.layout.simple_spinner_item, customers);
         spinnerOutlet.setAdapter(adapter);
 
-        outlet = outlets.get(0);
+        outlet = customers.get(0);
+
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+    }*/
+
+    private void loadCustomer() {
+        SpinnerCustomerAdapter adapter = null;
+        CustomerRepo repo = new CustomerRepo(getApplicationContext());
+        List<Customer> customers = repo.getAll();
+        int size = customers.size();
+        Log.i("List size : ", Integer.toString(size));
+
+        adapter = new SpinnerCustomerAdapter(TransaksiActivity.this, android.R.layout.simple_spinner_item, customers);
+        spinnerCustomer.setAdapter(adapter);
+
+        customer = customers.get(0);
 
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
     }
@@ -90,14 +109,14 @@ public class TransaksiActivity extends Activity implements View.OnClickListener,
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
         if (parent == findViewById(R.id.spinnerOutlet)) {
-            Outlet selectedOutlet = (Outlet) parent.getItemAtPosition(position);
-            outlet = selectedOutlet;
-            Log.i("Outlet KODE : ", outlet.getKode());
+            Customer selectedCustomer = (Customer) parent.getItemAtPosition(position);
+            customer = selectedCustomer;
+            Log.i("Customer ID : ", customer.getCustomerId());
         }
     }
 
     @Override
     public void onNothingSelected(AdapterView<?> parent) {
-        outlet = null;
+        customer = null;
     }
 }

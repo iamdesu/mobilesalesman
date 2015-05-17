@@ -4,6 +4,8 @@ import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
+import com.bali.nusadua.productmonitor.model.Billing;
+import com.bali.nusadua.productmonitor.model.Customer;
 import com.bali.nusadua.productmonitor.model.Order;
 import com.bali.nusadua.productmonitor.model.Outlet;
 import com.bali.nusadua.productmonitor.model.Retur;
@@ -39,7 +41,7 @@ public class DBHelper extends SQLiteOpenHelper{
 
         db.execSQL(CREATE_TABLE_TEAM);
 
-        String CREATE_TABLE_ORDER = "CREATE TABLE " + Order.TABLE + " ( "
+        /*String CREATE_TABLE_ORDER = "CREATE TABLE " + Order.TABLE + " ( "
                 + Order.ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
                 + Order.GUID + " TEXT, "
                 + Order.KODE + " TEXT, "
@@ -50,9 +52,9 @@ public class DBHelper extends SQLiteOpenHelper{
                 + Order.KODE_OUTLET + " TEXT, "
                 + Order.CREATE_DATE + " TEXT ) ";
 
-        db.execSQL(CREATE_TABLE_ORDER);
+        db.execSQL(CREATE_TABLE_ORDER);*/
 
-        String CREATE_TABLE_RETUR = "CREATE TABLE " + Retur.TABLE + " ( "
+        /*String CREATE_TABLE_RETUR = "CREATE TABLE " + Retur.TABLE + " ( "
                 + Retur.ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
                 + Retur.GUID + " TEXT, "
                 + Retur.KODE + " TEXT, "
@@ -63,9 +65,9 @@ public class DBHelper extends SQLiteOpenHelper{
                 + Retur.KODE_OUTLET + " TEXT, "
                 + Retur.CREATE_DATE + " TEXT ) ";
 
-        db.execSQL(CREATE_TABLE_RETUR);
+        db.execSQL(CREATE_TABLE_RETUR);*/
 
-        String CREATE_TABLE_SETTLEMENT = "CREATE TABLE " + Settlement.TABLE + " ( "
+        /*String CREATE_TABLE_SETTLEMENT = "CREATE TABLE " + Settlement.TABLE + " ( "
                 + Settlement.ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
                 + Settlement.GUID + " TEXT, "
                 + Settlement.INVOICE_NUMBER + " TEXT, "
@@ -76,7 +78,7 @@ public class DBHelper extends SQLiteOpenHelper{
                 + Settlement.KODE_OUTLET + " TEXT, "
                 + Settlement.CREATE_DATE + " TEXT ) ";
 
-        db.execSQL(CREATE_TABLE_SETTLEMENT);
+        db.execSQL(CREATE_TABLE_SETTLEMENT);*/
 
         String CREATE_TABLE_OUTLET = "CREATE TABLE " + Outlet.TABLE + " ( "
                 + Outlet.ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
@@ -85,6 +87,15 @@ public class DBHelper extends SQLiteOpenHelper{
                 + Outlet.NAME + " TEXT ) ";
 
         db.execSQL(CREATE_TABLE_OUTLET);
+
+        db.execSQL(Order.CREATE_TABLE());
+        db.execSQL(Retur.CREATE_TABLE());
+        db.execSQL(Settlement.CREATE_TABLE());
+        db.execSQL(StaffBilling.CREATE_TABLE());
+        db.execSQL(StockBilling.CREATE_TABLE());
+        db.execSQL(StockPrice.CREATE_TABLE());
+        db.execSQL(Customer.CREATE_TABLE());
+        db.execSQL(Billing.CREATE_TABLE());
 
         //Insert Team
         String INSERT_TEAM_A = "INSERT INTO  " + Team.TABLE + " (" + Team.GUID + ", " + Team.NAME + ") values ( '" + UUID.randomUUID().toString() + "','Team A')";
@@ -106,10 +117,6 @@ public class DBHelper extends SQLiteOpenHelper{
         String INSERT_OUTLET_3 = "INSERT INTO  " + Outlet.TABLE + " (" + Outlet.GUID + ", " + Outlet.KODE + ", " + Outlet.NAME + ") values ( '" + UUID.randomUUID().toString() + "', '115', 'Outlet 3')";
         db.execSQL(INSERT_OUTLET_3);
 
-        db.execSQL(StaffBilling.CREATE_TABLE());
-        db.execSQL(StockBilling.CREATE_TABLE());
-        db.execSQL(StockPrice.CREATE_TABLE());
-
     }
 
     @Override
@@ -123,6 +130,8 @@ public class DBHelper extends SQLiteOpenHelper{
         db.execSQL("DROP TABLE IF EXISTS " + StaffBilling.TABLE);
         db.execSQL("DROP TABLE IF EXISTS " + StockBilling.TABLE);
         db.execSQL("DROP TABLE IF EXISTS " + StockPrice.TABLE);
+        db.execSQL("DROP TABLE IF EXISTS " + Customer.TABLE);
+        db.execSQL("DROP TABLE IF EXISTS " + Billing.TABLE);
 
         //Create tables again
         onCreate(db);

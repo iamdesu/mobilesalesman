@@ -102,9 +102,14 @@ public class MainActivity extends ActionBarActivity {
     }
 
     public void onButtonAmbilDataClick(View view) {
-        Intent intent = new Intent(MainActivity.this, AmbilDataActivity.class);
-        startActivityForResult(intent, 0);
-        //startActivity(intent);
+        if(mLoggedIn == true) {
+            Intent intent = new Intent(MainActivity.this, AmbilDataActivity.class);
+            startActivityForResult(intent, 0);
+            //startActivity(intent);
+        } else {
+            showToast("Please login to DropBox");
+            connectDropbox();
+        }
     }
 
     public void onTransaksiClick(View view) {
@@ -113,8 +118,13 @@ public class MainActivity extends ActionBarActivity {
     }
 
     public void onButtonKirimDataClick(View view) {
-        Log.i("Button Kirim data", " Klik");
-        uploadFileToDropBox();
+        if(mLoggedIn == true) {
+            Log.i("Button Kirim data", " Klik");
+            uploadFileToDropBox();
+        } else {
+            showToast("Please login to DropBox");
+            connectDropbox();
+        }
     }
 
     @Override

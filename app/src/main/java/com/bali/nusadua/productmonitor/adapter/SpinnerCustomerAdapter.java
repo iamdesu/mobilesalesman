@@ -8,19 +8,15 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
-import com.bali.nusadua.productmonitor.model.Outlet;
-import com.bali.nusadua.productmonitor.model.Team;
+import com.bali.nusadua.productmonitor.model.Customer;
 
 import java.util.List;
 
-/**
- * Created by desu sudarsana on 4/21/2015.
- */
-public class SpinnerOutletAdapter extends ArrayAdapter<Outlet> {
+public class SpinnerCustomerAdapter extends ArrayAdapter<Customer> {
     private Context mContext;
-    private List<Outlet> mValues;
+    private List<Customer> mValues;
 
-    public SpinnerOutletAdapter(Context context, int textViewResourceId, List<Outlet> objects){
+    public SpinnerCustomerAdapter(Context context, int textViewResourceId, List<Customer> objects) {
         super(context, textViewResourceId, objects);
         this.mContext = context;
         this.mValues = objects;
@@ -32,12 +28,12 @@ public class SpinnerOutletAdapter extends ArrayAdapter<Outlet> {
     }
 
     @Override
-    public Outlet getItem(int position){
+    public Customer getItem(int position) {
         return mValues.get(position);
     }
 
     @Override
-    public long getItemId(int position){
+    public long getItemId(int position) {
         return position;
     }
 
@@ -47,9 +43,9 @@ public class SpinnerOutletAdapter extends ArrayAdapter<Outlet> {
         TextView label = new TextView(mContext);
         label.setTextColor(Color.BLACK);
         label.setTextSize(18);
-        label.setText(" " + mValues.get(position).getName());
+        label.setText(" " + mValues.get(position).getCompanyName());
         label.setHeight(50);
-        label.setGravity(Gravity.LEFT | Gravity.CENTER );
+        label.setGravity(Gravity.LEFT | Gravity.CENTER);
         return label;
     }
 
@@ -60,9 +56,9 @@ public class SpinnerOutletAdapter extends ArrayAdapter<Outlet> {
         TextView label = new TextView(mContext);
         label.setTextColor(Color.BLACK);
         label.setTextSize(18);
-        label.setText(" " + mValues.get(position).getName());
+        label.setText(" " + mValues.get(position).getCompanyName());
         label.setHeight(70);
-        label.setGravity(Gravity.LEFT | Gravity.CENTER );
+        label.setGravity(Gravity.LEFT | Gravity.CENTER);
 
         return label;
     }

@@ -30,7 +30,8 @@
     <string name="hint_nominal_payment">Nominal Pembayaran</string>
 
     <string name="team_prompt">Pilih Team</string>
-    <string name="download_success">File berhasil di download</string>
+    <string name="download_success">File download successfully!</string>
+    <string name="download_failed">FAILED downloading file!</string>
     <string name="file_downloading">File downloading ...</string>
     <string name="file_setup">File Setup</string>
     <string name="failed_login">Failed to login. Please make sure User Id and Password are valid.</string>

@@ -11,21 +11,19 @@ import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
 
+import com.bali.nusadua.productmonitor.model.Customer;
 import com.bali.nusadua.productmonitor.model.Order;
 import com.bali.nusadua.productmonitor.repo.OrderRepo;
 
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Created by desu sudarsana on 4/13/2015.
- */
 public class OrderPenjualanActivity extends Activity implements android.view.View.OnClickListener {
 
     private Button btnAdd, btnProses, btnBatal;
     private TableLayout theGrid;
     private EditText tvCode, tvName, tvPrice, tvQty, tvUnit;
-    private String kodeOutlet;
+    private String customerID;
 
     private List<Order> orders = new ArrayList<Order>();
     OrderRepo orderRepo = new OrderRepo(this);
@@ -52,8 +50,8 @@ public class OrderPenjualanActivity extends Activity implements android.view.Vie
         btnBatal.setOnClickListener(this);
 
         Intent intent = getIntent();
-        kodeOutlet = intent.getStringExtra("kode_outlet");
-        Log.i("Outlet GUID : ", kodeOutlet);
+        customerID = intent.getStringExtra(Customer.CUST_ID);
+        Log.i("Customer ID : ", customerID);
 
         orders = orderRepo.getAll();
         Log.i("Jumlah order penjualan di database : ", Integer.toString(orders.size()));
@@ -86,7 +84,7 @@ public class OrderPenjualanActivity extends Activity implements android.view.Vie
             tableRow.addView(labelQty);
             order.setQty(Integer.valueOf(tvQty.getText().toString()));
             order.setUnit(tvUnit.getText().toString());
-            order.setKodeOutlet(kodeOutlet);
+            order.setKodeOutlet(customerID);
 
             TextView labelSummary = new TextView(this);
             labelSummary.setId(200 + count + 1);

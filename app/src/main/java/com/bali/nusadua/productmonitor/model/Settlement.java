@@ -106,4 +106,24 @@ public class Settlement {
     public void setOutlet(Outlet outlet) {
         this.outlet = outlet;
     }
+
+    /**
+     * This method to generate Database
+     *
+     * @return String
+     */
+    public static String CREATE_TABLE() {
+        String CREATE_TABLE = "CREATE TABLE " + TABLE + " ( "
+                + ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
+                + GUID + " TEXT, "
+                + INVOICE_NUMBER + " TEXT, "
+                + INVOICE_DATE + " TEXT, "
+                + CREDIT + " INTEGER, "
+                + PAYMENT_METHOD + " TEXT, "
+                + NOMINAL_PAYMENT + " INTEGER, "
+                + KODE_OUTLET + " TEXT, "
+                + CREATE_DATE + " TEXT ) ";
+
+        return CREATE_TABLE;
+    }
 }

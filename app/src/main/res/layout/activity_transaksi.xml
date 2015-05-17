@@ -7,9 +7,10 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:padding="16dp">
 
-        <LinearLayout
+        <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal">
@@ -18,6 +19,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/text_view_outlet"
+                android:layout_alignParentTop="true"
                 android:text="Outlet : "
                 android:textSize="24dp"
                 android:singleLine="true"/>
@@ -26,104 +28,112 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/spinnerOutlet"
+                android:layout_alignParentRight="true"
                 android:prompt="@string/team_prompt"
                 android:spinnerMode="dropdown"/>
 
-        </LinearLayout>
+        </RelativeLayout>
 
-        <LinearLayout
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:orientation="horizontal"
-            android:background="@drawable/button_shape"
-            android:id="@+id/block_order">
-
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="3"
-                android:id="@+id/text_view_order_penjualan"
-                android:text="@string/transaksi_order"
-                android:textSize="24dp"
-                android:singleLine="true"
-                android:textColor="#ffffff"
-                android:layout_gravity="center_vertical"/>
-
+            android:layout_height="wrap_content"
+            android:id="@+id/order_card"
+            android:background="@drawable/card_shape"
+            android:padding="8dp">
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:id="@+id/text_view_order_status"
-                android:text="[o]/[x]"
-                android:textSize="24dp"
-                android:singleLine="true"
-                android:textColor="#ffffff"
-                android:layout_gravity="center_vertical"/>
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:orientation="horizontal"
-            android:background="@drawable/button_shape"
-            android:id="@+id/block_retur">
-
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="3"
-                android:id="@+id/text_view_retur"
-                android:text="@string/transaksi_retur"
-                android:textSize="24dp"
-                android:singleLine="true"
-                android:textColor="#ffffff"
-                android:layout_gravity="center_vertical"/>
-
+                android:id="@+id/label_order"
+                android:layout_alignParentTop="true"
+                android:textSize="32sp"
+                android:text="Order"
+                />
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:id="@+id/text_view_retur_status"
-                android:text="[o]/[x]"
-                android:textSize="24dp"
-                android:singleLine="true"
-                android:textColor="#ffffff"
-                android:layout_gravity="center_vertical"/>
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:orientation="horizontal"
-            android:background="@drawable/button_shape"
-            android:layout_gravity="center_vertical"
-            android:id="@+id/block_pelunasan">
-
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="3"
-                android:id="@+id/text_view_pelunasan"
-                android:text="@string/transaksi_pelunasan"
-                android:textSize="24dp"
-                android:singleLine="true"
-                android:textColor="#ffffff"
-                android:layout_gravity="center_vertical"/>
-
+                android:id="@+id/label_order_data"
+                android:layout_alignParentRight="true"
+                android:textSize="28sp"
+                android:text="0"
+                />
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:id="@+id/text_view_pelunasan_status"
-                android:text="[o]/[x]"
-                android:textSize="24dp"
-                android:singleLine="true"
-                android:textColor="#ffffff"
-                android:layout_gravity="center_vertical"/>
+                android:id="@+id/label_order_info"
+                android:layout_alignParentRight="true"
+                android:layout_below="@id/label_order_data"
+                android:textSize="12sp"
+                android:text="Transaksi"
+                />
+        </RelativeLayout>
 
-        </LinearLayout>
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/retur_card"
+            android:layout_marginTop="4dp"
+            android:background="@drawable/card_shape"
+            android:padding="8dp">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/label_retur"
+                android:layout_alignParentTop="true"
+                android:textSize="32sp"
+                android:text="Retur"
+                />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/label_retur_data"
+                android:layout_alignParentRight="true"
+                android:textSize="28sp"
+                android:text="0"
+                />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/label_retur_info"
+                android:layout_alignParentRight="true"
+                android:layout_below="@id/label_retur_data"
+                android:textSize="12sp"
+                android:text="Transaksi"
+                />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/settlement_card"
+            android:layout_marginTop="4dp"
+            android:background="@drawable/card_shape"
+            android:padding="8dp">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/label_settlement"
+                android:layout_alignParentTop="true"
+                android:textSize="32sp"
+                android:text="Pelunasan"
+                />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/label_settlement_data"
+                android:layout_alignParentRight="true"
+                android:textSize="28sp"
+                android:text="0"
+                />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/label_settlement_info"
+                android:layout_alignParentRight="true"
+                android:layout_below="@id/label_settlement_data"
+                android:textSize="12sp"
+                android:text="Transaksi"
+                />
+        </RelativeLayout>
 
     </LinearLayout>
 

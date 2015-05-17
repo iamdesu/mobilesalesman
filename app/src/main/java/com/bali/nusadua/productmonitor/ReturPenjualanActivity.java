@@ -11,6 +11,7 @@ import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
 
+import com.bali.nusadua.productmonitor.model.Customer;
 import com.bali.nusadua.productmonitor.model.Retur;
 import com.bali.nusadua.productmonitor.repo.ReturRepo;
 
@@ -19,15 +20,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-/**
- * Created by desu sudarsana on 4/23/2015.
- */
 public class ReturPenjualanActivity extends Activity implements android.view.View.OnClickListener {
 
     private Button btnAdd, btnProses, btnBatal;
     private TableLayout theGrid;
     private EditText tvCode, tvName, tvPrice, tvQty, tvUnit;
-    private String kodeOutlet;
+    private String customerID;
 
     private Map<String, Retur> mapReturs = new HashMap<String, Retur>();
     private ReturRepo returRepo = new ReturRepo(this);
@@ -53,8 +51,8 @@ public class ReturPenjualanActivity extends Activity implements android.view.Vie
         btnBatal.setOnClickListener(this);
 
         Intent intent = getIntent();
-        kodeOutlet = intent.getStringExtra("kode_outlet");
-        Log.i("Outlet GUID : ", kodeOutlet);
+        customerID = intent.getStringExtra(Customer.CUST_ID);
+        Log.i("Customer ID : ", customerID);
 
         /*returs = returRepo.getAll();
         Log.i("Jumlah retur penjualan di database : ", Integer.toString(returs.size()));*/
@@ -87,7 +85,7 @@ public class ReturPenjualanActivity extends Activity implements android.view.Vie
             tableRow.addView(labelQty);
             retur.setQty(Integer.valueOf(tvQty.getText().toString()));
             retur.setUnit(tvUnit.getText().toString());
-            retur.setKodeOutlet(kodeOutlet);
+            retur.setKodeOutlet(customerID);
 
             TextView labelSummary = new TextView(this);
             labelSummary.setId(200 + count + 1);

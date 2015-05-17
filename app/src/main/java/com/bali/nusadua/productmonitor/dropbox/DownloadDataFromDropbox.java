@@ -2,14 +2,21 @@ package com.bali.nusadua.productmonitor.dropbox;
 
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.AsyncTask;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.bali.nusadua.productmonitor.MSConstantsIntf;
+import com.bali.nusadua.productmonitor.R;
+import com.bali.nusadua.productmonitor.model.Billing;
+import com.bali.nusadua.productmonitor.model.Customer;
 import com.bali.nusadua.productmonitor.model.StaffBilling;
 import com.bali.nusadua.productmonitor.model.StockBilling;
 import com.bali.nusadua.productmonitor.model.StockPrice;
+import com.bali.nusadua.productmonitor.repo.BillingRepo;
+import com.bali.nusadua.productmonitor.repo.CustomerRepo;
 import com.bali.nusadua.productmonitor.repo.StaffBillingRepo;
 import com.bali.nusadua.productmonitor.repo.StockBillingRepo;
 import com.bali.nusadua.productmonitor.repo.StockPriceRepo;
@@ -47,13 +54,19 @@ public class DownloadDataFromDropbox extends AsyncTask<Void, Void, Boolean> {
         try {
             if(isAllDownload == true) {
                 readStaffBilling();
-                progressBar.setProgress(30);
+                progressBar.setProgress(20);
                 readStockBilling();
-                progressBar.setProgress(60);
+                progressBar.setProgress(40);
                 readStockPrice();
-                progressBar.setProgress(90);
+                progressBar.setProgress(60);
 
-                progressBar.dismiss();
+                SharedPreferences prefs = context.getSharedPreferences(MSConstantsIntf.MOBILESALES_PREFS_NAME, 0);
+                String team = prefs.getString(MSConstantsIntf.TEAM, null);
+
+                readCustomer(team);
+                progressBar.setProgress(80);
+                readBilling(team);
+                progressBar.setProgress(90);
             } else {
                 readStaffBilling();
                 progressBar.setProgress(30);
@@ -61,13 +74,14 @@ public class DownloadDataFromDropbox extends AsyncTask<Void, Void, Boolean> {
                 progressBar.setProgress(60);
                 readStockPrice();
                 progressBar.setProgress(90);
-                progressBar.dismiss();
             }
             return true;
         } catch (IOException e) {
             e.printStackTrace();
         } catch (DropboxException e) {
             e.printStackTrace();
+        } finally {
+            progressBar.dismiss();
         }
 
         return false;
@@ -76,9 +90,9 @@ public class DownloadDataFromDropbox extends AsyncTask<Void, Void, Boolean> {
     @Override
     protected void onPostExecute(Boolean result) {
         if (result) {
-            Toast.makeText(context, "File Berhasil di unduh!", Toast.LENGTH_LONG).show();
+            Toast.makeText(context, context.getResources().getString(R.string.download_success), Toast.LENGTH_LONG).show();
         } else {
-            Toast.makeText(context, "Gagal mengunduh file!", Toast.LENGTH_LONG).show();
+            Toast.makeText(context, context.getResources().getString(R.string.download_failed), Toast.LENGTH_LONG).show();
         }
     }
 
@@ -236,6 +250,108 @@ public class DownloadDataFromDropbox extends AsyncTask<Void, Void, Boolean> {
                     stockPrice.setPrice(data[2].trim().equals("") ? null : Double.valueOf(data[2]));
 
                     stockPriceRepo.insert(stockPrice);
+                } else {
+                    first = false;
+                }
+
+            }
+        } finally {
+            try {
+                if (br != null) {
+                    br.close();
+                }
+                tempfile.delete();
+            } catch (IOException ex) {
+                ex.printStackTrace();
+            }
+        }
+    }
+
+    private void readCustomer(String team) throws IOException, DropboxException {
+        final File tempDir = context.getCacheDir();
+        File tempfile = File.createTempFile("Cust_" + team + "_B", ".csv", tempDir);
+        FileOutputStream outputStream = new FileOutputStream(tempfile);
+        DropboxAPI.DropboxFileInfo info = dropbox.getFile(path + "Cust_"+team+"_B.csv", null, outputStream, null);
+
+        DBHelper dbHelper = new DBHelper(context);
+        SQLiteDatabase db = dbHelper.getWritableDatabase();
+        db.execSQL("DELETE FROM " + Customer.TABLE);
+        db.execSQL("DELETE FROM sqlite_sequence where name='" + Customer.TABLE + "'");
+        db.close();
+
+        CustomerRepo customerRepo = new CustomerRepo(context);
+        BufferedReader br = null;
+
+        try {
+            br = new BufferedReader(new FileReader(tempfile));
+            String line = "";
+            boolean first = true; //First is column name
+            while ((line = br.readLine()) != null) {
+
+                if (!first && line.trim() != "" && !line.isEmpty()) {
+                    // use | as separator
+                    String[] data = line.split(DELIMITED, -1);
+
+                    Customer customer = new Customer();
+                    customer.setCustomerId(data[0]);
+                    customer.setCompanyName(data[1]);
+                    customer.setPersonName(data[2]);
+                    customer.setAddress(data[3]);
+                    customer.setRegion(data[4]);
+                    customer.setCity(data[5]);
+                    customer.setVisit(data[6]);
+                    customer.setPriceLevel(data[7].trim().equals("") ? null : Integer.valueOf(data[7]));
+
+                    customerRepo.insert(customer);
+                } else {
+                    first = false;
+                }
+
+            }
+        } finally {
+            try {
+                if (br != null) {
+                    br.close();
+                }
+                tempfile.delete();
+            } catch (IOException ex) {
+                ex.printStackTrace();
+            }
+        }
+    }
+
+    private void readBilling(String team) throws IOException, DropboxException {
+        final File tempDir = context.getCacheDir();
+        File tempfile = File.createTempFile("Billing_" + team + "_B", ".csv", tempDir);
+        FileOutputStream outputStream = new FileOutputStream(tempfile);
+        DropboxAPI.DropboxFileInfo info = dropbox.getFile(path + "Billing_"+team+"_B.csv", null, outputStream, null);
+
+        DBHelper dbHelper = new DBHelper(context);
+        SQLiteDatabase db = dbHelper.getWritableDatabase();
+        db.execSQL("DELETE FROM " + Billing.TABLE);
+        db.execSQL("DELETE FROM sqlite_sequence where name='" + Billing.TABLE + "'");
+        db.close();
+
+        BillingRepo billingRepo = new BillingRepo(context);
+        BufferedReader br = null;
+
+        try {
+            br = new BufferedReader(new FileReader(tempfile));
+            String line = "";
+            boolean first = true; //First is column name
+            while ((line = br.readLine()) != null) {
+
+                if (!first && line.trim() != "" && !line.isEmpty()) {
+                    // use | as separator
+                    String[] data = line.split(DELIMITED, -1);
+
+                    Billing billing = new Billing();
+                    billing.setInvoiceNo(data[0]);
+                    billing.setCustomerId(data[1]);
+                    billing.setTotalAmount(data[2].trim().equals("") ? null : Double.valueOf(data[2]));
+                    billing.setPaidAmount(data[3].trim().equals("") ? null : Double.valueOf(data[3]));
+
+                    billingRepo.insert(billing);
                 } else {
                     first = false;
                 }

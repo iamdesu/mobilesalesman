@@ -106,4 +106,24 @@ public class Retur {
     public Outlet getOutlet() {
         return outlet;
     }
+
+    /**
+     * This method to generate Database
+     *
+     * @return String
+     */
+    public static String CREATE_TABLE() {
+        String CREATE_TABLE = "CREATE TABLE " + TABLE + " ( "
+                + ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
+                + GUID + " TEXT, "
+                + KODE + " TEXT, "
+                + NAMA_BARANG + " TEXT, "
+                + HARGA + " INTEGER, "
+                + QTY + " INTEGER, "
+                + UNIT + " TEXT, "
+                + KODE_OUTLET + " TEXT, "
+                + CREATE_DATE + " TEXT ) ";
+
+        return CREATE_TABLE;
+    }
 }
