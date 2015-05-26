@@ -82,7 +82,7 @@ public class ReturRepo {
         values.put(Retur.KODE_OUTLET, retur.getKodeOutlet());
 
         // It's a good practice to use parameter ?, instead of concatenate string
-        db.update(Retur.TABLE, values, Retur.GUID + "= ?", new String[] { retur.getGuid() });
+        db.update(Retur.TABLE, values, Retur.GUID + "= ?", new String[]{retur.getGuid()});
         db.close();
     }
 
@@ -226,5 +226,52 @@ public class ReturRepo {
         cursor.close();
         db.close();
         return listRetur;
+    }
+
+    public List<Retur> getReturByCustomer(String customerId) {
+        SQLiteDatabase db = dbHelper.getReadableDatabase();
+        String selectQuery = "SELECT " +
+                Retur.ID + ", " +
+                Retur.GUID + ", " +
+                Retur.KODE + ", " +
+                Retur.NAMA_BARANG + ", " +
+                Retur.HARGA + ", " +
+                Retur.QTY + ", " +
+                Retur.UNIT + ", " +
+                Retur.KODE_OUTLET + ", " +
+                Retur.CREATE_DATE + " FROM " +
+                Retur.TABLE + " WHERE " +
+                Retur.KODE_OUTLET + " = ?";
+
+        List<Retur> returs = new ArrayList<Retur>();
+        Cursor cursor = db.rawQuery(selectQuery, new String[]{ customerId } );
+
+        //Looping through all rows and adding to list
+        if(cursor.moveToFirst()){
+            do {
+                Retur retur = new Retur();
+                retur.setId((int) cursor.getLong(cursor.getColumnIndex(Retur.ID)));
+                retur.setUnit(cursor.getString(cursor.getColumnIndex(Retur.UNIT)));
+                retur.setHarga(cursor.getInt(cursor.getColumnIndex(Retur.HARGA)));
+                retur.setNamaBarang(cursor.getString(cursor.getColumnIndex(Retur.NAMA_BARANG)));
+                retur.setGuid(cursor.getString(cursor.getColumnIndex(Retur.GUID)));
+                retur.setQty(cursor.getInt(cursor.getColumnIndex(Retur.QTY)));
+                retur.setKode(cursor.getString(cursor.getColumnIndex(Retur.KODE)));
+                retur.setKodeOutlet(cursor.getString(cursor.getColumnIndex(Retur.KODE_OUTLET)));
+
+                try {
+                    Date createDate = sdf.parse(cursor.getString(cursor.getColumnIndex(Retur.CREATE_DATE)));
+                    retur.setCreateDate(createDate);
+                } catch (ParseException e) {
+                    retur.setCreateDate(null);
+                }
+
+                returs.add(retur);
+            } while(cursor.moveToNext());
+        }
+
+        cursor.close();
+        db.close();
+        return returs;
     }
 }

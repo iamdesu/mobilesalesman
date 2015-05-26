@@ -242,4 +242,56 @@ public class SettlementRepo {
         db.close();
         return settlements;
     }
+
+    public List<Settlement> getSettlementByCustomer(String customerId) {
+        SQLiteDatabase db = dbHelper.getReadableDatabase();
+        String selectQuery = "SELECT " +
+                Settlement.ID + ", " +
+                Settlement.GUID + ", " +
+                Settlement.INVOICE_NUMBER + ", " +
+                Settlement.INVOICE_DATE + ", " +
+                Settlement.CREDIT + ", " +
+                Settlement.PAYMENT_METHOD + ", " +
+                Settlement.NOMINAL_PAYMENT + ", " +
+                Settlement.KODE_OUTLET + ", " +
+                Settlement.CREATE_DATE + " FROM " +
+                Settlement.TABLE + " WHERE " +
+                Settlement.GUID + " = ?";
+
+        List<Settlement> settlements = new ArrayList<Settlement>();
+        Cursor cursor = db.rawQuery(selectQuery, new String[]{customerId});
+
+        //Looping through all rows and adding to list
+        if (cursor.moveToFirst()) {
+            do {
+                Settlement settlement = new Settlement();
+                settlement.setId((int) cursor.getLong(cursor.getColumnIndex(Settlement.ID)));
+                settlement.setGuid(cursor.getString(cursor.getColumnIndex(Settlement.GUID)));
+                settlement.setInvoiceNumber(cursor.getString(cursor.getColumnIndex(Settlement.INVOICE_NUMBER)));
+                try {
+                    Date invoiceDate = sdf.parse(cursor.getString(cursor.getColumnIndex(Settlement.INVOICE_DATE)));
+                    settlement.setInvoiceDate(invoiceDate);
+                } catch (ParseException e) {
+                    settlement.setInvoiceDate(null);
+                }
+                settlement.setCredit(cursor.getLong(cursor.getColumnIndex(Settlement.CREDIT)));
+                settlement.setPaymentMethod(cursor.getString(cursor.getColumnIndex(Settlement.PAYMENT_METHOD)));
+                settlement.setNominalPayment(cursor.getLong(cursor.getColumnIndex(Settlement.NOMINAL_PAYMENT)));
+                settlement.setKodeOutlet(cursor.getString(cursor.getColumnIndex(Settlement.KODE_OUTLET)));
+
+                try {
+                    Date createDate = sdf.parse(cursor.getString(cursor.getColumnIndex(Settlement.CREATE_DATE)));
+                    settlement.setCreatedDate(createDate);
+                } catch (ParseException e) {
+                    settlement.setCreatedDate(null);
+                }
+
+                settlements.add(settlement);
+            } while (cursor.moveToNext());
+        }
+
+        cursor.close();
+        db.close();
+        return settlements;
+    }
 }

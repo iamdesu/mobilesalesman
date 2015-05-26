@@ -84,7 +84,7 @@ public class OrderRepo {
         values.put(Order.KODE_OUTLET, order.getKodeOutlet());
 
         // It's a good practice to use parameter ?, instead of concatenate string
-        db.update(Order.TABLE, values, Order.GUID + "= ?", new String[] { order.getGuid() });
+        db.update(Order.TABLE, values, Order.GUID + "= ?", new String[]{order.getGuid()});
         db.close();
     }
 
@@ -219,6 +219,53 @@ public class OrderRepo {
                 outlet.setName(cursor.getString(cursor.getColumnIndex("outletName")));
 
                 order.setOutlet(outlet);
+
+                listOrder.add(order);
+            } while(cursor.moveToNext());
+        }
+
+        cursor.close();
+        db.close();
+        return listOrder;
+    }
+
+    public List<Order> getOrderByCustomer(String customerId) {
+        SQLiteDatabase db = dbHelper.getReadableDatabase();
+        String selectQuery = "SELECT " +
+                Order.ID + ", " +
+                Order.GUID + ", " +
+                Order.KODE + ", " +
+                Order.NAMA_BARANG + ", " +
+                Order.HARGA + ", " +
+                Order.QTY + ", " +
+                Order.UNIT + ", " +
+                Order.KODE_OUTLET + ", " +
+                Order.CREATE_DATE + " FROM " +
+                Order.TABLE + " WHERE " +
+                Order.KODE_OUTLET + " = ?";
+
+        List<Order> listOrder = new ArrayList<Order>();
+        Cursor cursor = db.rawQuery(selectQuery, new String[]{ customerId } );
+
+        //Looping through all rows and adding to list
+        if(cursor.moveToFirst()){
+            do {
+                Order order = new Order();
+                order.setId(cursor.getInt(cursor.getColumnIndex(Order.ID)));
+                order.setGuid(cursor.getString(cursor.getColumnIndex(Order.GUID)));
+                order.setKode(cursor.getString(cursor.getColumnIndex(Order.KODE)));
+                order.setNamaBarang(cursor.getString(cursor.getColumnIndex(Order.NAMA_BARANG)));
+                order.setHarga(cursor.getInt(cursor.getColumnIndex(Order.HARGA)));
+                order.setQty(cursor.getInt(cursor.getColumnIndex(Order.QTY)));
+                order.setUnit(cursor.getString(cursor.getColumnIndex(Order.UNIT)));
+                order.setKodeOutlet(cursor.getString(cursor.getColumnIndex(Order.KODE_OUTLET)));
+
+                try {
+                    Date createDate = sdf.parse(cursor.getString(cursor.getColumnIndex(Order.CREATE_DATE)));
+                    order.setCreateDate(createDate);
+                } catch (ParseException e) {
+                    order.setCreateDate(null);
+                }
 
                 listOrder.add(order);
             } while(cursor.moveToNext());

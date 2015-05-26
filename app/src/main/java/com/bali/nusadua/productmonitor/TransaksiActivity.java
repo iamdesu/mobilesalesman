@@ -10,10 +10,17 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.Spinner;
+import android.widget.TextView;
 
 import com.bali.nusadua.productmonitor.adapter.SpinnerCustomerAdapter;
 import com.bali.nusadua.productmonitor.model.Customer;
+import com.bali.nusadua.productmonitor.model.Order;
+import com.bali.nusadua.productmonitor.model.Retur;
+import com.bali.nusadua.productmonitor.model.Settlement;
 import com.bali.nusadua.productmonitor.repo.CustomerRepo;
+import com.bali.nusadua.productmonitor.repo.OrderRepo;
+import com.bali.nusadua.productmonitor.repo.ReturRepo;
+import com.bali.nusadua.productmonitor.repo.SettlementRepo;
 
 import java.util.List;
 
@@ -22,6 +29,7 @@ public class TransaksiActivity extends Activity implements View.OnClickListener,
     private Button btnSummary, btnProses;
     private LinearLayout blockOrderPenjualan, blockRetur, blockPelunasan;
     private RelativeLayout orderCard, returCard, settlementCard;
+    private TextView labelOrderData, labelReturData, labelSettlementData;
     private Spinner spinnerCustomer;
     private Customer customer = null;
 
@@ -33,25 +41,23 @@ public class TransaksiActivity extends Activity implements View.OnClickListener,
         //Declare component UI
         btnProses = (Button) findViewById(R.id.btn_proses);
         btnSummary = (Button) findViewById(R.id.btn_summary);
-        /*blockOrderPenjualan = (LinearLayout) findViewById(R.id.block_order);
-        blockRetur = (LinearLayout) findViewById(R.id.block_retur);
-        blockPelunasan = (LinearLayout) findViewById(R.id.block_pelunasan);*/
         orderCard = (RelativeLayout) findViewById(R.id.order_card);
         returCard = (RelativeLayout) findViewById(R.id.retur_card);
         settlementCard = (RelativeLayout) findViewById(R.id.settlement_card);
         spinnerCustomer = (Spinner) findViewById(R.id.spinnerOutlet);
+        labelOrderData = (TextView) findViewById(R.id.label_order_data);
+        labelReturData = (TextView) findViewById(R.id.label_retur_data);
+        labelSettlementData = (TextView) findViewById(R.id.label_settlement_data);
 
         btnProses.setOnClickListener(this);
         btnSummary.setOnClickListener(this);
-        /*blockOrderPenjualan.setOnClickListener(this);
-        blockRetur.setOnClickListener(this);
-        blockPelunasan.setOnClickListener(this);*/
         orderCard.setOnClickListener(this);
         returCard.setOnClickListener(this);
         settlementCard.setOnClickListener(this);
         spinnerCustomer.setOnItemSelectedListener(this);
 
         loadCustomer();
+        setTransactionCount();
     }
 
     @Override
@@ -72,6 +78,12 @@ public class TransaksiActivity extends Activity implements View.OnClickListener,
             Intent intent = new Intent(TransaksiActivity.this, SummaryActivity.class);
             startActivity(intent);
         }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        setTransactionCount();
     }
 
     /*private void loadOutlet() {
@@ -112,11 +124,26 @@ public class TransaksiActivity extends Activity implements View.OnClickListener,
             Customer selectedCustomer = (Customer) parent.getItemAtPosition(position);
             customer = selectedCustomer;
             Log.i("Customer ID : ", customer.getCustomerId());
+            setTransactionCount();
         }
     }
 
     @Override
     public void onNothingSelected(AdapterView<?> parent) {
         customer = null;
+    }
+
+    private void setTransactionCount() {
+        OrderRepo orderRepo = new OrderRepo(getApplicationContext());
+        List<Order> orders = orderRepo.getOrderByCustomer(customer.getCustomerId());
+        labelOrderData.setText(String.valueOf(orders.size()));
+
+        ReturRepo returRepo = new ReturRepo(getApplicationContext());
+        List<Retur> returs = returRepo.getReturByCustomer(customer.getCustomerId());
+        labelReturData.setText(String.valueOf(returs.size()));
+
+        SettlementRepo settlementRepo = new SettlementRepo(getApplicationContext());
+        List<Settlement> settlements = settlementRepo.getSettlementByCustomer(customer.getCustomerId());
+        labelSettlementData.setText(String.valueOf(settlements.size()));
     }
 }
