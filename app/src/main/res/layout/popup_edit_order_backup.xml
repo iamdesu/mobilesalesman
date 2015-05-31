@@ -10,7 +10,7 @@
         android:layout_width="250dp"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
-        android:background="@drawable/popup_layout_bg"
+        android:background="@drawable/linearlayout_bg"
         android:orientation="vertical"
         android:padding="10dp">
 
@@ -46,7 +46,7 @@
 
             <EditText
                 android:id="@+id/popup_order_code"
-                style="@style/PopupEditText"
+                style="@style/ButtonText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="3dp"
@@ -58,7 +58,7 @@
 
             <EditText
                 android:id="@+id/popup_nama_brg"
-                style="@style/PopupEditText"
+                style="@style/ButtonText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="3dp"
@@ -93,7 +93,7 @@
 
             <EditText
                 android:id="@+id/popup_order_price"
-                style="@style/PopupEditText"
+                style="@style/ButtonText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
@@ -137,7 +137,7 @@
 
             <EditText
                 android:id="@+id/popup_order_qty"
-                style="@style/PopupEditText"
+                style="@style/ButtonText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
@@ -150,7 +150,7 @@
 
             <EditText
                 android:id="@+id/popup_order_unit"
-                style="@style/PopupEditText"
+                style="@style/ButtonText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="3dp"

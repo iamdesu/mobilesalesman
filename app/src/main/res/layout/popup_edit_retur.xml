@@ -45,7 +45,7 @@
             android:orientation="horizontal">
 
             <EditText
-                android:id="@+id/popup_order_code"
+                android:id="@+id/popup_retur_code"
                 style="@style/PopupEditText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -57,7 +57,7 @@
                 android:maxLines="255"/>
 
             <EditText
-                android:id="@+id/popup_nama_brg"
+                android:id="@+id/popup_retur_nama_brg"
                 style="@style/PopupEditText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -92,7 +92,7 @@
             android:orientation="horizontal">
 
             <EditText
-                android:id="@+id/popup_order_price"
+                android:id="@+id/popup_retur_price"
                 style="@style/PopupEditText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -136,7 +136,7 @@
             android:orientation="horizontal">
 
             <EditText
-                android:id="@+id/popup_order_qty"
+                android:id="@+id/popup_retur_qty"
                 style="@style/PopupEditText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -149,7 +149,7 @@
                 android:maxLines="9" />
 
             <EditText
-                android:id="@+id/popup_order_unit"
+                android:id="@+id/popup_retur_unit"
                 style="@style/PopupEditText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -168,7 +168,7 @@
             android:orientation="horizontal"
             android:paddingTop="10dp">
             <Button
-                android:id="@+id/popup_btn_save_data"
+                android:id="@+id/popup_btn_save_data_retur"
                 style="@style/ButtonText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -181,7 +181,7 @@
                 android:textAppearance="?android:attr/textAppearanceMedium" />
 
             <Button
-                android:id="@+id/popup_btn_delete_data"
+                android:id="@+id/popup_btn_delete_data_retur"
                 style="@style/ButtonText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

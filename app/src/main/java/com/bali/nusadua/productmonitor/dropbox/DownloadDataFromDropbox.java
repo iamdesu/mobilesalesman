@@ -12,6 +12,9 @@ import com.bali.nusadua.productmonitor.MSConstantsIntf;
 import com.bali.nusadua.productmonitor.R;
 import com.bali.nusadua.productmonitor.model.Billing;
 import com.bali.nusadua.productmonitor.model.Customer;
+import com.bali.nusadua.productmonitor.model.Order;
+import com.bali.nusadua.productmonitor.model.Retur;
+import com.bali.nusadua.productmonitor.model.Settlement;
 import com.bali.nusadua.productmonitor.model.StaffBilling;
 import com.bali.nusadua.productmonitor.model.StockBilling;
 import com.bali.nusadua.productmonitor.model.StockPrice;
@@ -52,7 +55,11 @@ public class DownloadDataFromDropbox extends AsyncTask<Void, Void, Boolean> {
     @Override
     protected Boolean doInBackground(Void... params) {
         try {
-            if(isAllDownload == true) {
+            if (isAllDownload == true) {
+                clearOrder();
+                clearRetur();
+                clearSettlement();
+
                 readStaffBilling();
                 progressBar.setProgress(20);
                 readStockBilling();
@@ -114,6 +121,30 @@ public class DownloadDataFromDropbox extends AsyncTask<Void, Void, Boolean> {
             Log.i("Data outlet", line);
 
         }
+    }
+
+    private void clearOrder() {
+        DBHelper dbHelper = new DBHelper(context);
+        SQLiteDatabase db = dbHelper.getWritableDatabase();
+        db.execSQL("DELETE FROM " + Order.TABLE);
+        db.execSQL("DELETE FROM sqlite_sequence where name='" + Order.TABLE + "'");
+        db.close();
+    }
+
+    private void clearRetur() {
+        DBHelper dbHelper = new DBHelper(context);
+        SQLiteDatabase db = dbHelper.getWritableDatabase();
+        db.execSQL("DELETE FROM " + Retur.TABLE);
+        db.execSQL("DELETE FROM sqlite_sequence where name='" + Retur.TABLE + "'");
+        db.close();
+    }
+
+    private void clearSettlement() {
+        DBHelper dbHelper = new DBHelper(context);
+        SQLiteDatabase db = dbHelper.getWritableDatabase();
+        db.execSQL("DELETE FROM " + Settlement.TABLE);
+        db.execSQL("DELETE FROM sqlite_sequence where name='" + Settlement.TABLE + "'");
+        db.close();
     }
 
     private void readStaffBilling() throws IOException, DropboxException {
@@ -271,7 +302,7 @@ public class DownloadDataFromDropbox extends AsyncTask<Void, Void, Boolean> {
         final File tempDir = context.getCacheDir();
         File tempfile = File.createTempFile("Cust_" + team + "_B", ".csv", tempDir);
         FileOutputStream outputStream = new FileOutputStream(tempfile);
-        DropboxAPI.DropboxFileInfo info = dropbox.getFile(path + "Cust_"+team+"_B.csv", null, outputStream, null);
+        DropboxAPI.DropboxFileInfo info = dropbox.getFile(path + "Cust_" + team + "_B.csv", null, outputStream, null);
 
         DBHelper dbHelper = new DBHelper(context);
         SQLiteDatabase db = dbHelper.getWritableDatabase();
@@ -324,7 +355,7 @@ public class DownloadDataFromDropbox extends AsyncTask<Void, Void, Boolean> {
         final File tempDir = context.getCacheDir();
         File tempfile = File.createTempFile("Billing_" + team + "_B", ".csv", tempDir);
         FileOutputStream outputStream = new FileOutputStream(tempfile);
-        DropboxAPI.DropboxFileInfo info = dropbox.getFile(path + "Billing_"+team+"_B.csv", null, outputStream, null);
+        DropboxAPI.DropboxFileInfo info = dropbox.getFile(path + "Billing_" + team + "_B.csv", null, outputStream, null);
 
         DBHelper dbHelper = new DBHelper(context);
         SQLiteDatabase db = dbHelper.getWritableDatabase();

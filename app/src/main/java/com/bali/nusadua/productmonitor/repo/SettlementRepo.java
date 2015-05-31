@@ -256,7 +256,7 @@ public class SettlementRepo {
                 Settlement.KODE_OUTLET + ", " +
                 Settlement.CREATE_DATE + " FROM " +
                 Settlement.TABLE + " WHERE " +
-                Settlement.GUID + " = ?";
+                Settlement.KODE_OUTLET + " = ?";
 
         List<Settlement> settlements = new ArrayList<Settlement>();
         Cursor cursor = db.rawQuery(selectQuery, new String[]{customerId});
