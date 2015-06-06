@@ -24,7 +24,7 @@
                 android:ems="10"
                 android:id="@+id/order_code"
                 android:layout_weight="20"
-                android:maxLines="255"
+                android:maxLines="9"
                 android:hint="@string/hint_kode"/>
 
             <EditText

@@ -1,5 +1,6 @@
 package com.bali.nusadua.productmonitor.dropbox;
 
+import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -40,15 +41,18 @@ public class DownloadDataFromDropbox extends AsyncTask<Void, Void, Boolean> {
     private String path;
     private Context context;
     private ProgressDialog progressBar;
-    private Boolean isAllDownload = true;
+    private Boolean isAllDownload = true, isCloseActivity;
     private String team;
+    private Activity currentActivity;
 
-    public DownloadDataFromDropbox(Context context, DropboxAPI<?> dropbox, String path, Boolean isAllDownload, String team, ProgressDialog progressBar) {
-        this.context = context.getApplicationContext();
+    public DownloadDataFromDropbox(Activity currentActivity, DropboxAPI<?> dropbox, String path, Boolean isAllDownload, String team, ProgressDialog progressBar, boolean isCloseActivity) {
+        this.currentActivity = currentActivity;
+        this.context = currentActivity.getApplicationContext();
         this.dropbox = dropbox;
         this.path = path;
         this.progressBar = progressBar;
         this.isAllDownload = isAllDownload;
+        this.isCloseActivity = isCloseActivity;
         this.team = team;
     }
 
@@ -98,6 +102,9 @@ public class DownloadDataFromDropbox extends AsyncTask<Void, Void, Boolean> {
     protected void onPostExecute(Boolean result) {
         if (result) {
             Toast.makeText(context, context.getResources().getString(R.string.download_success), Toast.LENGTH_LONG).show();
+            if(isCloseActivity) {
+                currentActivity.finish();
+            }
         } else {
             Toast.makeText(context, context.getResources().getString(R.string.download_failed), Toast.LENGTH_LONG).show();
         }

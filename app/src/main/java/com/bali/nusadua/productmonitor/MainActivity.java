@@ -122,7 +122,14 @@ public class MainActivity extends ActionBarActivity {
     public void onButtonKirimDataClick(View view) {
         if(mLoggedIn == true) {
             Log.i("Button Kirim data", " Klik");
-            uploadFileToDropBox();
+            SharedPreferences prefs = getSharedPreferences(MSConstantsIntf.MOBILESALES_PREFS_NAME, 0);
+            String team = prefs.getString(MSConstantsIntf.TEAM, null);
+
+            if(team != null && !team.isEmpty()) {
+                uploadFileToDropBox();
+            } else {
+                showToast("Mohon login dan ambil data terbaru");
+            }
         } else {
             showToast("Please login to DropBox");
             connectDropbox();
@@ -319,7 +326,7 @@ public class MainActivity extends ActionBarActivity {
         progressBar.setMax(100);
         progressBar.show();
 
-        DownloadDataFromDropbox download = new DownloadDataFromDropbox(this, dropboxApi, DropboxHelper.FILE_DIR_IMPORT, false, "", progressBar);
+        DownloadDataFromDropbox download = new DownloadDataFromDropbox(this, dropboxApi, DropboxHelper.FILE_DIR_IMPORT, false, "", progressBar, false);
         download.execute();
     }
 }

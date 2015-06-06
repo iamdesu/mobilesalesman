@@ -1,9 +1,11 @@
 package com.bali.nusadua.productmonitor.dropbox;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.widget.Toast;
 
+import com.bali.nusadua.productmonitor.MSConstantsIntf;
 import com.bali.nusadua.productmonitor.model.Order;
 import com.bali.nusadua.productmonitor.model.Retur;
 import com.bali.nusadua.productmonitor.model.Settlement;
@@ -41,9 +43,12 @@ public class UploadFileToDropbox extends AsyncTask<Void, Void, Boolean> {
     @Override
     protected Boolean doInBackground(Void... params) {
         try {
-            uploadOrderTable();
-            uploadReturTable();
-            uploadSettlementTable();
+            SharedPreferences prefs = this.context.getSharedPreferences(MSConstantsIntf.MOBILESALES_PREFS_NAME, 0);
+            String team = prefs.getString(MSConstantsIntf.TEAM, null);
+
+            uploadOrderTable(team);
+            uploadReturTable(team);
+            uploadSettlementTable(team);
             return true;
         } catch (IOException e) {
             e.printStackTrace();
@@ -65,7 +70,7 @@ public class UploadFileToDropbox extends AsyncTask<Void, Void, Boolean> {
         }
     }
 
-    private void uploadOrderTable() throws IOException, DropboxException {
+    private void uploadOrderTable(String team) throws IOException, DropboxException {
         final File tempDir = context.getCacheDir();
         File tempFile;
         FileWriter fr;
@@ -117,12 +122,12 @@ public class UploadFileToDropbox extends AsyncTask<Void, Void, Boolean> {
         DateFormat df = new SimpleDateFormat("dd-MM-yyyy");
 
         FileInputStream fileInputStream = new FileInputStream(tempFile);
-        dropbox.putFile(path + "TeamA-Order-"+df.format(date)+".csv", fileInputStream,
+        dropbox.putFile(path + team + "-Order-"+df.format(date)+".csv", fileInputStream,
                 tempFile.length(), null, null);
         tempFile.delete();
     }
 
-    private void uploadReturTable() throws IOException, DropboxException {
+    private void uploadReturTable(String team) throws IOException, DropboxException {
         final File tempDir = context.getCacheDir();
         File tempFile;
         FileWriter fr;
@@ -174,12 +179,12 @@ public class UploadFileToDropbox extends AsyncTask<Void, Void, Boolean> {
         DateFormat df = new SimpleDateFormat("dd-MM-yyyy");
 
         FileInputStream fileInputStream = new FileInputStream(tempFile);
-        dropbox.putFile(path + "TeamA-Retur-"+df.format(date)+".csv", fileInputStream,
+        dropbox.putFile(path + team + "-Retur-"+df.format(date)+".csv", fileInputStream,
                 tempFile.length(), null, null);
         tempFile.delete();
     }
 
-    private void uploadSettlementTable() throws IOException, DropboxException {
+    private void uploadSettlementTable(String team) throws IOException, DropboxException {
         final File tempDir = context.getCacheDir();
         File tempFile;
         FileWriter fr;
@@ -231,7 +236,7 @@ public class UploadFileToDropbox extends AsyncTask<Void, Void, Boolean> {
         Date date = new Date();
 
         FileInputStream fileInputStream = new FileInputStream(tempFile);
-        dropbox.putFile(path + "TeamA-Pelunasan-"+df.format(date)+".csv", fileInputStream,
+        dropbox.putFile(path + team + "-Pelunasan-"+df.format(date)+".csv", fileInputStream,
                 tempFile.length(), null, null);
         tempFile.delete();
     }

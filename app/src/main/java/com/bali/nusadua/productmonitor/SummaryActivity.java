@@ -3,8 +3,8 @@ package com.bali.nusadua.productmonitor;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentTabHost;
+import android.widget.TextView;
 
-import com.bali.nusadua.productmonitor.fragment.FragmentTab;
 import com.bali.nusadua.productmonitor.fragment.SummaryOrderFragmentTab;
 import com.bali.nusadua.productmonitor.fragment.SummaryReturFragmentTab;
 import com.bali.nusadua.productmonitor.fragment.SummarySettlementFragmentTab;

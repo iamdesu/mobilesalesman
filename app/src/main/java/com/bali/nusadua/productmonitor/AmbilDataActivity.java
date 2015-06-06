@@ -5,6 +5,9 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.support.v7.app.ActionBarActivity;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -16,7 +19,7 @@ import com.bali.nusadua.productmonitor.repo.StaffBillingRepo;
 import com.dropbox.client2.DropboxAPI;
 import com.dropbox.client2.android.AndroidAuthSession;
 
-public class AmbilDataActivity extends Activity {
+public class AmbilDataActivity extends ActionBarActivity {
 
     private ProgressDialog progressBar;
     private EditText etUserId;
@@ -43,6 +46,37 @@ public class AmbilDataActivity extends Activity {
         DropboxHelper.connectDropbox(AmbilDataActivity.this, dropboxApi, mLoggedIn);
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.menu_ambil_data, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you medirecords_adminspecify a parent activity in AndroidManifest.xml.
+        int id = item.getItemId();
+
+        //noinspection SimplifiableIfStatement
+        if (id == R.id.action_refresh_user) {
+            progressBar = new ProgressDialog(AmbilDataActivity.this);
+            progressBar.setCancelable(false);
+            progressBar.setMessage(getResources().getString(R.string.file_setup));
+            progressBar.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
+            progressBar.setProgress(0);
+            progressBar.setMax(100);
+            progressBar.show();
+
+            DownloadDataFromDropbox download = new DownloadDataFromDropbox(this, dropboxApi, DropboxHelper.FILE_DIR_IMPORT, false, "", progressBar, false);
+            download.execute();
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+
     public void onBtnProsesClick(View view) {
         StaffBillingRepo staffBillingRepo = new StaffBillingRepo(AmbilDataActivity.this);
         StaffBilling staffBilling = staffBillingRepo.getStaffBilling(etUserId.getText().toString(), etPassword.getText().toString());
@@ -58,7 +92,7 @@ public class AmbilDataActivity extends Activity {
 
             storeLogin(staffBilling);
 
-            DownloadDataFromDropbox download = new DownloadDataFromDropbox(this, dropboxApi, DropboxHelper.FILE_DIR_IMPORT, true, "", progressBar);
+            DownloadDataFromDropbox download = new DownloadDataFromDropbox(this, dropboxApi, DropboxHelper.FILE_DIR_IMPORT, true, "", progressBar, true);
             download.execute();
         } else {
             showToast(getResources().getString(R.string.failed_login));
