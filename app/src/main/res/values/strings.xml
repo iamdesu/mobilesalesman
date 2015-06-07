@@ -1,11 +1,20 @@
 <resources>
     <!-- Application Context -->
     <string name="app_name">Mobile Salesman</string>
+    <string name="ambil_data_title">Mobile Salesman</string>
+    <string name="order_title">Order</string>
+    <string name="retur_title">Retur</string>
+    <string name="settlement_title">Pelunasan</string>
+
+    <string name="pop_up_order_edit">EDIT ORDER</string>
+    <string name="pop_up_retur_edit">EDIT RETUR</string>
+    <string name="pop_up_settlement_edit">EDIT PELUNASAN</string>
 
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
     <string name="action_reconnect">Reconnect</string>
     <string name="action_refresh_user">Refresh User</string>
+    <string name="action_show_stock">Lihat Stock</string>
     <string name="btn_ambil_data">1. Ambil Data</string>
     <string name="btn_transaksi">2. Transaksi</string>
     <string name="btn_kirim_data">3. Kirim Data</string>
@@ -37,6 +46,7 @@
     <string name="file_downloading">File downloading ...</string>
     <string name="file_setup">File Setup</string>
     <string name="failed_login">Failed to login. Please make sure User Id and Password are valid.</string>
+    <string name="code_not_found">Kode Barang tidak di temukan.</string>
 
     <!-- Style -->
     <style name="PopupEditText">

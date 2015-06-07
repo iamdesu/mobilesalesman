@@ -1,29 +1,32 @@
 package com.bali.nusadua.productmonitor;
 
-import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bali.nusadua.productmonitor.model.Customer;
-import com.bali.nusadua.productmonitor.model.Order;
 import com.bali.nusadua.productmonitor.model.Retur;
 import com.bali.nusadua.productmonitor.repo.ReturRepo;
+import com.bali.nusadua.productmonitor.repo.StockBillingRepo;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class ReturPenjualanActivity extends Activity implements android.view.View.OnClickListener {
+public class ReturPenjualanActivity extends ActionBarActivity implements android.view.View.OnClickListener {
 
     private Button btnAdd, btnProses, btnBatal;
     private TableLayout theGrid;
@@ -34,6 +37,7 @@ public class ReturPenjualanActivity extends Activity implements android.view.Vie
 
     private Map<String, Retur> mapReturs = new HashMap<String, Retur>();
     private ReturRepo returRepo = new ReturRepo(this);
+    private StockBillingRepo stockBillingRepo = new StockBillingRepo(this);
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -62,6 +66,29 @@ public class ReturPenjualanActivity extends Activity implements android.view.Vie
     }
 
     @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.menu_order, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you medirecords_adminspecify a parent activity in AndroidManifest.xml.
+        int id = item.getItemId();
+
+        //noinspection SimplifiableIfStatement
+        if (id == R.id.action_show_stock) {
+            Intent intent = new Intent(ReturPenjualanActivity.this, ViewStockActivity.class);
+            startActivity(intent);
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
     public void onClick(View view) {
         Retur retur = new Retur();
         int padding_in_dp = 8;  // 6 dps
@@ -75,55 +102,56 @@ public class ReturPenjualanActivity extends Activity implements android.view.Vie
                     && !tvQty.getText().toString().isEmpty() && tvQty.getText().toString().trim() != ""
                     && !tvUnit.getText().toString().isEmpty() && tvUnit.getText().toString().trim() != "") {
 
-                countID = countID + 1;
-                int count = countID;
-                TableRow tableRow = new TableRow(this);
-                tableRow.setPadding(padding_in_px, padding_in_px, padding_in_px, padding_in_px);
-                /*if (count % 2 == 0) {
+                if (stockBillingRepo.getByStockId(tvCode.getText().toString()) != null) {
+                    countID = countID + 1;
+                    int count = countID;
+                    TableRow tableRow = new TableRow(this);
+                    tableRow.setPadding(padding_in_px, padding_in_px, padding_in_px, padding_in_px);
+                    /*if (count % 2 == 0) {
+                        tableRow.setBackgroundResource(R.drawable.table_row_even_shape);
+                    } else {
+                        tableRow.setBackgroundResource(R.drawable.table_row_odd_shape);
+                    }*/
+
                     tableRow.setBackgroundResource(R.drawable.table_row_even_shape);
-                } else {
-                    tableRow.setBackgroundResource(R.drawable.table_row_odd_shape);
-                }*/
+                    tableRow.setId(count + 1);
 
-                tableRow.setBackgroundResource(R.drawable.table_row_even_shape);
-                tableRow.setId(count + 1);
+                    TextView labelCode = new TextView(this);
+                    labelCode.setId(200 + count + 1);
+                    labelCode.setText(tvCode.getText() + " | " + tvName.getText());
+                    labelCode.setTextAppearance(ReturPenjualanActivity.this, android.R.style.TextAppearance_Medium);
+                    labelCode.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT, TableRow.LayoutParams.WRAP_CONTENT, 40f));
+                    tableRow.addView(labelCode);
+                    retur.setKode(tvCode.getText().toString());
+                    retur.setNamaBarang(tvName.getText().toString());
 
-                TextView labelCode = new TextView(this);
-                labelCode.setId(200 + count + 1);
-                labelCode.setText(tvCode.getText() + " | " + tvName.getText());
-                labelCode.setTextAppearance(ReturPenjualanActivity.this, android.R.style.TextAppearance_Medium);
-                labelCode.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT, TableRow.LayoutParams.WRAP_CONTENT, 40f));
-                tableRow.addView(labelCode);
-                retur.setKode(tvCode.getText().toString());
-                retur.setNamaBarang(tvName.getText().toString());
+                    TextView labelPrice = new TextView(this);
+                    labelPrice.setId(300 + count + 1);
+                    labelPrice.setText(tvPrice.getText());
+                    labelPrice.setTextAppearance(ReturPenjualanActivity.this, android.R.style.TextAppearance_Medium);
+                    labelPrice.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT, TableRow.LayoutParams.WRAP_CONTENT, 20f));
+                    tableRow.addView(labelPrice);
+                    retur.setHarga(Integer.valueOf(tvPrice.getText().toString()));
 
-                TextView labelPrice = new TextView(this);
-                labelPrice.setId(300 + count + 1);
-                labelPrice.setText(tvPrice.getText());
-                labelPrice.setTextAppearance(ReturPenjualanActivity.this, android.R.style.TextAppearance_Medium);
-                labelPrice.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT, TableRow.LayoutParams.WRAP_CONTENT, 20f));
-                tableRow.addView(labelPrice);
-                retur.setHarga(Integer.valueOf(tvPrice.getText().toString()));
+                    TextView labelQty = new TextView(this);
+                    labelQty.setId(400 + count + 1);
+                    labelQty.setText(tvQty.getText() + "/" + tvUnit.getText());
+                    labelQty.setTextAppearance(ReturPenjualanActivity.this, android.R.style.TextAppearance_Medium);
+                    labelQty.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT, TableRow.LayoutParams.WRAP_CONTENT, 20f));
+                    tableRow.addView(labelQty);
+                    retur.setQty(Integer.valueOf(tvQty.getText().toString()));
+                    retur.setUnit(tvUnit.getText().toString());
+                    retur.setKodeOutlet(customerID);
 
-                TextView labelQty = new TextView(this);
-                labelQty.setId(400 + count + 1);
-                labelQty.setText(tvQty.getText() + "/" + tvUnit.getText());
-                labelQty.setTextAppearance(ReturPenjualanActivity.this, android.R.style.TextAppearance_Medium);
-                labelQty.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT, TableRow.LayoutParams.WRAP_CONTENT, 20f));
-                tableRow.addView(labelQty);
-                retur.setQty(Integer.valueOf(tvQty.getText().toString()));
-                retur.setUnit(tvUnit.getText().toString());
-                retur.setKodeOutlet(customerID);
+                    TextView labelSummary = new TextView(this);
+                    labelSummary.setId(500 + count + 1);
+                    labelSummary.setTextAppearance(ReturPenjualanActivity.this, android.R.style.TextAppearance_Medium);
+                    labelSummary.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT, TableRow.LayoutParams.WRAP_CONTENT, 20f));
+                    Integer summary = Integer.valueOf(tvQty.getText().toString()) * Integer.valueOf(tvPrice.getText().toString());
+                    labelSummary.setText(summary.toString());
+                    tableRow.addView(labelSummary);
 
-                TextView labelSummary = new TextView(this);
-                labelSummary.setId(500 + count + 1);
-                labelSummary.setTextAppearance(ReturPenjualanActivity.this, android.R.style.TextAppearance_Medium);
-                labelSummary.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT, TableRow.LayoutParams.WRAP_CONTENT, 20f));
-                Integer summary = Integer.valueOf(tvQty.getText().toString()) * Integer.valueOf(tvPrice.getText().toString());
-                labelSummary.setText(summary.toString());
-                tableRow.addView(labelSummary);
-
-                tableRow.setOnLongClickListener(
+                    tableRow.setOnLongClickListener(
                         new View.OnLongClickListener() {
                             @Override
                             public boolean onLongClick(View v) {
@@ -135,7 +163,7 @@ public class ReturPenjualanActivity extends Activity implements android.view.Vie
                                 // custom dialog
                                 final Dialog dialog = new Dialog(context);
                                 dialog.setContentView(R.layout.popup_edit_retur);
-                                dialog.setTitle("EDIT RETUR");
+                                dialog.setTitle(getResources().getString(R.string.pop_up_retur_edit));
 
                                 // set the custom dialog components - text, image and button
                                 final EditText edReturCode = (EditText) dialog.findViewById(R.id.popup_retur_code);
@@ -191,16 +219,20 @@ public class ReturPenjualanActivity extends Activity implements android.view.Vie
                                 return true;
                             }
                         }
-                );
+                    );
 
-                theGrid.addView(tableRow, new TableLayout.LayoutParams(TableLayout.LayoutParams.MATCH_PARENT, TableLayout.LayoutParams.WRAP_CONTENT));
-                mapReturs.put(retur.getKode(), retur);
+                    theGrid.addView(tableRow, new TableLayout.LayoutParams(TableLayout.LayoutParams.MATCH_PARENT, TableLayout.LayoutParams.WRAP_CONTENT));
+                    mapReturs.put(retur.getKode(), retur);
 
-                tvCode.setText(null);
-                tvName.setText(null);
-                tvPrice.setText(null);
-                tvQty.setText(null);
-                tvUnit.setText(null);
+                    tvCode.setText(null);
+                    tvName.setText(null);
+                    tvPrice.setText(null);
+                    tvQty.setText(null);
+                    tvUnit.setText(null);
+
+                } else {
+                    showToast(getResources().getString(R.string.code_not_found));
+                }
 
             }
         } else if (view == findViewById(R.id.button_proses)) {
@@ -215,5 +247,10 @@ public class ReturPenjualanActivity extends Activity implements android.view.Vie
     private void saveAllRetur() {
         List<Retur> returs = new ArrayList<Retur>(mapReturs.values());
         returRepo.insertAll(returs);
+    }
+
+    private void showToast(String msg) {
+        Toast error = Toast.makeText(this, msg, Toast.LENGTH_LONG);
+        error.show();
     }
 }

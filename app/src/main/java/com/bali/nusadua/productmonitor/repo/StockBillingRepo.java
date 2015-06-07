@@ -5,10 +5,13 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
+import com.bali.nusadua.productmonitor.model.Order;
 import com.bali.nusadua.productmonitor.model.StockBilling;
 import com.bali.nusadua.productmonitor.sqlitedb.DBHelper;
 
+import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 public class StockBillingRepo {
@@ -32,15 +35,15 @@ public class StockBillingRepo {
         return (int) id;
     }
 
-    //Retrieve all records and populate List<Order>
+    //Retrieve all records and populate List<StockBilling>
     public List<StockBilling> getAll() {
         SQLiteDatabase db = dbHelper.getReadableDatabase();
-        String selectQuery = "SELECT * FROM " + StockBilling.TABLE;
+        String selectQuery = "SELECT * FROM " + StockBilling.TABLE + " order by " + StockBilling.DESCRIPTION + ", " + StockBilling.SCODE;
 
         List<StockBilling> listStockBilling = new ArrayList<StockBilling>();
         Cursor cursor = db.rawQuery(selectQuery, null);
 
-        //Looping through all rows and adding to list  (cursor.getColumnIndex(Team.ID
+        //Looping through all rows and adding to list
         if (cursor.moveToFirst()) {
             do {
                 StockBilling stockBilling = new StockBilling();
@@ -56,5 +59,34 @@ public class StockBillingRepo {
         cursor.close();
         db.close();
         return listStockBilling;
+    }
+
+    public StockBilling getByStockId(String stockId) {
+        SQLiteDatabase db = dbHelper.getReadableDatabase();
+        String selectQuery = "SELECT " +
+                StockBilling.ID + ", " +
+                StockBilling.STOCK_ID + ", " +
+                StockBilling.SCODE + ", " +
+                StockBilling.DESCRIPTION + " FROM " +
+                StockBilling.TABLE + " WHERE " +
+                StockBilling.STOCK_ID + " = ?";
+
+        StockBilling stockBilling = null;
+        Cursor cursor = db.rawQuery(selectQuery, new String[]{ stockId } );
+
+        if(cursor.moveToFirst()) {
+            do {
+                stockBilling = new StockBilling();
+                stockBilling.setId(cursor.getInt(cursor.getColumnIndex(StockBilling.ID)));
+                stockBilling.setStockId(cursor.getString(cursor.getColumnIndex(StockBilling.STOCK_ID)));
+                stockBilling.setScode(cursor.getString(cursor.getColumnIndex(StockBilling.SCODE)));
+                stockBilling.setDescription(cursor.getString(cursor.getColumnIndex(StockBilling.DESCRIPTION)));
+
+            } while (cursor.moveToNext());
+        }
+
+        cursor.close();
+        db.close();
+        return stockBilling;
     }
 }

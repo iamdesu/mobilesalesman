@@ -1,28 +1,31 @@
 package com.bali.nusadua.productmonitor;
 
-import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bali.nusadua.productmonitor.model.Customer;
 import com.bali.nusadua.productmonitor.model.Order;
 import com.bali.nusadua.productmonitor.repo.OrderRepo;
+import com.bali.nusadua.productmonitor.repo.StockBillingRepo;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-public class OrderPenjualanActivity extends Activity implements android.view.View.OnClickListener {
+public class OrderPenjualanActivity extends ActionBarActivity implements android.view.View.OnClickListener {
 
     private Button btnAdd, btnProses, btnBatal;
     private TableLayout theGrid;
@@ -33,6 +36,7 @@ public class OrderPenjualanActivity extends Activity implements android.view.Vie
 
     private Map<String, Order> mapOrders = new HashMap<String, Order>();
     OrderRepo orderRepo = new OrderRepo(this);
+    private StockBillingRepo stockBillingRepo = new StockBillingRepo(this);
 
 
     @Override
@@ -62,6 +66,29 @@ public class OrderPenjualanActivity extends Activity implements android.view.Vie
     }
 
     @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.menu_order, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you medirecords_adminspecify a parent activity in AndroidManifest.xml.
+        int id = item.getItemId();
+
+        //noinspection SimplifiableIfStatement
+        if (id == R.id.action_show_stock) {
+            Intent intent = new Intent(OrderPenjualanActivity.this, ViewStockActivity.class);
+            startActivity(intent);
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
     public void onClick(View view) {
         Order order = new Order();
         int padding_in_dp = 8;  // 6 dps
@@ -75,132 +102,137 @@ public class OrderPenjualanActivity extends Activity implements android.view.Vie
                     && !tvQty.getText().toString().isEmpty() && tvQty.getText().toString().trim() != ""
                     && !tvUnit.getText().toString().isEmpty() && tvUnit.getText().toString().trim() != "") {
 
-                countID = countID + 1;
-                int count = countID;
-                TableRow tableRow = new TableRow(this);
-                tableRow.setPadding(padding_in_px, padding_in_px, padding_in_px, padding_in_px);
-                /*if (count % 2 == 0) {
+                if (stockBillingRepo.getByStockId(tvCode.getText().toString()) != null) {
+                    countID = countID + 1;
+                    int count = countID;
+                    TableRow tableRow = new TableRow(this);
+                    tableRow.setPadding(padding_in_px, padding_in_px, padding_in_px, padding_in_px);
+                    /*if (count % 2 == 0) {
+                        tableRow.setBackgroundResource(R.drawable.table_row_even_shape);
+                    } else {
+                        tableRow.setBackgroundResource(R.drawable.table_row_odd_shape);
+                    }*/
+
                     tableRow.setBackgroundResource(R.drawable.table_row_even_shape);
-                } else {
-                    tableRow.setBackgroundResource(R.drawable.table_row_odd_shape);
-                }*/
+                    tableRow.setId(count + 1);
 
-                tableRow.setBackgroundResource(R.drawable.table_row_even_shape);
-                tableRow.setId(count + 1);
+                    TextView labelCode = new TextView(this);
+                    labelCode.setId(200 + count + 1);
+                    labelCode.setText(tvCode.getText() + " | " + tvName.getText());
+                    labelCode.setTextAppearance(OrderPenjualanActivity.this, android.R.style.TextAppearance_Medium);
+                    labelCode.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT, TableRow.LayoutParams.WRAP_CONTENT, 40f));
+                    tableRow.addView(labelCode);
+                    order.setKode(tvCode.getText().toString());
+                    order.setNamaBarang(tvName.getText().toString());
 
-                TextView labelCode = new TextView(this);
-                labelCode.setId(200 + count + 1);
-                labelCode.setText(tvCode.getText() + " | " + tvName.getText());
-                labelCode.setTextAppearance(OrderPenjualanActivity.this, android.R.style.TextAppearance_Medium);
-                labelCode.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT, TableRow.LayoutParams.WRAP_CONTENT, 40f));
-                tableRow.addView(labelCode);
-                order.setKode(tvCode.getText().toString());
-                order.setNamaBarang(tvName.getText().toString());
+                    TextView labelPrice = new TextView(this);
+                    labelPrice.setId(300 + count + 1);
+                    labelPrice.setText(tvPrice.getText());
+                    labelPrice.setTextAppearance(OrderPenjualanActivity.this, android.R.style.TextAppearance_Medium);
+                    labelPrice.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT, TableRow.LayoutParams.WRAP_CONTENT, 20f));
+                    tableRow.addView(labelPrice);
+                    order.setHarga(Integer.valueOf(tvPrice.getText().toString()));
 
-                TextView labelPrice = new TextView(this);
-                labelPrice.setId(300 + count + 1);
-                labelPrice.setText(tvPrice.getText());
-                labelPrice.setTextAppearance(OrderPenjualanActivity.this, android.R.style.TextAppearance_Medium);
-                labelPrice.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT, TableRow.LayoutParams.WRAP_CONTENT, 20f));
-                tableRow.addView(labelPrice);
-                order.setHarga(Integer.valueOf(tvPrice.getText().toString()));
+                    TextView labelQty = new TextView(this);
+                    labelQty.setId(400 + count + 1);
+                    labelQty.setTextAppearance(OrderPenjualanActivity.this, android.R.style.TextAppearance_Medium);
+                    labelQty.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT, TableRow.LayoutParams.WRAP_CONTENT, 20f));
+                    labelQty.setText(tvQty.getText() + "/" + tvUnit.getText());
+                    tableRow.addView(labelQty);
+                    order.setQty(Integer.valueOf(tvQty.getText().toString()));
+                    order.setUnit(tvUnit.getText().toString());
+                    order.setKodeOutlet(customerID);
 
-                TextView labelQty = new TextView(this);
-                labelQty.setId(400 + count + 1);
-                labelQty.setTextAppearance(OrderPenjualanActivity.this, android.R.style.TextAppearance_Medium);
-                labelQty.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT, TableRow.LayoutParams.WRAP_CONTENT, 20f));
-                labelQty.setText(tvQty.getText() + "/" + tvUnit.getText());
-                tableRow.addView(labelQty);
-                order.setQty(Integer.valueOf(tvQty.getText().toString()));
-                order.setUnit(tvUnit.getText().toString());
-                order.setKodeOutlet(customerID);
+                    TextView labelSummary = new TextView(this);
+                    labelSummary.setId(500 + count + 1);
+                    labelSummary.setTextAppearance(OrderPenjualanActivity.this, android.R.style.TextAppearance_Medium);
+                    labelSummary.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT, TableRow.LayoutParams.WRAP_CONTENT, 20f));
+                    Integer summary = Integer.valueOf(tvQty.getText().toString()) * Integer.valueOf(tvPrice.getText().toString());
+                    labelSummary.setText(summary.toString());
+                    tableRow.addView(labelSummary);
 
-                TextView labelSummary = new TextView(this);
-                labelSummary.setId(500 + count + 1);
-                labelSummary.setTextAppearance(OrderPenjualanActivity.this, android.R.style.TextAppearance_Medium);
-                labelSummary.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT, TableRow.LayoutParams.WRAP_CONTENT, 20f));
-                Integer summary = Integer.valueOf(tvQty.getText().toString()) * Integer.valueOf(tvPrice.getText().toString());
-                labelSummary.setText(summary.toString());
-                tableRow.addView(labelSummary);
+                    tableRow.setOnLongClickListener(
+                            new View.OnLongClickListener() {
+                                @Override
+                                public boolean onLongClick(View v) {
+                                    final TableRow selectedRow = (TableRow) v;
+                                    TextView labelCode = (TextView) findViewById(200 + selectedRow.getId());
+                                    final String tvOrderCode = labelCode.getText().toString().split("\\|")[0].trim();
+                                    final Order order = mapOrders.get(tvOrderCode);
 
-                tableRow.setOnLongClickListener(
-                        new View.OnLongClickListener() {
-                            @Override
-                            public boolean onLongClick(View v) {
-                                final TableRow selectedRow = (TableRow) v;
-                                TextView labelCode = (TextView) findViewById(200 + selectedRow.getId());
-                                final String tvOrderCode = labelCode.getText().toString().split("\\|")[0].trim();
-                                final Order order = mapOrders.get(tvOrderCode);
+                                    // custom dialog
+                                    final Dialog dialog = new Dialog(context);
+                                    dialog.setContentView(R.layout.popup_edit_order);
+                                    dialog.setTitle("EDIT ORDER");
 
-                                // custom dialog
-                                final Dialog dialog = new Dialog(context);
-                                dialog.setContentView(R.layout.popup_edit_order);
-                                dialog.setTitle("EDIT ORDER");
-
-                                // set the custom dialog components - text, image and button
-                                final EditText edOrderCode = (EditText) dialog.findViewById(R.id.popup_order_code);
-                                edOrderCode.setText(order.getKode());
-                                edOrderCode.setEnabled(false);
-                                final EditText edOrderNamaBrg = (EditText) dialog.findViewById(R.id.popup_nama_brg);
-                                edOrderNamaBrg.setText(order.getNamaBarang());
-                                final EditText edOrderPrice = (EditText) dialog.findViewById(R.id.popup_order_price);
-                                edOrderPrice.setText(String.valueOf(order.getHarga()));
-                                final EditText edOrderQty = (EditText) dialog.findViewById(R.id.popup_order_qty);
-                                edOrderQty.setText(String.valueOf(order.getQty()));
-                                final EditText edOrderUnit = (EditText) dialog.findViewById(R.id.popup_order_unit);
-                                edOrderUnit.setText(order.getUnit());
+                                    // set the custom dialog components - text, image and button
+                                    final EditText edOrderCode = (EditText) dialog.findViewById(R.id.popup_order_code);
+                                    edOrderCode.setText(order.getKode());
+                                    edOrderCode.setEnabled(false);
+                                    final EditText edOrderNamaBrg = (EditText) dialog.findViewById(R.id.popup_nama_brg);
+                                    edOrderNamaBrg.setText(order.getNamaBarang());
+                                    final EditText edOrderPrice = (EditText) dialog.findViewById(R.id.popup_order_price);
+                                    edOrderPrice.setText(String.valueOf(order.getHarga()));
+                                    final EditText edOrderQty = (EditText) dialog.findViewById(R.id.popup_order_qty);
+                                    edOrderQty.setText(String.valueOf(order.getQty()));
+                                    final EditText edOrderUnit = (EditText) dialog.findViewById(R.id.popup_order_unit);
+                                    edOrderUnit.setText(order.getUnit());
 
 
-                                Button popupSaveButton = (Button) dialog.findViewById(R.id.popup_btn_save_data);
-                                Button popupDeleteButton = (Button) dialog.findViewById(R.id.popup_btn_delete_data);
+                                    Button popupSaveButton = (Button) dialog.findViewById(R.id.popup_btn_save_data);
+                                    Button popupDeleteButton = (Button) dialog.findViewById(R.id.popup_btn_delete_data);
 
-                                // if button is clicked, close the custom dialog
-                                popupSaveButton.setOnClickListener(new View.OnClickListener() {
-                                    @Override
-                                    public void onClick(View v) {
-                                        Order order = mapOrders.get(edOrderCode.getText().toString());
-                                        order.setNamaBarang(edOrderNamaBrg.getText().toString());
-                                        order.setHarga(Integer.valueOf(edOrderPrice.getText().toString()));
-                                        order.setQty(Integer.valueOf(edOrderQty.getText().toString()));
-                                        order.setUnit(edOrderUnit.getText().toString());
+                                    // if button is clicked, close the custom dialog
+                                    popupSaveButton.setOnClickListener(new View.OnClickListener() {
+                                        @Override
+                                        public void onClick(View v) {
+                                            Order order = mapOrders.get(edOrderCode.getText().toString());
+                                            order.setNamaBarang(edOrderNamaBrg.getText().toString());
+                                            order.setHarga(Integer.valueOf(edOrderPrice.getText().toString()));
+                                            order.setQty(Integer.valueOf(edOrderQty.getText().toString()));
+                                            order.setUnit(edOrderUnit.getText().toString());
 
-                                        TextView labelCode = (TextView) findViewById(200 + selectedRow.getId());
-                                        labelCode.setText(edOrderCode.getText() + " | " + edOrderNamaBrg.getText());
-                                        TextView labelPrice = (TextView) findViewById(300 + selectedRow.getId());
-                                        labelPrice.setText(edOrderPrice.getText());
-                                        TextView labelQty = (TextView) findViewById(400 + selectedRow.getId());
-                                        labelQty.setText(edOrderQty.getText());
-                                        TextView labelSummary = (TextView) findViewById(500 + selectedRow.getId());
-                                        Integer summary = Integer.valueOf(edOrderQty.getText().toString()) * Integer.valueOf(edOrderPrice.getText().toString());
-                                        labelSummary.setText(summary.toString());
+                                            TextView labelCode = (TextView) findViewById(200 + selectedRow.getId());
+                                            labelCode.setText(edOrderCode.getText() + " | " + edOrderNamaBrg.getText());
+                                            TextView labelPrice = (TextView) findViewById(300 + selectedRow.getId());
+                                            labelPrice.setText(edOrderPrice.getText());
+                                            TextView labelQty = (TextView) findViewById(400 + selectedRow.getId());
+                                            labelQty.setText(edOrderQty.getText());
+                                            TextView labelSummary = (TextView) findViewById(500 + selectedRow.getId());
+                                            Integer summary = Integer.valueOf(edOrderQty.getText().toString()) * Integer.valueOf(edOrderPrice.getText().toString());
+                                            labelSummary.setText(summary.toString());
 
-                                        dialog.dismiss();
-                                    }
-                                });
+                                            dialog.dismiss();
+                                        }
+                                    });
 
-                                popupDeleteButton.setOnClickListener(new View.OnClickListener() {
-                                    @Override
-                                    public void onClick(View v) {
-                                        mapOrders.remove(edOrderCode.getText().toString());
-                                        theGrid.removeView(selectedRow);
-                                        dialog.dismiss();
-                                    }
-                                });
+                                    popupDeleteButton.setOnClickListener(new View.OnClickListener() {
+                                        @Override
+                                        public void onClick(View v) {
+                                            mapOrders.remove(edOrderCode.getText().toString());
+                                            theGrid.removeView(selectedRow);
+                                            dialog.dismiss();
+                                        }
+                                    });
 
-                                dialog.show();
-                                return true;
+                                    dialog.show();
+                                    return true;
+                                }
                             }
-                        }
-                );
+                    );
 
-                theGrid.addView(tableRow, new TableLayout.LayoutParams(TableLayout.LayoutParams.MATCH_PARENT, TableLayout.LayoutParams.WRAP_CONTENT));
-                mapOrders.put(order.getKode(), order);
+                    theGrid.addView(tableRow, new TableLayout.LayoutParams(TableLayout.LayoutParams.MATCH_PARENT, TableLayout.LayoutParams.WRAP_CONTENT));
+                    mapOrders.put(order.getKode(), order);
 
-                tvCode.setText(null);
-                tvName.setText(null);
-                tvPrice.setText(null);
-                tvQty.setText(null);
-                tvUnit.setText(null);
+                    tvCode.setText(null);
+                    tvName.setText(null);
+                    tvPrice.setText(null);
+                    tvQty.setText(null);
+                    tvUnit.setText(null);
+
+                } else {
+                    showToast(getResources().getString(R.string.code_not_found));
+                }
 
             }
         } else if (view == findViewById(R.id.button_proses)) {
@@ -214,5 +246,10 @@ public class OrderPenjualanActivity extends Activity implements android.view.Vie
 
     private void saveAllOrder() {
         orderRepo.insertAll(new ArrayList<Order>(mapOrders.values()));
+    }
+
+    private void showToast(String msg) {
+        Toast error = Toast.makeText(this, msg, Toast.LENGTH_LONG);
+        error.show();
     }
 }

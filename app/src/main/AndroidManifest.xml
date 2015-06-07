@@ -42,17 +42,17 @@
         </activity>
         <activity
             android:name=".OrderPenjualanActivity"
-            android:label="@string/app_name"
+            android:label="@string/order_title"
             android:screenOrientation="landscape">
         </activity>
         <activity
             android:name=".ReturPenjualanActivity"
-            android:label="@string/app_name"
+            android:label="@string/retur_title"
             android:screenOrientation="landscape">
         </activity>
         <activity
             android:name=".SettlementActivity"
-            android:label="@string/app_name"
+            android:label="@string/settlement_title"
             android:screenOrientation="landscape">
         </activity>
         <activity
@@ -62,6 +62,11 @@
         </activity>
         <activity
             android:name=".SummaryActivity"
+            android:label="@string/app_name"
+            android:screenOrientation="landscape">
+        </activity>
+        <activity
+            android:name=".ViewStockActivity"
             android:label="@string/app_name"
             android:screenOrientation="landscape">
         </activity>
