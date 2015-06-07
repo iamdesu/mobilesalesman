@@ -102,7 +102,7 @@ public class DownloadDataFromDropbox extends AsyncTask<Void, Void, Boolean> {
     protected void onPostExecute(Boolean result) {
         if (result) {
             Toast.makeText(context, context.getResources().getString(R.string.download_success), Toast.LENGTH_LONG).show();
-            if(isCloseActivity) {
+            if (isCloseActivity) {
                 currentActivity.finish();
             }
         } else {
