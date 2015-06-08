@@ -70,6 +70,11 @@
             android:label="@string/app_name"
             android:screenOrientation="landscape">
         </activity>
+        <activity
+            android:name=".ViewBillingActivity"
+            android:label="@string/app_name"
+            android:screenOrientation="landscape">
+        </activity>
     </application>
 
     <uses-permission android:name="android.permission.INTERNET"></uses-permission>
