@@ -78,7 +78,7 @@ public class UploadFileToDropbox extends AsyncTask<Void, Void, Boolean> {
         tempFile = File.createTempFile("file", ".csv", tempDir);
         fr = new FileWriter(tempFile);
         OrderRepo orderRepo = new OrderRepo(context);
-        List<Order> orders = orderRepo.getAllWithOutlet();
+        List<Order> orders = orderRepo.getAll();
 
         fr.append("GUID");
         fr.append(",");
@@ -110,7 +110,7 @@ public class UploadFileToDropbox extends AsyncTask<Void, Void, Boolean> {
             fr.append(",");
             fr.append(order.getUnit());
             fr.append(",");
-            fr.append(order.getOutlet().getKode());
+            fr.append(order.getKodeOutlet());
             fr.append(",");
             fr.append(String.valueOf(order.getCreateDate()));
             fr.append('\n');
@@ -119,10 +119,10 @@ public class UploadFileToDropbox extends AsyncTask<Void, Void, Boolean> {
         fr.close();
 
         Date date = new Date();
-        DateFormat df = new SimpleDateFormat("dd-MM-yyyy");
+        DateFormat df = new SimpleDateFormat("yyMMdd");
 
         FileInputStream fileInputStream = new FileInputStream(tempFile);
-        dropbox.putFile(path + team + "-Order-"+df.format(date)+".csv", fileInputStream,
+        dropbox.putFile(path + "ORDER_" + team + "_" + df.format(date)+".csv", fileInputStream,
                 tempFile.length(), null, null);
         tempFile.delete();
     }
@@ -135,7 +135,7 @@ public class UploadFileToDropbox extends AsyncTask<Void, Void, Boolean> {
         tempFile = File.createTempFile("file", ".csv", tempDir);
         fr = new FileWriter(tempFile);
         ReturRepo returRepo = new ReturRepo(context);
-        List<Retur> returs = returRepo.getAllWithOutlet();
+        List<Retur> returs = returRepo.getAll();
 
         fr.append("GUID");
         fr.append(",");
@@ -167,7 +167,7 @@ public class UploadFileToDropbox extends AsyncTask<Void, Void, Boolean> {
             fr.append(",");
             fr.append(retur.getUnit());
             fr.append(",");
-            fr.append(retur.getOutlet().getKode());
+            fr.append(retur.getKodeOutlet());
             fr.append(",");
             fr.append(String.valueOf(retur.getCreateDate()));
             fr.append('\n');
@@ -176,10 +176,10 @@ public class UploadFileToDropbox extends AsyncTask<Void, Void, Boolean> {
         fr.close();
 
         Date date = new Date();
-        DateFormat df = new SimpleDateFormat("dd-MM-yyyy");
+        DateFormat df = new SimpleDateFormat("yyMMdd");
 
         FileInputStream fileInputStream = new FileInputStream(tempFile);
-        dropbox.putFile(path + team + "-Retur-"+df.format(date)+".csv", fileInputStream,
+        dropbox.putFile(path + "RETUR_"+ team + "_" + df.format(date)+".csv", fileInputStream,
                 tempFile.length(), null, null);
         tempFile.delete();
     }
@@ -192,8 +192,8 @@ public class UploadFileToDropbox extends AsyncTask<Void, Void, Boolean> {
         tempFile = File.createTempFile("file", ".csv", tempDir);
         fr = new FileWriter(tempFile);
         SettlementRepo settlementRepo = new SettlementRepo(context);
-        List<Settlement> settlements = settlementRepo.getAllWithOutlet();
-        DateFormat df = new SimpleDateFormat("dd-MM-yyyy");
+        List<Settlement> settlements = settlementRepo.getAll();
+        DateFormat df = new SimpleDateFormat("yyMMdd");
 
         fr.append("GUID");
         fr.append(",");
@@ -225,7 +225,7 @@ public class UploadFileToDropbox extends AsyncTask<Void, Void, Boolean> {
             fr.append(",");
             fr.append(String.valueOf(settlement.getNominalPayment()));
             fr.append(",");
-            fr.append(settlement.getOutlet().getKode());
+            fr.append(settlement.getKodeOutlet());
             fr.append(",");
             fr.append(String.valueOf(settlement.getCreatedDate()));
             fr.append('\n');
@@ -236,7 +236,7 @@ public class UploadFileToDropbox extends AsyncTask<Void, Void, Boolean> {
         Date date = new Date();
 
         FileInputStream fileInputStream = new FileInputStream(tempFile);
-        dropbox.putFile(path + team + "-Pelunasan-"+df.format(date)+".csv", fileInputStream,
+        dropbox.putFile(path + "LUNAS_"+ team + "_" + df.format(date)+".csv", fileInputStream,
                 tempFile.length(), null, null);
         tempFile.delete();
     }
