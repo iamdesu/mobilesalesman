@@ -180,12 +180,12 @@ public class DownloadDataFromDropbox extends AsyncTask<Void, Void, Boolean> {
                     String[] data = line.split(DELIMITED, -1);
 
                     StaffBilling staffBilling = new StaffBilling();
-                    staffBilling.setStaff(data[0]);
-                    staffBilling.setStaffName(data[1]);
+                    staffBilling.setStaff(data[0].trim());
+                    staffBilling.setStaffName(data[1].trim());
                     staffBilling.setPassword(data[2]);
                     staffBilling.setLevel(data[3].trim().equals("") ? null : Integer.valueOf(data[3]));
-                    staffBilling.setUserID(data[4]);
-                    staffBilling.setTeam(data[5]);
+                    staffBilling.setUserID(data[4].trim());
+                    staffBilling.setTeam(data[5].trim());
                     staffBilling.setExpire(data[6].trim().equals("") ? null : Integer.valueOf(data[6]));
 
                     staffBillingRepo.insert(staffBilling);
@@ -235,9 +235,9 @@ public class DownloadDataFromDropbox extends AsyncTask<Void, Void, Boolean> {
                     String[] data = line.split(DELIMITED, -1);
 
                     StockBilling stockBilling = new StockBilling();
-                    stockBilling.setStockId(data[0]);
-                    stockBilling.setScode(data[1]);
-                    stockBilling.setDescription(data[2]);
+                    stockBilling.setStockId(data[0].trim());
+                    stockBilling.setScode(data[1].trim());
+                    stockBilling.setDescription(data[2].trim());
 
                     stockBillingRepo.insert(stockBilling);
                 } else {
@@ -283,7 +283,7 @@ public class DownloadDataFromDropbox extends AsyncTask<Void, Void, Boolean> {
                     String[] data = line.split(DELIMITED, -1);
 
                     StockPrice stockPrice = new StockPrice();
-                    stockPrice.setStockId(data[0]);
+                    stockPrice.setStockId(data[0].trim());
                     stockPrice.setPriceLevel(data[1].trim().equals("") ? null : Integer.valueOf(data[1]));
                     stockPrice.setPrice(data[2].trim().equals("") ? null : Double.valueOf(data[2]));
 
@@ -331,13 +331,13 @@ public class DownloadDataFromDropbox extends AsyncTask<Void, Void, Boolean> {
                     String[] data = line.split(DELIMITED, -1);
 
                     Customer customer = new Customer();
-                    customer.setCustomerId(data[0]);
-                    customer.setCompanyName(data[1]);
-                    customer.setPersonName(data[2]);
-                    customer.setAddress(data[3]);
-                    customer.setRegion(data[4]);
-                    customer.setCity(data[5]);
-                    customer.setVisit(data[6]);
+                    customer.setCustomerId(data[0].trim());
+                    customer.setCompanyName(data[1].trim());
+                    customer.setPersonName(data[2].trim());
+                    customer.setAddress(data[3].trim());
+                    customer.setRegion(data[4].trim());
+                    customer.setCity(data[5].trim());
+                    customer.setVisit(data[6].trim());
                     customer.setPriceLevel(data[7].trim().equals("") ? null : Integer.valueOf(data[7]));
 
                     customerRepo.insert(customer);
@@ -384,8 +384,8 @@ public class DownloadDataFromDropbox extends AsyncTask<Void, Void, Boolean> {
                     String[] data = line.split(DELIMITED, -1);
 
                     Billing billing = new Billing();
-                    billing.setInvoiceNo(data[0]);
-                    billing.setCustomerId(data[1]);
+                    billing.setInvoiceNo(data[0].trim());
+                    billing.setCustomerId(data[1].trim());
                     billing.setTotalAmount(data[2].trim().equals("") ? null : Double.valueOf(data[2]));
                     billing.setPaidAmount(data[3].trim().equals("") ? null : Double.valueOf(data[3]));
 

@@ -2,30 +2,58 @@ package com.bali.nusadua.productmonitor;
 
 import android.app.Activity;
 import android.os.Bundle;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
+import android.text.Editable;
+import android.text.TextWatcher;
+import android.widget.EditText;
+import android.widget.ListView;
 
-import com.bali.nusadua.productmonitor.adapter.StockRecycleViewAdapter;
+import com.bali.nusadua.productmonitor.adapter.StockListViewAdapter;
 import com.bali.nusadua.productmonitor.repo.StockBillingRepo;
+
+import java.util.ArrayList;
+import java.util.HashMap;
 
 /**
  * Created by desu sudarsana on 6/7/2015.
  */
-public class ViewStockActivity extends Activity{
+public class ViewStockActivity extends Activity {
+    private ListView lv;
+    private EditText inputSearch;
+
+    StockListViewAdapter adapter;
+
+    ArrayList<HashMap<String, String>> stockList;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_view_stock);
-        RecyclerView recList = (RecyclerView) findViewById(R.id.rv);
-        recList.setHasFixedSize(true);
-        LinearLayoutManager llm = new LinearLayoutManager(this);
-        llm.setOrientation(LinearLayoutManager.VERTICAL);
-        recList.setLayoutManager(llm);
+        lv = (ListView) findViewById(R.id.list_view);
+        inputSearch = (EditText) findViewById(R.id.inputSearchStock);
 
         StockBillingRepo stockBillingRepo = new StockBillingRepo(this);
 
-        StockRecycleViewAdapter srva = new StockRecycleViewAdapter(stockBillingRepo.getAll());
-        recList.setAdapter(srva);
+        adapter = new StockListViewAdapter(this, stockBillingRepo.getStockBillings());
+        lv.setAdapter(adapter);
+
+        inputSearch.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence cs, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence cs, int start, int before, int count) {
+                // When user changed the Text
+                ViewStockActivity.this.adapter.getFilter().filter(cs);
+            }
+
+            @Override
+            public void afterTextChanged(Editable cs) {
+                // When user changed the Text
+
+            }
+        });
     }
 }
