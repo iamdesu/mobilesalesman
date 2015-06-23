@@ -1,13 +1,17 @@
 package com.bali.nusadua.productmonitor;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ListView;
 
 import com.bali.nusadua.productmonitor.adapter.StockListViewAdapter;
+import com.bali.nusadua.productmonitor.model.StockBilling;
 import com.bali.nusadua.productmonitor.repo.StockBillingRepo;
 
 import java.util.ArrayList;
@@ -37,9 +41,24 @@ public class ViewStockActivity extends Activity {
         adapter = new StockListViewAdapter(this, stockBillingRepo.getStockBillings());
         lv.setAdapter(adapter);
 
+        lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
+                StockBilling stockBilling = (StockBilling) lv.getItemAtPosition(position);
+
+                Intent resultIntent = new Intent();
+                resultIntent.putExtra("kode", stockBilling.getScode());
+                resultIntent.putExtra("nama_barang", stockBilling.getDescription());
+
+                setResult(Activity.RESULT_OK, resultIntent);
+                finish();
+            }
+        });
+
         inputSearch.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence cs, int start, int count, int after) {
+                //test
 
             }
 

@@ -1,5 +1,6 @@
 package com.bali.nusadua.productmonitor;
 
+import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
@@ -18,6 +19,7 @@ import android.widget.Toast;
 
 import com.bali.nusadua.productmonitor.model.Customer;
 import com.bali.nusadua.productmonitor.model.Order;
+import com.bali.nusadua.productmonitor.model.StockBilling;
 import com.bali.nusadua.productmonitor.repo.OrderRepo;
 import com.bali.nusadua.productmonitor.repo.StockBillingRepo;
 
@@ -26,6 +28,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class OrderPenjualanActivity extends ActionBarActivity implements android.view.View.OnClickListener {
+
+    private static final int VIEW_STOCK_ACTIVITY = 1;
 
     private Button btnAdd, btnProses, btnBatal;
     private TableLayout theGrid;
@@ -82,10 +86,26 @@ public class OrderPenjualanActivity extends ActionBarActivity implements android
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_show_stock) {
             Intent intent = new Intent(OrderPenjualanActivity.this, ViewStockActivity.class);
-            startActivity(intent);
+            //startActivity(intent);
+            startActivityForResult(intent, VIEW_STOCK_ACTIVITY);
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        switch(requestCode) {
+            case (VIEW_STOCK_ACTIVITY) : {
+                if (resultCode == Activity.RESULT_OK) {
+                    tvCode.setText(data.getStringExtra("kode"));
+                    tvName.setText(data.getStringExtra("nama_barang"));
+                    // TODO Update your TextView.
+                }
+                break;
+            }
+        }
     }
 
     @Override
