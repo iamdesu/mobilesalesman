@@ -10,8 +10,11 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Spinner;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
@@ -20,21 +23,25 @@ import android.widget.Toast;
 import com.bali.nusadua.productmonitor.model.Customer;
 import com.bali.nusadua.productmonitor.model.Order;
 import com.bali.nusadua.productmonitor.model.StockBilling;
+import com.bali.nusadua.productmonitor.model.StockPrice;
 import com.bali.nusadua.productmonitor.repo.OrderRepo;
 import com.bali.nusadua.productmonitor.repo.StockBillingRepo;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-public class OrderPenjualanActivity extends ActionBarActivity implements android.view.View.OnClickListener {
+public class OrderPenjualanActivity extends ActionBarActivity implements android.view.View.OnClickListener, AdapterView.OnItemSelectedListener {
 
     private static final int VIEW_STOCK_ACTIVITY = 1;
 
     private Button btnAdd, btnProses, btnBatal;
     private TableLayout theGrid;
-    private EditText tvCode, tvName, tvPrice, tvQty, tvUnit;
-    private String customerID;
+    private EditText tvCode, tvName, tvPrice, tvQty;
+    private Spinner unitSpinner;
+    private String customerID, prevPrice;
     private final Context context = this;
     private int countID;
 
@@ -57,16 +64,27 @@ public class OrderPenjualanActivity extends ActionBarActivity implements android
         tvName = (EditText) findViewById(R.id.order_name);
         tvPrice = (EditText) findViewById(R.id.order_price);
         tvQty = (EditText) findViewById(R.id.order_qty);
-        tvUnit = (EditText) findViewById(R.id.order_unit);
+        unitSpinner = (Spinner) findViewById(R.id.unit_spinner);
 
         btnAdd.setOnClickListener(this);
         btnProses.setOnClickListener(this);
         btnBatal.setOnClickListener(this);
+        unitSpinner.setOnItemSelectedListener(this);
 
         Intent intent = getIntent();
         customerID = intent.getStringExtra(Customer.CUST_ID);
         Log.i("Customer ID : ", customerID);
         countID = 0;
+    }
+
+    @Override
+    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+
+    }
+
+    @Override
+    public void onNothingSelected(AdapterView<?> parent) {
+
     }
 
     @Override
@@ -86,7 +104,7 @@ public class OrderPenjualanActivity extends ActionBarActivity implements android
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_show_stock) {
             Intent intent = new Intent(OrderPenjualanActivity.this, ViewStockActivity.class);
-            //startActivity(intent);
+            intent.putExtra(Customer.CUST_ID, customerID);
             startActivityForResult(intent, VIEW_STOCK_ACTIVITY);
         }
 
@@ -99,9 +117,10 @@ public class OrderPenjualanActivity extends ActionBarActivity implements android
         switch(requestCode) {
             case (VIEW_STOCK_ACTIVITY) : {
                 if (resultCode == Activity.RESULT_OK) {
-                    tvCode.setText(data.getStringExtra("kode"));
-                    tvName.setText(data.getStringExtra("nama_barang"));
-                    // TODO Update your TextView.
+                    // Update your TextView
+                    tvCode.setText(data.getStringExtra(StockBilling.SCODE));
+                    tvName.setText(data.getStringExtra(StockBilling.DESCRIPTION));
+                    tvPrice.setText(data.getStringExtra(StockPrice.PRICE));
                 }
                 break;
             }
@@ -120,18 +139,13 @@ public class OrderPenjualanActivity extends ActionBarActivity implements android
                     && !tvName.getText().toString().isEmpty() && tvName.getText().toString().trim() != ""
                     && !tvPrice.getText().toString().isEmpty() && tvPrice.getText().toString().trim() != ""
                     && !tvQty.getText().toString().isEmpty() && tvQty.getText().toString().trim() != ""
-                    && !tvUnit.getText().toString().isEmpty() && tvUnit.getText().toString().trim() != "") {
+                    && !unitSpinner.getSelectedItem().toString().isEmpty()) {
 
-                if (stockBillingRepo.getByStockId(tvCode.getText().toString()) != null) {
+                if (stockBillingRepo.getByStockCode(tvCode.getText().toString()) != null) {
                     countID = countID + 1;
                     int count = countID;
                     TableRow tableRow = new TableRow(this);
                     tableRow.setPadding(padding_in_px, padding_in_px, padding_in_px, padding_in_px);
-                    /*if (count % 2 == 0) {
-                        tableRow.setBackgroundResource(R.drawable.table_row_even_shape);
-                    } else {
-                        tableRow.setBackgroundResource(R.drawable.table_row_odd_shape);
-                    }*/
 
                     tableRow.setBackgroundResource(R.drawable.table_row_even_shape);
                     tableRow.setId(count + 1);
@@ -147,27 +161,36 @@ public class OrderPenjualanActivity extends ActionBarActivity implements android
 
                     TextView labelPrice = new TextView(this);
                     labelPrice.setId(300 + count + 1);
-                    labelPrice.setText(tvPrice.getText());
+                    String selectedUnit = unitSpinner.getSelectedItem().toString();
+                    if (selectedUnit.equals("Pcs")) {
+                        Double doubleValue = Double.parseDouble(tvPrice.getText().toString());
+                        Double price = doubleValue / 12;
+                        price = new BigDecimal(price).setScale(0, RoundingMode.HALF_UP).doubleValue();
+                        labelPrice.setText(String.valueOf(price));
+                        order.setHarga(price);
+                    } else {
+                        labelPrice.setText(tvPrice.getText().toString());
+                        order.setHarga(Double.valueOf(tvPrice.getText().toString()));
+                    }
                     labelPrice.setTextAppearance(OrderPenjualanActivity.this, android.R.style.TextAppearance_Medium);
                     labelPrice.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT, TableRow.LayoutParams.WRAP_CONTENT, 20f));
                     tableRow.addView(labelPrice);
-                    order.setHarga(Integer.valueOf(tvPrice.getText().toString()));
 
                     TextView labelQty = new TextView(this);
                     labelQty.setId(400 + count + 1);
                     labelQty.setTextAppearance(OrderPenjualanActivity.this, android.R.style.TextAppearance_Medium);
                     labelQty.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT, TableRow.LayoutParams.WRAP_CONTENT, 20f));
-                    labelQty.setText(tvQty.getText() + "/" + tvUnit.getText());
+                    labelQty.setText(tvQty.getText() + "/" + unitSpinner.getSelectedItem().toString());
                     tableRow.addView(labelQty);
                     order.setQty(Integer.valueOf(tvQty.getText().toString()));
-                    order.setUnit(tvUnit.getText().toString());
+                    order.setUnit(unitSpinner.getSelectedItem().toString());
                     order.setKodeOutlet(customerID);
 
                     TextView labelSummary = new TextView(this);
                     labelSummary.setId(500 + count + 1);
                     labelSummary.setTextAppearance(OrderPenjualanActivity.this, android.R.style.TextAppearance_Medium);
                     labelSummary.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT, TableRow.LayoutParams.WRAP_CONTENT, 20f));
-                    Integer summary = Integer.valueOf(tvQty.getText().toString()) * Integer.valueOf(tvPrice.getText().toString());
+                    Double summary = order.getQty() * order.getHarga();
                     labelSummary.setText(summary.toString());
                     tableRow.addView(labelSummary);
 
@@ -183,7 +206,7 @@ public class OrderPenjualanActivity extends ActionBarActivity implements android
                                     // custom dialog
                                     final Dialog dialog = new Dialog(context);
                                     dialog.setContentView(R.layout.popup_edit_order);
-                                    dialog.setTitle("EDIT ORDER");
+                                    dialog.setTitle(getResources().getString(R.string.pop_up_order_edit));
 
                                     // set the custom dialog components - text, image and button
                                     final EditText edOrderCode = (EditText) dialog.findViewById(R.id.popup_order_code);
@@ -195,9 +218,6 @@ public class OrderPenjualanActivity extends ActionBarActivity implements android
                                     edOrderPrice.setText(String.valueOf(order.getHarga()));
                                     final EditText edOrderQty = (EditText) dialog.findViewById(R.id.popup_order_qty);
                                     edOrderQty.setText(String.valueOf(order.getQty()));
-                                    final EditText edOrderUnit = (EditText) dialog.findViewById(R.id.popup_order_unit);
-                                    edOrderUnit.setText(order.getUnit());
-
 
                                     Button popupSaveButton = (Button) dialog.findViewById(R.id.popup_btn_save_data);
                                     Button popupDeleteButton = (Button) dialog.findViewById(R.id.popup_btn_delete_data);
@@ -208,18 +228,17 @@ public class OrderPenjualanActivity extends ActionBarActivity implements android
                                         public void onClick(View v) {
                                             Order order = mapOrders.get(edOrderCode.getText().toString());
                                             order.setNamaBarang(edOrderNamaBrg.getText().toString());
-                                            order.setHarga(Integer.valueOf(edOrderPrice.getText().toString()));
+                                            order.setHarga(Double.parseDouble(edOrderPrice.getText().toString()));
                                             order.setQty(Integer.valueOf(edOrderQty.getText().toString()));
-                                            order.setUnit(edOrderUnit.getText().toString());
 
                                             TextView labelCode = (TextView) findViewById(200 + selectedRow.getId());
-                                            labelCode.setText(edOrderCode.getText() + " | " + edOrderNamaBrg.getText());
+                                            labelCode.setText(order.getKode() + " | " + order.getNamaBarang());
                                             TextView labelPrice = (TextView) findViewById(300 + selectedRow.getId());
-                                            labelPrice.setText(edOrderPrice.getText());
+                                            labelPrice.setText(order.getHarga().toString());
                                             TextView labelQty = (TextView) findViewById(400 + selectedRow.getId());
-                                            labelQty.setText(edOrderQty.getText());
+                                            labelQty.setText(String.valueOf(order.getQty()) + "/" + order.getUnit());
                                             TextView labelSummary = (TextView) findViewById(500 + selectedRow.getId());
-                                            Integer summary = Integer.valueOf(edOrderQty.getText().toString()) * Integer.valueOf(edOrderPrice.getText().toString());
+                                            Double summary = order.getQty() * order.getHarga();
                                             labelSummary.setText(summary.toString());
 
                                             dialog.dismiss();
@@ -248,7 +267,7 @@ public class OrderPenjualanActivity extends ActionBarActivity implements android
                     tvName.setText(null);
                     tvPrice.setText(null);
                     tvQty.setText(null);
-                    tvUnit.setText(null);
+                    unitSpinner.setSelection(0);
 
                 } else {
                     showToast(getResources().getString(R.string.code_not_found));

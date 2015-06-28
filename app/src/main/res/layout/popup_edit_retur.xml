@@ -119,14 +119,6 @@
                 android:text="@string/hint_qty"
                 android:textAppearance="?android:attr/textAppearanceMedium"
                 android:textColor="#ffffff" />
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="@string/hint_unit"
-                android:textAppearance="?android:attr/textAppearanceMedium"
-                android:textColor="#ffffff" />
         </LinearLayout>
 
         <LinearLayout
@@ -147,18 +139,6 @@
                 android:textAppearance="?android:attr/textAppearanceMedium"
                 android:inputType="numberSigned"
                 android:maxLines="9" />
-
-            <EditText
-                android:id="@+id/popup_retur_unit"
-                style="@style/PopupEditText"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="3dp"
-                android:layout_marginTop="3dp"
-                android:layout_weight="1"
-                android:background="#ffffff"
-                android:textAppearance="?android:attr/textAppearanceMedium"
-                android:maxLines="255"/>
         </LinearLayout>
 
         <LinearLayout

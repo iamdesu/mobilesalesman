@@ -1,5 +1,6 @@
 package com.bali.nusadua.productmonitor;
 
+import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.content.Context;
@@ -18,6 +19,7 @@ import android.widget.TableRow;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bali.nusadua.productmonitor.model.Billing;
 import com.bali.nusadua.productmonitor.model.Customer;
 import com.bali.nusadua.productmonitor.model.Settlement;
 import com.bali.nusadua.productmonitor.repo.BillingRepo;
@@ -32,6 +34,8 @@ import java.util.List;
 import java.util.Map;
 
 public class SettlementActivity extends ActionBarActivity implements View.OnClickListener {
+
+    private static final int VIEW_BILLING_ACTIVITY = 1;
 
     private SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
     private Button btnAdd, btnProses, btnBatal;
@@ -127,10 +131,24 @@ public class SettlementActivity extends ActionBarActivity implements View.OnClic
         if (id == R.id.action_show_billing) {
             Intent intent = new Intent(SettlementActivity.this, ViewBillingActivity.class);
             intent.putExtra(Customer.CUST_ID, customerID);
-            startActivity(intent);
+            startActivityForResult(intent, VIEW_BILLING_ACTIVITY);
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        switch(requestCode) {
+            case (VIEW_BILLING_ACTIVITY) : {
+                if (resultCode == Activity.RESULT_OK) {
+                    //Update your TextView
+                    etInvoiceNumber.setText(data.getStringExtra(Billing.INVOICE_NO));
+                }
+                break;
+            }
+        }
     }
 
     @Override
@@ -146,7 +164,7 @@ public class SettlementActivity extends ActionBarActivity implements View.OnClic
                     && !etPaymentMethod.getText().toString().isEmpty() && etPaymentMethod.getText().toString().trim() != ""
                     && !etNominalPayment.getText().toString().isEmpty() && etNominalPayment.getText().toString().trim() != "") {
 
-                if (billingRepo.getBillingByInvoiceNo(etInvoiceNumber.getText().toString()) != null) {
+                if (billingRepo.getBillingByCustoMerInvoiceNo(customerID, etInvoiceNumber.getText().toString()) != null) {
                     countID = countID + 1;
                     int count = countID;
                     TableRow tableRow = new TableRow(this);

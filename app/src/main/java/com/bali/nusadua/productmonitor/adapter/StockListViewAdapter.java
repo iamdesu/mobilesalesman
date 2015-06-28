@@ -11,27 +11,30 @@ import android.widget.TextView;
 
 import com.bali.nusadua.productmonitor.R;
 import com.bali.nusadua.productmonitor.model.StockBilling;
+import com.bali.nusadua.productmonitor.modelView.StockView;
 
+import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 /**
  * Created by Desu on 6/20/2015.
  */
-public class StockListViewAdapter extends ArrayAdapter<StockBilling> implements Filterable {
+public class StockListViewAdapter extends ArrayAdapter<StockView> implements Filterable {
     private Activity activity;
     private LayoutInflater inflater;
-    private List<StockBilling> stockBillings;
-    private List<StockBilling> filteredStockBillings;
+    private List<StockView> stockViews;
+    private List<StockView> filteredStockViews;
     private ModelFilter filter;
 
-    public StockListViewAdapter(Activity activity, List<StockBilling> listStockBilling) {
-        super(activity, R.layout.list_view_stock, listStockBilling);
+    public StockListViewAdapter(Activity activity, List<StockView> listStockView) {
+        super(activity, R.layout.list_view_stock, listStockView);
         this.activity = activity;
-        this.stockBillings = new ArrayList<StockBilling>();
-        this.stockBillings.addAll(listStockBilling);
-        this.filteredStockBillings = new ArrayList<StockBilling>();
-        this.filteredStockBillings.addAll(this.stockBillings);
+        this.stockViews = new ArrayList<StockView>();
+        this.stockViews.addAll(listStockView);
+        this.filteredStockViews = new ArrayList<StockView>();
+        this.filteredStockViews.addAll(this.stockViews);
         inflater = activity.getLayoutInflater();
         getFilter();
     }
@@ -48,23 +51,14 @@ public class StockListViewAdapter extends ArrayAdapter<StockBilling> implements 
         protected TextView stock_icon;
         protected TextView stock_code;
         protected TextView stock_description;
+        protected TextView stock_price;
     }
-
-    /*@Override
-    public StockBilling getItem(int location) {
-        return stockBillings.get(location);
-    }
-
-    @Override
-    public long getItemId(int position) {
-        return position;
-    }*/
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         View view = null;
 
-        StockBilling sb = filteredStockBillings.get(position);
+        StockView sv = filteredStockViews.get(position);
         ViewHolder viewHolder = null;
 
         if (convertView == null) {
@@ -73,15 +67,19 @@ public class StockListViewAdapter extends ArrayAdapter<StockBilling> implements 
             viewHolder.stock_icon = (TextView) view.findViewById(R.id.stock_icon);
             viewHolder.stock_code = (TextView) view.findViewById(R.id.stock_code);
             viewHolder.stock_description = (TextView) view.findViewById(R.id.stock_description);
+            viewHolder.stock_price = (TextView) view.findViewById(R.id.stock_price);
             view.setTag(viewHolder);
         } else {
             view = convertView;
             viewHolder = ((ViewHolder) view.getTag());
         }
 
-        viewHolder.stock_icon.setText(sb.getScode().toUpperCase().substring(0, 1));
-        viewHolder.stock_code.setText(sb.getScode());
-        viewHolder.stock_description.setText(sb.getDescription().trim());
+        NumberFormat format = NumberFormat.getInstance(Locale.GERMAN);
+
+        viewHolder.stock_icon.setText(sv.getStockBilling().getScode().toUpperCase().substring(0, 1));
+        viewHolder.stock_code.setText(sv.getStockBilling().getScode());
+        viewHolder.stock_description.setText(sv.getStockBilling().getDescription().trim());
+        viewHolder.stock_price.setText(parent.getResources().getString(R.string.currency_symbol) + " " + format.format(sv.getStockPrice().getPrice()).toString());
 
         return view;
     }
@@ -93,21 +91,21 @@ public class StockListViewAdapter extends ArrayAdapter<StockBilling> implements 
             constraint = constraint.toString().toLowerCase();
             FilterResults result = new FilterResults();
             if (constraint != null && constraint.toString().length() > 0) {
-                ArrayList<StockBilling> filteredItems = new ArrayList<StockBilling>();
+                ArrayList<StockView> filteredItems = new ArrayList<StockView>();
 
-                for (int i = 0, l = stockBillings.size(); i < l; i++) {
-                    StockBilling sb = stockBillings.get(i);
-                    if (sb.getScode().toLowerCase().contains(constraint) ||
-                            sb.getDescription().toLowerCase().contains(constraint)) {
-                        filteredItems.add(sb);
+                for (int i = 0, l = stockViews.size(); i < l; i++) {
+                    StockView sv = stockViews.get(i);
+                    if (sv.getStockBilling().getScode().toLowerCase().contains(constraint) ||
+                            sv.getStockBilling().getDescription().toLowerCase().contains(constraint)) {
+                        filteredItems.add(sv);
                     }
                 }
                 result.count = filteredItems.size();
                 result.values = filteredItems;
             } else {
                 synchronized (this) {
-                    result.count = stockBillings.size();
-                    result.values = stockBillings;
+                    result.count = stockViews.size();
+                    result.values = stockViews;
                 }
             }
             return result;
@@ -115,11 +113,11 @@ public class StockListViewAdapter extends ArrayAdapter<StockBilling> implements 
 
         @Override
         protected void publishResults(CharSequence constraint, FilterResults results) {
-            filteredStockBillings = (ArrayList<StockBilling>) results.values;
+            filteredStockViews = (ArrayList<StockView>) results.values;
             notifyDataSetChanged();
             clear();
-            for (int i = 0, l = filteredStockBillings.size(); i < l; i++) {
-                add(filteredStockBillings.get(i));
+            for (int i = 0, l = filteredStockViews.size(); i < l; i++) {
+                add(filteredStockViews.get(i));
             }
             notifyDataSetChanged();
         }

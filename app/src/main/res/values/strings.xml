@@ -97,6 +97,11 @@
 
 
     <!-- Below is the dummy string values -->
+    <string-array name="unit_arrays">
+        <item>Dus</item>
+        <item>Pcs</item>
+    </string-array>
+
     <string-array name="country_arrays">
         <item>Malaysia</item>
         <item>United States</item>

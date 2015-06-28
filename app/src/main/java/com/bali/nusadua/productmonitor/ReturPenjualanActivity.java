@@ -1,5 +1,6 @@
 package com.bali.nusadua.productmonitor;
 
+import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
@@ -11,6 +12,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Spinner;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
@@ -18,9 +20,13 @@ import android.widget.Toast;
 
 import com.bali.nusadua.productmonitor.model.Customer;
 import com.bali.nusadua.productmonitor.model.Retur;
+import com.bali.nusadua.productmonitor.model.StockBilling;
+import com.bali.nusadua.productmonitor.model.StockPrice;
 import com.bali.nusadua.productmonitor.repo.ReturRepo;
 import com.bali.nusadua.productmonitor.repo.StockBillingRepo;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -28,9 +34,12 @@ import java.util.Map;
 
 public class ReturPenjualanActivity extends ActionBarActivity implements android.view.View.OnClickListener {
 
+    private static final int VIEW_STOCK_ACTIVITY = 1;
+
     private Button btnAdd, btnProses, btnBatal;
     private TableLayout theGrid;
-    private EditText tvCode, tvName, tvPrice, tvQty, tvUnit;
+    private EditText tvCode, tvName, tvPrice, tvQty;
+    private Spinner unitSpinner;
     private String customerID;
     private final Context context = this;
     private int countID;
@@ -53,7 +62,7 @@ public class ReturPenjualanActivity extends ActionBarActivity implements android
         tvName = (EditText) findViewById(R.id.order_name);
         tvPrice = (EditText) findViewById(R.id.order_price);
         tvQty = (EditText) findViewById(R.id.order_qty);
-        tvUnit = (EditText) findViewById(R.id.order_unit);
+        unitSpinner = (Spinner) findViewById(R.id.unit_spinner);
 
         btnAdd.setOnClickListener(this);
         btnProses.setOnClickListener(this);
@@ -82,10 +91,27 @@ public class ReturPenjualanActivity extends ActionBarActivity implements android
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_show_stock) {
             Intent intent = new Intent(ReturPenjualanActivity.this, ViewStockActivity.class);
-            startActivity(intent);
+            intent.putExtra(Customer.CUST_ID, customerID);
+            startActivityForResult(intent, VIEW_STOCK_ACTIVITY);
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        switch(requestCode) {
+            case (VIEW_STOCK_ACTIVITY) : {
+                if (resultCode == Activity.RESULT_OK) {
+                    //Update your TextView
+                    tvCode.setText(data.getStringExtra(StockBilling.SCODE));
+                    tvName.setText(data.getStringExtra(StockBilling.DESCRIPTION));
+                    tvPrice.setText(data.getStringExtra(StockPrice.PRICE));
+                }
+                break;
+            }
+        }
     }
 
     @Override
@@ -99,19 +125,13 @@ public class ReturPenjualanActivity extends ActionBarActivity implements android
             if (!tvCode.getText().toString().isEmpty() && tvCode.getText().toString().trim() != ""
                     && !tvName.getText().toString().isEmpty() && tvName.getText().toString().trim() != ""
                     && !tvPrice.getText().toString().isEmpty() && tvPrice.getText().toString().trim() != ""
-                    && !tvQty.getText().toString().isEmpty() && tvQty.getText().toString().trim() != ""
-                    && !tvUnit.getText().toString().isEmpty() && tvUnit.getText().toString().trim() != "") {
+                    && !tvQty.getText().toString().isEmpty() && tvQty.getText().toString().trim() != "") {
 
-                if (stockBillingRepo.getByStockId(tvCode.getText().toString()) != null) {
+                if (stockBillingRepo.getByStockCode(tvCode.getText().toString()) != null) {
                     countID = countID + 1;
                     int count = countID;
                     TableRow tableRow = new TableRow(this);
                     tableRow.setPadding(padding_in_px, padding_in_px, padding_in_px, padding_in_px);
-                    /*if (count % 2 == 0) {
-                        tableRow.setBackgroundResource(R.drawable.table_row_even_shape);
-                    } else {
-                        tableRow.setBackgroundResource(R.drawable.table_row_odd_shape);
-                    }*/
 
                     tableRow.setBackgroundResource(R.drawable.table_row_even_shape);
                     tableRow.setId(count + 1);
@@ -127,27 +147,37 @@ public class ReturPenjualanActivity extends ActionBarActivity implements android
 
                     TextView labelPrice = new TextView(this);
                     labelPrice.setId(300 + count + 1);
-                    labelPrice.setText(tvPrice.getText());
+                    String selectedUnit = unitSpinner.getSelectedItem().toString();
+                    if (selectedUnit.equals("Pcs")) {
+                        Double doubleValue = Double.parseDouble(tvPrice.getText().toString());
+                        Double price = doubleValue / 12;
+                        price = new BigDecimal(price).setScale(0, RoundingMode.HALF_UP).doubleValue();
+                        labelPrice.setText(String.valueOf(price));
+                        retur.setHarga(price);
+                    } else {
+                        labelPrice.setText(tvPrice.getText().toString());
+                        retur.setHarga(Double.valueOf(tvPrice.getText().toString()));
+                    }
                     labelPrice.setTextAppearance(ReturPenjualanActivity.this, android.R.style.TextAppearance_Medium);
                     labelPrice.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT, TableRow.LayoutParams.WRAP_CONTENT, 20f));
                     tableRow.addView(labelPrice);
-                    retur.setHarga(Integer.valueOf(tvPrice.getText().toString()));
+                    retur.setHarga(Double.valueOf(tvPrice.getText().toString()));
 
                     TextView labelQty = new TextView(this);
                     labelQty.setId(400 + count + 1);
-                    labelQty.setText(tvQty.getText() + "/" + tvUnit.getText());
+                    labelQty.setText(tvQty.getText() + "/" + unitSpinner.getSelectedItem().toString());
                     labelQty.setTextAppearance(ReturPenjualanActivity.this, android.R.style.TextAppearance_Medium);
                     labelQty.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT, TableRow.LayoutParams.WRAP_CONTENT, 20f));
                     tableRow.addView(labelQty);
                     retur.setQty(Integer.valueOf(tvQty.getText().toString()));
-                    retur.setUnit(tvUnit.getText().toString());
+                    retur.setUnit(unitSpinner.getSelectedItem().toString());
                     retur.setKodeOutlet(customerID);
 
                     TextView labelSummary = new TextView(this);
                     labelSummary.setId(500 + count + 1);
                     labelSummary.setTextAppearance(ReturPenjualanActivity.this, android.R.style.TextAppearance_Medium);
                     labelSummary.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT, TableRow.LayoutParams.WRAP_CONTENT, 20f));
-                    Integer summary = Integer.valueOf(tvQty.getText().toString()) * Integer.valueOf(tvPrice.getText().toString());
+                    Double summary = Integer.valueOf(tvQty.getText().toString()) * Double.valueOf(tvPrice.getText().toString());
                     labelSummary.setText(summary.toString());
                     tableRow.addView(labelSummary);
 
@@ -175,9 +205,6 @@ public class ReturPenjualanActivity extends ActionBarActivity implements android
                                 edReturPrice.setText(String.valueOf(retur.getHarga()));
                                 final EditText edReturQty = (EditText) dialog.findViewById(R.id.popup_retur_qty);
                                 edReturQty.setText(String.valueOf(retur.getQty()));
-                                final EditText edReturUnit = (EditText) dialog.findViewById(R.id.popup_retur_unit);
-                                edReturUnit.setText(retur.getUnit());
-
 
                                 Button popupSaveButton = (Button) dialog.findViewById(R.id.popup_btn_save_data_retur);
                                 Button popupDeleteButton = (Button) dialog.findViewById(R.id.popup_btn_delete_data_retur);
@@ -188,18 +215,17 @@ public class ReturPenjualanActivity extends ActionBarActivity implements android
                                     public void onClick(View v) {
                                         Retur retur = mapReturs.get(edReturCode.getText().toString());
                                         retur.setNamaBarang(edReturNamaBrg.getText().toString());
-                                        retur.setHarga(Integer.valueOf(edReturPrice.getText().toString()));
+                                        retur.setHarga(Double.valueOf(edReturPrice.getText().toString()));
                                         retur.setQty(Integer.valueOf(edReturQty.getText().toString()));
-                                        retur.setUnit(edReturUnit.getText().toString());
 
                                         TextView labelCode = (TextView) findViewById(200 + selectedRow.getId());
-                                        labelCode.setText(edReturCode.getText() + " | " + edReturNamaBrg.getText());
+                                        labelCode.setText(retur.getKode() + " | " + retur.getNamaBarang());
                                         TextView labelPrice = (TextView) findViewById(300 + selectedRow.getId());
-                                        labelPrice.setText(edReturPrice.getText());
+                                        labelPrice.setText(retur.getHarga().toString());
                                         TextView labelQty = (TextView) findViewById(400 + selectedRow.getId());
-                                        labelQty.setText(edReturQty.getText());
+                                        labelQty.setText(String.valueOf(retur.getQty()) + "/" + retur.getUnit());
                                         TextView labelSummary = (TextView) findViewById(500 + selectedRow.getId());
-                                        Integer summary = Integer.valueOf(edReturQty.getText().toString()) * Integer.valueOf(edReturPrice.getText().toString());
+                                        Double summary = retur.getQty() * retur.getHarga();
                                         labelSummary.setText(summary.toString());
 
                                         dialog.dismiss();
@@ -228,7 +254,7 @@ public class ReturPenjualanActivity extends ActionBarActivity implements android
                     tvName.setText(null);
                     tvPrice.setText(null);
                     tvQty.setText(null);
-                    tvUnit.setText(null);
+                    unitSpinner.setSelection(0);
 
                 } else {
                     showToast(getResources().getString(R.string.code_not_found));

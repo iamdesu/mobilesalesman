@@ -71,7 +71,7 @@ public class SummaryOrderFragmentTab extends Fragment {
 
             TextView labelSummary = new TextView(context);
             labelSummary.setId(203 + count + 1);
-            Integer summary = order.getQty() * order.getHarga();
+            Double summary = order.getQty() * order.getHarga();
             labelSummary.setText(summary.toString());
             labelSummary.setTextAppearance(context, android.R.style.TextAppearance_Medium);
             tableRow.addView(labelSummary);

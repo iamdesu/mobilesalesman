@@ -40,6 +40,44 @@ public class CustomerRepo {
         return (int) id;
     }
 
+    public Customer findByCustomerID(String customerID) {
+        SQLiteDatabase db = dbHelper.getReadableDatabase();
+        String selectQuery = "SELECT " +
+                Customer.ID + ", " +
+                Customer.CUST_ID + ", " +
+                Customer.COMPANY_NAME + ", " +
+                Customer.PERSON_NAME + ", " +
+                Customer.ADDRESS + ", " +
+                Customer.REGION + ", " +
+                Customer.CITY + ", " +
+                Customer.VISIT + ", " +
+                Customer.PRICE_LEVEL + " FROM " +
+                Customer.TABLE + " WHERE " +
+                Customer.CUST_ID + " = ?";
+
+        Customer customer = new Customer();
+        Cursor cursor = db.rawQuery(selectQuery, new String[]{ customerID } );
+
+        if(cursor.moveToFirst()) {
+            do {
+                customer.setId(cursor.getInt(cursor.getColumnIndex(Customer.ID)));
+                customer.setCustomerId(cursor.getString(cursor.getColumnIndex(Customer.CUST_ID)));
+                customer.setCompanyName(cursor.getString(cursor.getColumnIndex(Customer.COMPANY_NAME)));
+                customer.setPersonName(cursor.getString(cursor.getColumnIndex(Customer.PERSON_NAME)));
+                customer.setAddress(cursor.getString(cursor.getColumnIndex(Customer.ADDRESS)));
+                customer.setRegion(cursor.getString(cursor.getColumnIndex(Customer.REGION)));
+                customer.setCity(cursor.getString(cursor.getColumnIndex(Customer.CITY)));
+                customer.setVisit(cursor.getString(cursor.getColumnIndex(Customer.VISIT)));
+                customer.setPriceLevel(cursor.getInt(cursor.getColumnIndex(Customer.PRICE_LEVEL)));
+
+            } while (cursor.moveToNext());
+        }
+
+        cursor.close();
+        db.close();
+        return customer;
+    }
+
     //Retrieve all records and populate List<Order>
     public List<Customer> getAll() {
         SQLiteDatabase db = dbHelper.getReadableDatabase();

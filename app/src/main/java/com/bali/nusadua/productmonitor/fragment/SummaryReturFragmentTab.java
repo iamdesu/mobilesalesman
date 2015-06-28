@@ -72,7 +72,7 @@ public class SummaryReturFragmentTab extends Fragment {
 
             TextView labelSummary = new TextView(context);
             labelSummary.setId(203 + count + 1);
-            Integer summary = retur.getQty() * retur.getHarga();
+            Double summary = retur.getQty() * retur.getHarga();
             labelSummary.setText(summary.toString());
             labelSummary.setTextAppearance(context, android.R.style.TextAppearance_Medium);
             tableRow.addView(labelSummary);

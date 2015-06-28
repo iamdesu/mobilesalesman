@@ -112,7 +112,7 @@ public class OrderRepo {
                 order.setGuid(cursor.getString(cursor.getColumnIndex(Order.GUID)));
                 order.setKode(cursor.getString(cursor.getColumnIndex(Order.KODE)));
                 order.setNamaBarang(cursor.getString(cursor.getColumnIndex(Order.NAMA_BARANG)));
-                order.setHarga(cursor.getInt(cursor.getColumnIndex(Order.HARGA)));
+                order.setHarga(cursor.getDouble(cursor.getColumnIndex(Order.HARGA)));
                 order.setQty(cursor.getInt(cursor.getColumnIndex(Order.QTY)));
                 order.setUnit(cursor.getString(cursor.getColumnIndex(Order.UNIT)));
                 order.setKodeOutlet(cursor.getString(cursor.getColumnIndex(Order.KODE_OUTLET)));
@@ -146,7 +146,7 @@ public class OrderRepo {
                 Order order = new Order();
                 order.setId((int) cursor.getLong(cursor.getColumnIndex(Order.ID)));
                 order.setUnit(cursor.getString(cursor.getColumnIndex(Order.UNIT)));
-                order.setHarga(cursor.getInt(cursor.getColumnIndex(Order.HARGA)));
+                order.setHarga(cursor.getDouble(cursor.getColumnIndex(Order.HARGA)));
                 order.setNamaBarang(cursor.getString(cursor.getColumnIndex(Order.NAMA_BARANG)));
                 order.setGuid(cursor.getString(cursor.getColumnIndex(Order.GUID)));
                 order.setQty(cursor.getInt(cursor.getColumnIndex(Order.QTY)));
@@ -198,7 +198,7 @@ public class OrderRepo {
                 Order order = new Order();
                 order.setId((int) cursor.getLong(cursor.getColumnIndex(Order.ID)));
                 order.setUnit(cursor.getString(cursor.getColumnIndex(Order.UNIT)));
-                order.setHarga(cursor.getInt(cursor.getColumnIndex(Order.HARGA)));
+                order.setHarga(cursor.getDouble(cursor.getColumnIndex(Order.HARGA)));
                 order.setNamaBarang(cursor.getString(cursor.getColumnIndex(Order.NAMA_BARANG)));
                 order.setGuid(cursor.getString(cursor.getColumnIndex(Order.GUID)));
                 order.setQty(cursor.getInt(cursor.getColumnIndex(Order.QTY)));
@@ -255,7 +255,7 @@ public class OrderRepo {
                 order.setGuid(cursor.getString(cursor.getColumnIndex(Order.GUID)));
                 order.setKode(cursor.getString(cursor.getColumnIndex(Order.KODE)));
                 order.setNamaBarang(cursor.getString(cursor.getColumnIndex(Order.NAMA_BARANG)));
-                order.setHarga(cursor.getInt(cursor.getColumnIndex(Order.HARGA)));
+                order.setHarga(cursor.getDouble(cursor.getColumnIndex(Order.HARGA)));
                 order.setQty(cursor.getInt(cursor.getColumnIndex(Order.QTY)));
                 order.setUnit(cursor.getString(cursor.getColumnIndex(Order.UNIT)));
                 order.setKodeOutlet(cursor.getString(cursor.getColumnIndex(Order.KODE_OUTLET)));

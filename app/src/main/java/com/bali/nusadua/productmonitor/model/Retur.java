@@ -18,7 +18,7 @@ public class Retur {
     private String guid;
     private String kode;
     private String namaBarang;
-    private int harga;
+    private Double harga;
     private int qty;
     private String unit;
     private String kodeOutlet;
@@ -59,11 +59,11 @@ public class Retur {
         this.namaBarang = namaBarang;
     }
 
-    public int getHarga() {
+    public Double getHarga() {
         return harga;
     }
 
-    public void setHarga(int harga) {
+    public void setHarga(Double harga) {
         this.harga = harga;
     }
 
@@ -118,7 +118,7 @@ public class Retur {
                 + GUID + " TEXT, "
                 + KODE + " TEXT, "
                 + NAMA_BARANG + " TEXT, "
-                + HARGA + " INTEGER, "
+                + HARGA + " REAL, "
                 + QTY + " INTEGER, "
                 + UNIT + " TEXT, "
                 + KODE_OUTLET + " TEXT, "

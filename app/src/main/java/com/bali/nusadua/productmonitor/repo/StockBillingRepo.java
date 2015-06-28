@@ -5,7 +5,10 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
+import com.bali.nusadua.productmonitor.model.Customer;
 import com.bali.nusadua.productmonitor.model.StockBilling;
+import com.bali.nusadua.productmonitor.model.StockPrice;
+import com.bali.nusadua.productmonitor.modelView.StockView;
 import com.bali.nusadua.productmonitor.sqlitedb.DBHelper;
 
 import java.util.ArrayList;
@@ -104,6 +107,35 @@ public class StockBillingRepo {
 
         StockBilling stockBilling = null;
         Cursor cursor = db.rawQuery(selectQuery, new String[]{stockId});
+
+        if (cursor.moveToFirst()) {
+            do {
+                stockBilling = new StockBilling();
+                stockBilling.setId(cursor.getInt(cursor.getColumnIndex(StockBilling.ID)));
+                stockBilling.setStockId(cursor.getString(cursor.getColumnIndex(StockBilling.STOCK_ID)));
+                stockBilling.setScode(cursor.getString(cursor.getColumnIndex(StockBilling.SCODE)));
+                stockBilling.setDescription(cursor.getString(cursor.getColumnIndex(StockBilling.DESCRIPTION)));
+
+            } while (cursor.moveToNext());
+        }
+
+        cursor.close();
+        db.close();
+        return stockBilling;
+    }
+
+    public StockBilling getByStockCode(String stockCode) {
+        SQLiteDatabase db = dbHelper.getReadableDatabase();
+        String selectQuery = "SELECT " +
+                StockBilling.ID + ", " +
+                StockBilling.STOCK_ID + ", " +
+                StockBilling.SCODE + ", " +
+                StockBilling.DESCRIPTION + " FROM " +
+                StockBilling.TABLE + " WHERE " +
+                StockBilling.SCODE + " = ?";
+
+        StockBilling stockBilling = null;
+        Cursor cursor = db.rawQuery(selectQuery, new String[]{stockCode});
 
         if (cursor.moveToFirst()) {
             do {

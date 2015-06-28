@@ -5,8 +5,10 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
+import com.bali.nusadua.productmonitor.model.Customer;
 import com.bali.nusadua.productmonitor.model.StockBilling;
 import com.bali.nusadua.productmonitor.model.StockPrice;
+import com.bali.nusadua.productmonitor.modelView.StockView;
 import com.bali.nusadua.productmonitor.sqlitedb.DBHelper;
 
 import java.util.ArrayList;
@@ -57,5 +59,47 @@ public class StockPriceRepo {
         cursor.close();
         db.close();
         return listStockPrice;
+    }
+
+    public List<StockView> getStockByCustomerLevel(Integer customerLevel) {
+        SQLiteDatabase db = dbHelper.getReadableDatabase();
+        String selectQuery = "SELECT "
+                + StockBilling.TABLE + "." + StockBilling.STOCK_ID + ", "
+                + StockBilling.TABLE + "." + StockBilling.SCODE + ", "
+                + StockBilling.TABLE + "." + StockBilling.DESCRIPTION + ", "
+                + StockPrice.TABLE + "." + StockPrice.STOCK_ID + ", "
+                + StockPrice.TABLE + "." + StockPrice.PRICE_LEVEL + ", "
+                + StockPrice.TABLE + "." + StockPrice.PRICE
+                + " FROM " + StockPrice.TABLE + " LEFT JOIN " + StockBilling.TABLE
+                + " ON "+ StockPrice.TABLE + "." + StockPrice.STOCK_ID + " = " + StockBilling.TABLE + "." + StockBilling.STOCK_ID
+                + " WHERE " + StockPrice.TABLE + "." + StockPrice.PRICE_LEVEL + "= ? "
+                + " ORDER BY " + StockBilling.TABLE + "." + StockBilling.SCODE + " ASC";
+
+        List<StockView> listStock = new ArrayList<StockView>();
+        Cursor cursor = db.rawQuery(selectQuery, new String[]{ customerLevel.toString() } );
+
+        //Looping through all rows and adding to list
+        if(cursor.moveToFirst()){
+            do {
+                StockView stockView = new StockView();
+
+                StockBilling stockBilling = new StockBilling();
+                stockBilling.setStockId(cursor.getString(0));
+                stockBilling.setScode(cursor.getString(1));
+                stockBilling.setDescription(cursor.getString(2));
+
+                StockPrice stockPrice = new StockPrice();
+                stockPrice.setStockId(cursor.getString(3));
+                stockPrice.setPriceLevel(cursor.getInt(4));
+                stockPrice.setPrice(cursor.getDouble(5));
+
+                stockView.setStockBilling(stockBilling);
+                stockView.setStockPrice(stockPrice);
+
+                listStock.add(stockView);
+            } while (cursor.moveToNext());
+        }
+
+        return listStock;
     }
 }

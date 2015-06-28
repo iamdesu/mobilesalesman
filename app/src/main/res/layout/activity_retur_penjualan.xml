@@ -19,7 +19,7 @@
 
             <EditText
                 android:layout_width="0dp"
-                android:layout_height="wrap_content"
+                android:layout_height="fill_parent"
                 android:ems="10"
                 android:id="@+id/order_code"
                 android:layout_weight="20"
@@ -28,7 +28,7 @@
 
             <EditText
                 android:layout_width="0dp"
-                android:layout_height="wrap_content"
+                android:layout_height="fill_parent"
                 android:id="@+id/order_name"
                 android:layout_weight="20"
                 android:maxLines="255"
@@ -36,7 +36,7 @@
 
             <EditText
                 android:layout_width="0dp"
-                android:layout_height="wrap_content"
+                android:layout_height="fill_parent"
                 android:inputType="numberSigned"
                 android:ems="10"
                 android:id="@+id/order_price"
@@ -46,7 +46,7 @@
 
             <EditText
                 android:layout_width="0dp"
-                android:layout_height="wrap_content"
+                android:layout_height="fill_parent"
                 android:inputType="numberSigned"
                 android:ems="10"
                 android:id="@+id/order_qty"
@@ -54,13 +54,13 @@
                 android:maxLines="9"
                 android:hint="@string/hint_qty"/>
 
-            <EditText
+            <Spinner
+                android:id="@+id/unit_spinner"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:id="@+id/order_unit"
                 android:layout_weight="10"
-                android:maxLines="255"
-                android:hint="@string/hint_unit"/>
+                android:entries="@array/unit_arrays"
+                android:prompt="@string/hint_unit" />
 
             <Button
                 android:id="@+id/button_add"

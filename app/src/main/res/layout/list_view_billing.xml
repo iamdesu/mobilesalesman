@@ -13,7 +13,7 @@
         android:paddingBottom="8dp">
 
         <TextView
-            android:id="@+id/stock_icon"
+            android:id="@+id/billing_icon"
             android:layout_width="60dp"
             android:layout_height="60dp"
             android:layout_alignParentLeft="true"
@@ -26,29 +26,20 @@
             android:layout_marginRight="16dp"/>
 
         <TextView
-            android:id="@+id/stock_code"
+            android:id="@+id/billing_invoice_no"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentTop="true"
-            android:layout_toRightOf="@+id/stock_icon"
+            android:layout_toRightOf="@+id/billing_icon"
             android:textSize="30sp"
-            android:maxLines="25"
             android:text="Test"/>
 
         <TextView
-            android:id="@+id/stock_description"
+            android:id="@+id/billing_total_amount"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/stock_code"
-            android:layout_toRightOf="@+id/stock_icon"
-            android:text="Test"/>
-
-        <TextView
-            android:id="@+id/stock_price"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_alignParentTop="true"
+            android:layout_below="@+id/billing_invoice_no"
+            android:layout_toRightOf="@+id/billing_icon"
             android:text="Test"/>
 
     </RelativeLayout>

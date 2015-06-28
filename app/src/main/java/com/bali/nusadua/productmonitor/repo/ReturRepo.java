@@ -110,7 +110,7 @@ public class ReturRepo {
                 retur.setGuid(cursor.getString(cursor.getColumnIndex(Retur.GUID)));
                 retur.setKode(cursor.getString(cursor.getColumnIndex(Retur.KODE)));
                 retur.setNamaBarang(cursor.getString(cursor.getColumnIndex(Retur.NAMA_BARANG)));
-                retur.setHarga(cursor.getInt(cursor.getColumnIndex(Retur.HARGA)));
+                retur.setHarga(cursor.getDouble(cursor.getColumnIndex(Retur.HARGA)));
                 retur.setQty(cursor.getInt(cursor.getColumnIndex(Retur.QTY)));
                 retur.setUnit(cursor.getString(cursor.getColumnIndex(Retur.UNIT)));
                 retur.setKodeOutlet(cursor.getString(cursor.getColumnIndex(Retur.KODE_OUTLET)));
@@ -146,7 +146,7 @@ public class ReturRepo {
                 Retur retur = new Retur();
                 retur.setId((int) cursor.getLong(cursor.getColumnIndex(Retur.ID)));
                 retur.setUnit(cursor.getString(cursor.getColumnIndex(Retur.UNIT)));
-                retur.setHarga(cursor.getInt(cursor.getColumnIndex(Retur.HARGA)));
+                retur.setHarga(cursor.getDouble(cursor.getColumnIndex(Retur.HARGA)));
                 retur.setNamaBarang(cursor.getString(cursor.getColumnIndex(Retur.NAMA_BARANG)));
                 retur.setGuid(cursor.getString(cursor.getColumnIndex(Retur.GUID)));
                 retur.setQty(cursor.getInt(cursor.getColumnIndex(Retur.QTY)));
@@ -197,7 +197,7 @@ public class ReturRepo {
                 Retur retur = new Retur();
                 retur.setId((int) cursor.getLong(cursor.getColumnIndex(Retur.ID)));
                 retur.setUnit(cursor.getString(cursor.getColumnIndex(Retur.UNIT)));
-                retur.setHarga(cursor.getInt(cursor.getColumnIndex(Retur.HARGA)));
+                retur.setHarga(cursor.getDouble(cursor.getColumnIndex(Retur.HARGA)));
                 retur.setNamaBarang(cursor.getString(cursor.getColumnIndex(Retur.NAMA_BARANG)));
                 retur.setGuid(cursor.getString(cursor.getColumnIndex(Retur.GUID)));
                 retur.setQty(cursor.getInt(cursor.getColumnIndex(Retur.QTY)));
@@ -252,7 +252,7 @@ public class ReturRepo {
                 Retur retur = new Retur();
                 retur.setId((int) cursor.getLong(cursor.getColumnIndex(Retur.ID)));
                 retur.setUnit(cursor.getString(cursor.getColumnIndex(Retur.UNIT)));
-                retur.setHarga(cursor.getInt(cursor.getColumnIndex(Retur.HARGA)));
+                retur.setHarga(cursor.getDouble(cursor.getColumnIndex(Retur.HARGA)));
                 retur.setNamaBarang(cursor.getString(cursor.getColumnIndex(Retur.NAMA_BARANG)));
                 retur.setGuid(cursor.getString(cursor.getColumnIndex(Retur.GUID)));
                 retur.setQty(cursor.getInt(cursor.getColumnIndex(Retur.QTY)));

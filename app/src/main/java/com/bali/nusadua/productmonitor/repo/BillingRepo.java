@@ -96,4 +96,36 @@ public class BillingRepo {
         db.close();
         return billing;
     }
+
+    public Billing getBillingByCustoMerInvoiceNo(String customerID, String invoiceNo) {
+        SQLiteDatabase db = dbHelper.getReadableDatabase();
+        String selectQuery = "SELECT " +
+                Billing.ID + ", " +
+                Billing.INVOICE_NO + ", " +
+                Billing.CUST_ID + ", " +
+                Billing.TOTAL_AMOUNT + ", " +
+                Billing.PAID_AMOUNT + " FROM " +
+                Billing.TABLE + " WHERE " +
+                Billing.CUST_ID + " = ? AND " +
+                Billing.INVOICE_NO + " = ?";
+
+        Billing billing = null;
+        Cursor cursor = db.rawQuery(selectQuery, new String[]{customerID, invoiceNo});
+
+        //Looping through all rows and adding to list
+        if (cursor.moveToFirst()) {
+            do {
+                billing = new Billing();
+                billing.setId(cursor.getInt(cursor.getColumnIndex(Billing.ID)));
+                billing.setInvoiceNo(cursor.getString(cursor.getColumnIndex(Billing.INVOICE_NO)));
+                billing.setCustomerId(cursor.getString(cursor.getColumnIndex(Billing.CUST_ID)));
+                billing.setTotalAmount(cursor.getDouble(cursor.getColumnIndex(Billing.TOTAL_AMOUNT)));
+                billing.setPaidAmount(cursor.getDouble(cursor.getColumnIndex(Billing.PAID_AMOUNT)));
+            } while (cursor.moveToNext());
+        }
+
+        cursor.close();
+        db.close();
+        return billing;
+    }
 }

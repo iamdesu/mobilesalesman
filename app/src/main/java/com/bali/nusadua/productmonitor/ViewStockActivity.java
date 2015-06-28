@@ -5,14 +5,19 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ListView;
 
 import com.bali.nusadua.productmonitor.adapter.StockListViewAdapter;
+import com.bali.nusadua.productmonitor.model.Customer;
 import com.bali.nusadua.productmonitor.model.StockBilling;
-import com.bali.nusadua.productmonitor.repo.StockBillingRepo;
+import com.bali.nusadua.productmonitor.model.StockPrice;
+import com.bali.nusadua.productmonitor.modelView.StockView;
+import com.bali.nusadua.productmonitor.repo.CustomerRepo;
+import com.bali.nusadua.productmonitor.repo.StockPriceRepo;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -23,6 +28,7 @@ import java.util.HashMap;
 public class ViewStockActivity extends Activity {
     private ListView lv;
     private EditText inputSearch;
+    private String customerID;
 
     StockListViewAdapter adapter;
 
@@ -36,19 +42,25 @@ public class ViewStockActivity extends Activity {
         lv = (ListView) findViewById(R.id.list_view);
         inputSearch = (EditText) findViewById(R.id.inputSearchStock);
 
-        StockBillingRepo stockBillingRepo = new StockBillingRepo(this);
+        Intent intent = getIntent();
+        customerID = intent.getStringExtra(Customer.CUST_ID);
+        CustomerRepo customerRepo = new CustomerRepo(this);
+        Customer customer = customerRepo.findByCustomerID(customerID);
 
-        adapter = new StockListViewAdapter(this, stockBillingRepo.getStockBillings());
+        StockPriceRepo stockPriceRepo = new StockPriceRepo(this);
+        Log.i("Customer Level : ", customer.getPriceLevel().toString());
+        adapter = new StockListViewAdapter(this, stockPriceRepo.getStockByCustomerLevel(customer.getPriceLevel()));
         lv.setAdapter(adapter);
 
         lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
-                StockBilling stockBilling = (StockBilling) lv.getItemAtPosition(position);
+                StockView stockView = (StockView) lv.getItemAtPosition(position);
 
                 Intent resultIntent = new Intent();
-                resultIntent.putExtra("kode", stockBilling.getScode());
-                resultIntent.putExtra("nama_barang", stockBilling.getDescription());
+                resultIntent.putExtra(StockBilling.SCODE, stockView.getStockBilling().getScode());
+                resultIntent.putExtra(StockBilling.DESCRIPTION, stockView.getStockBilling().getDescription());
+                resultIntent.putExtra(StockPrice.PRICE, stockView.getStockPrice().getPrice().toString());
 
                 setResult(Activity.RESULT_OK, resultIntent);
                 finish();
