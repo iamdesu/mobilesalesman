@@ -81,7 +81,7 @@ public class CustomerRepo {
     //Retrieve all records and populate List<Order>
     public List<Customer> getAll() {
         SQLiteDatabase db = dbHelper.getReadableDatabase();
-        String selectQuery = "SELECT * FROM " + Customer.TABLE;
+        String selectQuery = "SELECT * FROM " + Customer.TABLE + " ORDER BY " + Customer.COMPANY_NAME + " ASC";
 
         List<Customer> listCustomer = new ArrayList<Customer>();
         Cursor cursor = db.rawQuery(selectQuery, null);

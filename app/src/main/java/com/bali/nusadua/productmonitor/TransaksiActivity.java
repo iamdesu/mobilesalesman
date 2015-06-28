@@ -6,7 +6,9 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.Spinner;
@@ -22,15 +24,16 @@ import com.bali.nusadua.productmonitor.repo.OrderRepo;
 import com.bali.nusadua.productmonitor.repo.ReturRepo;
 import com.bali.nusadua.productmonitor.repo.SettlementRepo;
 
+import java.util.ArrayList;
 import java.util.List;
 
-public class TransaksiActivity extends Activity implements View.OnClickListener, AdapterView.OnItemSelectedListener {
+public class TransaksiActivity extends Activity implements View.OnClickListener {
 
     private Button btnSummary, btnProses;
     private LinearLayout blockOrderPenjualan, blockRetur, blockPelunasan;
     private RelativeLayout orderCard, returCard, settlementCard;
+    private EditText companyName;
     private TextView labelOrderData, labelReturData, labelSettlementData;
-    private Spinner spinnerCustomer;
     private Customer customer = null;
 
     @Override
@@ -44,7 +47,7 @@ public class TransaksiActivity extends Activity implements View.OnClickListener,
         orderCard = (RelativeLayout) findViewById(R.id.order_card);
         returCard = (RelativeLayout) findViewById(R.id.retur_card);
         settlementCard = (RelativeLayout) findViewById(R.id.settlement_card);
-        spinnerCustomer = (Spinner) findViewById(R.id.spinnerOutlet);
+        companyName = (EditText) findViewById(R.id.company_name);
         labelOrderData = (TextView) findViewById(R.id.label_order_data);
         labelReturData = (TextView) findViewById(R.id.label_retur_data);
         labelSettlementData = (TextView) findViewById(R.id.label_settlement_data);
@@ -54,9 +57,11 @@ public class TransaksiActivity extends Activity implements View.OnClickListener,
         orderCard.setOnClickListener(this);
         returCard.setOnClickListener(this);
         settlementCard.setOnClickListener(this);
-        spinnerCustomer.setOnItemSelectedListener(this);
 
-        loadCustomer();
+        Intent intent = getIntent();
+        customer = (new CustomerRepo(this)).findByCustomerID(intent.getStringExtra(Customer.CUST_ID));
+        companyName.setText(customer.getCompanyName());
+
         setTransactionCount();
     }
 
@@ -86,24 +91,7 @@ public class TransaksiActivity extends Activity implements View.OnClickListener,
         setTransactionCount();
     }
 
-    /*private void loadOutlet() {
-        SpinnerCustomerAdapter adapter = null;
-        CustomerRepo repo = new CustomerRepo(getApplicationContext());
-        List<Customer> customers = repo.getAll();
-        int size = customers.size();
-        Log.i("List size : ", Integer.toString(size));
-        *//*for(int i = 0; i < size; i++){
-            Log.i("Outlets", outlets.get(i).getName());
-        }*//*
-        adapter = new SpinnerCustomerAdapter(TransaksiActivity.this, android.R.layout.simple_spinner_item, customers);
-        spinnerOutlet.setAdapter(adapter);
-
-        outlet = customers.get(0);
-
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-    }*/
-
-    private void loadCustomer() {
+    /*private void loadCustomer() {
         SpinnerCustomerAdapter adapter = null;
         CustomerRepo repo = new CustomerRepo(getApplicationContext());
         List<Customer> customers = repo.getAll();
@@ -116,9 +104,9 @@ public class TransaksiActivity extends Activity implements View.OnClickListener,
         customer = customers.get(0);
 
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-    }
+    }*/
 
-    @Override
+    /*@Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
         if (parent == findViewById(R.id.spinnerOutlet)) {
             Customer selectedCustomer = (Customer) parent.getItemAtPosition(position);
@@ -130,8 +118,7 @@ public class TransaksiActivity extends Activity implements View.OnClickListener,
 
     @Override
     public void onNothingSelected(AdapterView<?> parent) {
-        customer = null;
-    }
+    }*/
 
     private void setTransactionCount() {
         OrderRepo orderRepo = new OrderRepo(getApplicationContext());

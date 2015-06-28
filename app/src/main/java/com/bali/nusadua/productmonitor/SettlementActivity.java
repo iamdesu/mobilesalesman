@@ -29,6 +29,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -145,6 +146,7 @@ public class SettlementActivity extends ActionBarActivity implements View.OnClic
                 if (resultCode == Activity.RESULT_OK) {
                     //Update your TextView
                     etInvoiceNumber.setText(data.getStringExtra(Billing.INVOICE_NO));
+                    etInvoiceDate.setText(sdf.format(new Date()));
                 }
                 break;
             }

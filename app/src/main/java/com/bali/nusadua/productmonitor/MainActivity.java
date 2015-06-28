@@ -115,7 +115,7 @@ public class MainActivity extends ActionBarActivity {
     }
 
     public void onTransaksiClick(View view) {
-        Intent intent = new Intent(MainActivity.this, TransaksiActivity.class);
+        Intent intent = new Intent(MainActivity.this, ViewOutletActivity.class);
         startActivity(intent);
     }
 

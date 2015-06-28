@@ -24,13 +24,13 @@
                 android:textSize="24dp"
                 android:singleLine="true"/>
 
-            <Spinner
+            <EditText
+                android:id="@+id/company_name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:id="@+id/spinnerOutlet"
                 android:layout_alignParentRight="true"
-                android:prompt="@string/team_prompt"
-                android:spinnerMode="dropdown"/>
+                android:text="Test"
+                android:editable="false"/>
 
         </RelativeLayout>
 
