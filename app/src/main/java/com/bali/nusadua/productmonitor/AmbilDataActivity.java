@@ -1,10 +1,10 @@
 package com.bali.nusadua.productmonitor;
 
-import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -36,7 +36,10 @@ public class AmbilDataActivity extends ActionBarActivity {
         AndroidAuthSession session = DropboxHelper.buildSession(AmbilDataActivity.this);
         dropboxApi = new DropboxAPI<AndroidAuthSession>(session);
 
-        setContentView(R.layout.activity_ambil_data);
+        setContentView(R.layout.activity_retrieve_data);
+        ActionBar actionBar = getSupportActionBar();
+        actionBar.setDisplayHomeAsUpEnabled(true);
+
         etUserId = (EditText) findViewById(R.id.user_id);
         etPassword = (EditText) findViewById(R.id.password);
 
@@ -49,7 +52,7 @@ public class AmbilDataActivity extends ActionBarActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_ambil_data, menu);
+        getMenuInflater().inflate(R.menu.menu_retrieve_data, menu);
         return true;
     }
 
@@ -61,20 +64,30 @@ public class AmbilDataActivity extends ActionBarActivity {
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_refresh_user) {
-            progressBar = new ProgressDialog(AmbilDataActivity.this);
-            progressBar.setCancelable(false);
-            progressBar.setMessage(getResources().getString(R.string.file_setup));
-            progressBar.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
-            progressBar.setProgress(0);
-            progressBar.setMax(100);
-            progressBar.show();
+        switch (id) {
+            case android.R.id.home:
+                Intent intent = new Intent();
+                setResult(RESULT_OK, intent);
+                finish();
 
-            DownloadDataFromDropbox download = new DownloadDataFromDropbox(this, dropboxApi, DropboxHelper.FILE_DIR_IMPORT, false, "", progressBar, false);
-            download.execute();
+                break;
+
+            case R.id.action_refresh_user:
+                progressBar = new ProgressDialog(AmbilDataActivity.this);
+                progressBar.setCancelable(false);
+                progressBar.setMessage(getResources().getString(R.string.file_setup));
+                progressBar.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
+                progressBar.setProgress(0);
+                progressBar.setMax(100);
+                progressBar.show();
+
+                DownloadDataFromDropbox download = new DownloadDataFromDropbox(this, dropboxApi, DropboxHelper.FILE_DIR_IMPORT, false, "", progressBar, false);
+                download.execute();
+
+                break;
         }
 
-        return super.onOptionsItemSelected(item);
+        return true;
     }
 
     public void onBtnProsesClick(View view) {
@@ -108,21 +121,6 @@ public class AmbilDataActivity extends ActionBarActivity {
         setResult(RESULT_OK, intent);
         finish();
     }
-
-    /*@Override
-    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-        if(parent == findViewById(R.id.spinnerTeam)){
-            Team selectedTeam = (Team) parent.getItemAtPosition(position);
-            mTvSelectedTeam.setText(selectedTeam.getName());
-        }
-    }
-
-    @Override
-    public void onNothingSelected(AdapterView<?> parent) {
-        mTvSelectedTeam.setText("Not selected");
-    }*/
-
-
 
     private void setLoggedIn(boolean loggedIn) {
         mLoggedIn = loggedIn;

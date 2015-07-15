@@ -8,8 +8,10 @@
     <EditText android:id="@+id/inputSearchStock"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:hint="Search stock.."
-        android:inputType="textVisiblePassword"/>
+        android:hint="@string/hint_search_stock"
+        android:inputType="textVisiblePassword"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:drawableRight="@drawable/ic_search_black"/>
 
     <!-- List View -->
     <ListView

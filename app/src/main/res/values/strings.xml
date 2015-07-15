@@ -1,10 +1,14 @@
 <resources>
     <!-- Application Context -->
     <string name="app_name">Mobile Salesman</string>
-    <string name="ambil_data_title">Mobile Salesman</string>
+    <string name="retrieve_data_title">Ambil Data</string>
+    <string name="transaction_title">Transaksi</string>
     <string name="order_title">Order</string>
     <string name="retur_title">Retur</string>
     <string name="settlement_title">Pelunasan</string>
+    <string name="view_outlet_title">Pilih Outlet</string>
+    <string name="view_stock_title">Pilih Stock</string>
+    <string name="view_billing_title">Pilih Pelunasan</string>
 
     <string name="pop_up_order_edit">EDIT ORDER</string>
     <string name="pop_up_retur_edit">EDIT RETUR</string>
@@ -16,13 +20,16 @@
     <string name="action_refresh_user">Refresh User</string>
     <string name="action_show_stock">Lihat Stock</string>
     <string name="action_show_billing">Lihat Invoice</string>
-    <string name="btn_ambil_data">1. Ambil Data</string>
-    <string name="btn_transaksi">2. Transaksi</string>
-    <string name="btn_kirim_data">3. Kirim Data</string>
+    <string name="action_sent_current_data">Kirim</string>
+
+    <string name="btn_retrieve_data">Ambil Data</string>
+    <string name="btn_transaction">Transaksi</string>
+    <string name="btn_sent_data">Kirim Data</string>
     <string name="btn_kembali">Kembali</string>
     <string name="btn_exit">Keluar</string>
     <string name="btn_batal">Batal</string>
     <string name="btn_proses">Proses</string>
+    <string name="btn_login">Login</string>
     <string name="btn_summary">Summary</string>
     <string name="hint_kode">Kode</string>
     <string name="hint_nama_barang">Nama Brg</string>
@@ -40,6 +47,8 @@
     <string name="hint_credit">Credit</string>
     <string name="hint_payment_method">Metode Permbayaran</string>
     <string name="hint_nominal_payment">Nominal</string>
+    <string name="hint_search_outlet">Cari Outlet..</string>
+    <string name="hint_search_stock">Cari Stock..</string>
     <string name="invoice_no">Invoice</string>
     <string name="currency_symbol">Rp</string>
 

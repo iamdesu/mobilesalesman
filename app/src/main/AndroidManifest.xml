@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.bali.nusadua.productmonitor" >
+    package="com.bali.nusadua.productmonitor">
 
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
-        android:theme="@style/AppTheme" >
+        android:theme="@style/AppTheme">
         <activity
             android:name=".SplashScreenActivity"
             android:label="@string/app_name"
@@ -14,18 +14,18 @@
 
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
         <activity
             android:name="com.dropbox.client2.android.AuthActivity"
             android:configChanges="orientation|keyboard"
-            android:launchMode="singleTask" >
+            android:launchMode="singleTask">
             <intent-filter>
                 <!-- Change this to be db- followed by your app key -->
                 <data android:scheme="db-shhgratsyvnsh4p" />
                 <action android:name="android.intent.action.VIEW" />
+
                 <category android:name="android.intent.category.BROWSABLE" />
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
@@ -33,54 +33,44 @@
         <activity
             android:name=".MainActivity"
             android:label="@string/app_name"
-            android:screenOrientation="landscape">
-        </activity>
+            android:screenOrientation="landscape"></activity>
         <activity
             android:name=".AmbilDataActivity"
-            android:label="@string/app_name"
-            android:screenOrientation="landscape">
-        </activity>
+            android:label="@string/retrieve_data_title"
+            android:screenOrientation="landscape"></activity>
         <activity
             android:name=".OrderPenjualanActivity"
             android:label="@string/order_title"
-            android:screenOrientation="landscape">
-        </activity>
+            android:screenOrientation="landscape"></activity>
         <activity
             android:name=".ReturPenjualanActivity"
             android:label="@string/retur_title"
-            android:screenOrientation="landscape">
-        </activity>
+            android:screenOrientation="landscape"></activity>
         <activity
             android:name=".SettlementActivity"
             android:label="@string/settlement_title"
-            android:screenOrientation="landscape">
-        </activity>
+            android:screenOrientation="landscape"></activity>
         <activity
-            android:name=".TransaksiActivity"
-            android:label="@string/app_name"
-            android:screenOrientation="landscape">
-        </activity>
+            android:name=".TransactionActivity"
+            android:label="@string/transaction_title"
+            android:screenOrientation="landscape"></activity>
         <activity
             android:name=".SummaryActivity"
             android:label="@string/app_name"
-            android:screenOrientation="landscape">
-        </activity>
+            android:screenOrientation="landscape"></activity>
         <activity
             android:name=".ViewStockActivity"
-            android:label="@string/app_name"
+            android:label="@string/view_stock_title"
             android:screenOrientation="landscape"
-            android:windowSoftInputMode="stateHidden">
-        </activity>
+            android:windowSoftInputMode="stateHidden"></activity>
         <activity
             android:name=".ViewBillingActivity"
-            android:label="@string/app_name"
-            android:screenOrientation="landscape">
-        </activity>
+            android:label="@string/view_billing_title"
+            android:screenOrientation="landscape"></activity>
         <activity
             android:name=".ViewOutletActivity"
-            android:label="@string/app_name"
-            android:screenOrientation="landscape">
-        </activity>
+            android:label="@string/view_outlet_title"
+            android:screenOrientation="landscape"></activity>
     </application>
 
     <uses-permission android:name="android.permission.INTERNET"></uses-permission>

@@ -1,0 +1,11 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context=".TransactionActivity">
+    <item
+        android:id="@+id/action_sent_current_data"
+        android:icon="@drawable/ic_upload_cloud"
+        android:orderInCategory="100"
+        android:title="@string/action_sent_current_data"
+        app:showAsAction="always|withText"/>
+</menu>

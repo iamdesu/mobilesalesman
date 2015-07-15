@@ -5,6 +5,7 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 import android.view.Menu;
@@ -53,6 +54,8 @@ public class OrderPenjualanActivity extends ActionBarActivity implements android
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_order_penjualan);
+        ActionBar actionBar = getSupportActionBar();
+        actionBar.setDisplayHomeAsUpEnabled(true);
 
         //Declare UI component
         btnAdd = (Button) findViewById(R.id.button_add);
@@ -77,16 +80,6 @@ public class OrderPenjualanActivity extends ActionBarActivity implements android
     }
 
     @Override
-    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-
-    }
-
-    @Override
-    public void onNothingSelected(AdapterView<?> parent) {
-
-    }
-
-    @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_order, menu);
@@ -99,15 +92,36 @@ public class OrderPenjualanActivity extends ActionBarActivity implements android
         // automatically handle clicks on the Home/Up button, so long
         // as you medirecords_adminspecify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
+        Intent intent;
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_show_stock) {
-            Intent intent = new Intent(OrderPenjualanActivity.this, ViewStockActivity.class);
-            intent.putExtra(Customer.CUST_ID, customerID);
-            startActivityForResult(intent, VIEW_STOCK_ACTIVITY);
+        switch (id) {
+            case android.R.id.home:
+                intent = new Intent();
+                setResult(RESULT_OK, intent);
+                finish();
+
+                break;
+
+            case R.id.action_show_stock:
+                intent = new Intent(OrderPenjualanActivity.this, ViewStockActivity.class);
+                intent.putExtra(Customer.CUST_ID, customerID);
+                startActivityForResult(intent, VIEW_STOCK_ACTIVITY);
+
+                break;
         }
 
-        return super.onOptionsItemSelected(item);
+        return true;
+    }
+
+    @Override
+    public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+
+    }
+
+    @Override
+    public void onNothingSelected(AdapterView<?> adapterView) {
+
     }
 
     @Override

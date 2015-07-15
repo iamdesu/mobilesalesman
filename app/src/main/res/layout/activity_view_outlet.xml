@@ -6,16 +6,17 @@
 
     <!-- Editext for Search -->
     <EditText android:id="@+id/inputSearchOutlet"
-        android:layout_width="fill_parent"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Cari Outlet.."
+        android:hint="@string/hint_search_outlet"
         android:inputType="textVisiblePassword"
-        android:textAppearance="?android:attr/textAppearanceMedium"/>
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:drawableRight="@drawable/ic_search_black"/>
 
     <!-- List View -->
     <ListView
         android:id="@+id/list_view"
-        android:layout_width="fill_parent"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content" />
 
 </LinearLayout>

@@ -25,7 +25,7 @@ import com.dropbox.client2.session.AccessTokenPair;
 import com.dropbox.client2.session.AppKeyPair;
 
 
-public class MainActivity extends ActionBarActivity {
+public class MainActivity extends ActionBarActivity implements View.OnClickListener {
 
     private static final String TAG = "MainActivity";
 
@@ -45,7 +45,7 @@ public class MainActivity extends ActionBarActivity {
     private boolean mLoggedIn;
 
     //Android widget
-    private Button mBtnKirimData;
+    private Button btnSendData, btnRetrieveData, btnTransaction, btnExit;
     private TextView tvUsername;
 
     @Override
@@ -53,7 +53,7 @@ public class MainActivity extends ActionBarActivity {
         super.onCreate(savedInstanceState);
 
         // We create a new AuthSession so that we can use the Dropbox API.
-        AndroidAuthSession session = buildSession();
+        AndroidAuthSession session = DropboxHelper.buildSession(MainActivity.this);
         dropboxApi = new DropboxAPI<AndroidAuthSession>(session);
 
         // Basic Android widgets
@@ -61,8 +61,16 @@ public class MainActivity extends ActionBarActivity {
 
         checkAppKeySetup();
 
-        mBtnKirimData = (Button) findViewById(R.id.btn_kirim_data);
-        tvUsername = (TextView) findViewById(R.id.tv_staff_name);
+        btnRetrieveData = (Button) findViewById(R.id.btn_retrieve_data);
+        btnSendData = (Button) findViewById(R.id.btn_sent_data);
+        btnTransaction = (Button) findViewById(R.id.btn_transaction);
+        btnExit = (Button) findViewById(R.id.btn_exit);
+
+        btnRetrieveData.setOnClickListener(this);
+        btnSendData.setOnClickListener(this);
+        btnTransaction.setOnClickListener(this);
+        btnExit.setOnClickListener(this);
+        tvUsername = (TextView) findViewById(R.id.staff_name);
 
         // Display the proper UI state if logged in or not
         setLoggedIn(dropboxApi.getSession().isLinked());
@@ -92,47 +100,21 @@ public class MainActivity extends ActionBarActivity {
         if (id == R.id.action_reconnect) {
             logOut();
             connectDropbox();
-            //return true;
         }
 
         return super.onOptionsItemSelected(item);
     }
 
-    public void onButtonCloseClick(View view) {
-        finish();
-        System.exit(0);
-    }
-
-    public void onButtonAmbilDataClick(View view) {
-        if(mLoggedIn == true) {
-            Intent intent = new Intent(MainActivity.this, AmbilDataActivity.class);
-            startActivityForResult(intent, 0);
-            //startActivity(intent);
-        } else {
-            showToast("Please login to DropBox");
-            connectDropbox();
-        }
-    }
-
-    public void onTransaksiClick(View view) {
-        Intent intent = new Intent(MainActivity.this, ViewOutletActivity.class);
-        startActivity(intent);
-    }
-
-    public void onButtonKirimDataClick(View view) {
-        if(mLoggedIn == true) {
-            Log.i("Button Kirim data", " Klik");
-            SharedPreferences prefs = getSharedPreferences(MSConstantsIntf.MOBILESALES_PREFS_NAME, 0);
-            String team = prefs.getString(MSConstantsIntf.TEAM, null);
-
-            if(team != null && !team.isEmpty()) {
-                uploadFileToDropBox();
-            } else {
-                showToast("Mohon login dan ambil data terbaru");
-            }
-        } else {
-            showToast("Please login to DropBox");
-            connectDropbox();
+    @Override
+    public void onClick(View view) {
+        if (view == findViewById(R.id.btn_retrieve_data)) {
+            onButtonRetrieveDataClick(view);
+        } else if (view == findViewById(R.id.btn_transaction)) {
+            onButtonTransactionClick(view);
+        } else if (view == findViewById(R.id.btn_sent_data)) {
+            onButtonSentDataClick(view);
+        } else if (view == findViewById(R.id.btn_exit)) {
+            onButtonExitClick(view);
         }
     }
 
@@ -167,7 +149,44 @@ public class MainActivity extends ActionBarActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        displayUsername();
+        /*displayUsername();*/
+    }
+
+    public void onButtonRetrieveDataClick(View view) {
+        if (mLoggedIn == true) {
+            Intent intent = new Intent(MainActivity.this, AmbilDataActivity.class);
+            startActivityForResult(intent, 0);
+        } else {
+            showToast("Please login to DropBox");
+            connectDropbox();
+        }
+    }
+
+    public void onButtonTransactionClick(View view) {
+        Intent intent = new Intent(MainActivity.this, ViewOutletActivity.class);
+        startActivity(intent);
+    }
+
+    public void onButtonSentDataClick(View view) {
+        if (mLoggedIn == true) {
+            Log.i("Button Kirim data", " Klik");
+            SharedPreferences prefs = getSharedPreferences(MSConstantsIntf.MOBILESALES_PREFS_NAME, 0);
+            String team = prefs.getString(MSConstantsIntf.TEAM, null);
+
+            if (team != null && !team.isEmpty()) {
+                uploadFileToDropBox();
+            } else {
+                showToast("Mohon login dan ambil data terbaru");
+            }
+        } else {
+            showToast("Please login to DropBox");
+            connectDropbox();
+        }
+    }
+
+    public void onButtonExitClick(View view) {
+        finish();
+        System.exit(0);
     }
 
     private AndroidAuthSession buildSession() {
@@ -288,7 +307,7 @@ public class MainActivity extends ActionBarActivity {
         String staffName = prefs.getString(MSConstantsIntf.STAFF_NAME, null);
         if (staffName == null || staffName.length() == 0) return;
 
-        tvUsername.setText("Hello, " + staffName);
+        tvUsername.setText("User Login: " + staffName);
     }
 
     private void showToast(String msg) {
@@ -297,24 +316,14 @@ public class MainActivity extends ActionBarActivity {
     }
 
     private void connectDropbox() {
-        // This logs you out if you're logged in, or vice versa
-        if (mLoggedIn) {
-            //logOut();
-        } else {
-            // Start the remote authentication
-            if (USE_OAUTH1) {
-                dropboxApi.getSession().startAuthentication(MainActivity.this);
-            } else {
-                dropboxApi.getSession().startOAuth2Authentication(MainActivity.this);
-            }
-        }
+        DropboxHelper.connectDropbox(MainActivity.this, dropboxApi, mLoggedIn);
     }
 
     private void uploadFileToDropBox() {
-        mBtnKirimData.setEnabled(false);
+        btnSendData.setEnabled(false);
         UploadFileToDropbox upload = new UploadFileToDropbox(this, dropboxApi, FILE_DIR_EXPORT);
         upload.execute();
-        mBtnKirimData.setEnabled(true);
+        btnSendData.setEnabled(true);
     }
 
     private void downloadFileFromDropBox() {
