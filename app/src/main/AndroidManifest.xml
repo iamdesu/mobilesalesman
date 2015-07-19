@@ -71,6 +71,14 @@
             android:name=".ViewOutletActivity"
             android:label="@string/view_outlet_title"
             android:screenOrientation="landscape"></activity>
+        <activity
+            android:name=".EditOrderActivity"
+            android:label="@string/view_edit_stock_title"
+            android:screenOrientation="landscape"></activity>
+        <activity
+            android:name=".EditReturActivity"
+            android:label="@string/view_edit_stock_title"
+            android:screenOrientation="landscape"></activity>
     </application>
 
     <uses-permission android:name="android.permission.INTERNET"></uses-permission>

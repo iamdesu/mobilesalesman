@@ -1,8 +1,9 @@
 package com.bali.nusadua.productmonitor.model;
 
+import java.io.Serializable;
 import java.util.Date;
 
-public class Retur {
+public class Retur implements Serializable {
     public static final String TABLE = "ReturPenjualan";
     public static final String ID = "id";
     public static final String GUID = "guid";
@@ -13,6 +14,9 @@ public class Retur {
     public static final String UNIT = "unit";
     public static final String KODE_OUTLET = "kode_outlet";
     public static final String CREATE_DATE = "create_date";
+
+    public static final String LOOKUP_DUS = "dus";
+    public static final String LOOKUP_PCS = "pcs";
 
     private int id;
     private String guid;

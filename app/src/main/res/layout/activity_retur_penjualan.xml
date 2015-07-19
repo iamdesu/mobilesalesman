@@ -4,8 +4,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <TableLayout
-        xmlns:android="http://schemas.android.com/apk/res/android"
+    <TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:id="@+id/tableLayoutAction"
         android:layout_width="match_parent"
         android:layout_height="50dp"
@@ -14,49 +13,54 @@
 
         <TableRow
             android:id="@+id/tableRowAction1"
-            android:layout_height="wrap_content"
-            android:layout_width="match_parent">
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
 
             <EditText
-                android:layout_width="0dp"
-                android:layout_height="fill_parent"
-                android:ems="10"
                 android:id="@+id/order_code"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
                 android:layout_weight="20"
-                android:maxLines="255"
-                android:hint="@string/hint_kode"/>
+                android:ems="10"
+                android:hint="@string/hint_kode"
+                android:maxLength="255"
+                android:singleLine="true" />
 
             <EditText
-                android:layout_width="0dp"
-                android:layout_height="fill_parent"
                 android:id="@+id/order_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
                 android:layout_weight="20"
-                android:maxLines="255"
-                android:hint="@string/hint_nama_barang"/>
+                android:ems="10"
+                android:hint="@string/hint_nama_barang"
+                android:maxLength="255"
+                android:singleLine="true" />
 
             <EditText
-                android:layout_width="0dp"
-                android:layout_height="fill_parent"
-                android:inputType="numberSigned"
-                android:ems="10"
                 android:id="@+id/order_price"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
                 android:layout_weight="20"
-                android:maxLines="9"
-                android:hint="@string/hint_harga"/>
+                android:ems="10"
+                android:hint="@string/hint_harga"
+                android:inputType="numberSigned"
+                android:maxLength="9"
+                android:singleLine="true" />
 
             <EditText
-                android:layout_width="0dp"
-                android:layout_height="fill_parent"
-                android:inputType="numberSigned"
-                android:ems="10"
                 android:id="@+id/order_qty"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
                 android:layout_weight="20"
-                android:maxLines="9"
-                android:hint="@string/hint_qty"/>
+                android:ems="10"
+                android:hint="@string/hint_qty"
+                android:inputType="numberSigned"
+                android:maxLength="9"
+                android:singleLine="true" />
 
             <Spinner
                 android:id="@+id/unit_spinner"
-                android:layout_width="0dp"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="10"
                 android:entries="@array/unit_arrays"
@@ -64,99 +68,103 @@
 
             <Button
                 android:id="@+id/button_add"
-                android:layout_width="0dp"
+                style="@style/ButtonTextCenter"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_column="0"
                 android:layout_weight="10"
-                style="@style/ButtonTextCenter"
-                android:text="+"
-                android:background="@drawable/button_shape"/>
+                android:background="@drawable/button_shape"
+                android:text="+" />
 
         </TableRow>
     </TableLayout>
+
+    <TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#3F51B5">
+
+        <TableRow
+            android:id="@+id/tableRowData1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="1dp">
+
+            <TextView
+                android:id="@+id/textView_head_kode"
+                android:layout_height="wrap_content"
+                android:layout_weight="40"
+                android:maxEms="7"
+                android:text="@string/hint_kode_nama_barang"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:textColor="@android:color/white" />
+
+            <TextView
+                android:id="@+id/textView_head_price"
+                android:layout_height="wrap_content"
+                android:layout_weight="20"
+                android:gravity="center_horizontal"
+                android:text="@string/hint_harga"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:textColor="@android:color/white" />
+
+            <TextView
+                android:id="@+id/textView_head_qty_unit"
+                android:layout_height="wrap_content"
+                android:layout_weight="20"
+                android:gravity="center_horizontal"
+                android:text="@string/hint_qty_unit"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:textColor="@android:color/white" />
+
+            <TextView
+                android:id="@+id/textView_head_subtotal"
+                android:layout_height="wrap_content"
+                android:layout_weight="20"
+                android:gravity="center_horizontal"
+                android:text="@string/hint_subtotal"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:textColor="@android:color/white" />
+
+        </TableRow>
+    </TableLayout>
+
     <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1">
 
-        <TableLayout
-            xmlns:android="http://schemas.android.com/apk/res/android"
+        <TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
             android:id="@+id/tableLayoutData"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:shrinkColumns="*"
-            android:stretchColumns="*">
+            android:background="#3F51B5">
 
-            <TableRow android:id="@+id/tableRowData1"
-                android:layout_height="wrap_content"
-                android:layout_width="match_parent"
-                android:background="@drawable/table_row_even_shape"
-                android:padding="8dp">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textAppearance="?android:attr/textAppearanceMedium"
-                    android:text="@string/hint_kode_nama_barang"
-                    android:id="@+id/textView_head_kode"
-                    android:layout_weight="40"/>
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textAppearance="?android:attr/textAppearanceMedium"
-                    android:text="@string/hint_harga"
-                    android:id="@+id/textView_head_price"
-                    android:layout_weight="20"/>
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textAppearance="?android:attr/textAppearanceMedium"
-                    android:text="@string/hint_qty_unit"
-                    android:id="@+id/textView_head_qty_unit"
-                    android:layout_weight="20"/>
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textAppearance="?android:attr/textAppearanceMedium"
-                    android:text="@string/hint_subtotal"
-                    android:id="@+id/textView_head_subtotal"
-                    android:layout_weight="20"/>
-
-            </TableRow>
         </TableLayout>
     </ScrollView>
 
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:background="@android:color/white">
 
-        <Button
-            android:id="@+id/button_batal"
-            android:layout_width="120dp"
-            android:layout_height="wrap_content"
-            android:padding="10dp"
-            android:layout_margin="4dp"
-            style="@style/ButtonTextCenter"
-            android:text="@string/btn_batal"
-            android:background="@drawable/button_shape_red"/>
-
-        <Space
-            android:layout_width="wrap_content"
+        <TextView
+            android:id="@+id/text_total"
+            android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_weight="1"/>
+            android:layout_weight="1"
+            android:gravity="center_vertical"
+            android:text="Total 1000000"
+            android:textSize="30sp" />
 
         <Button
             android:id="@+id/button_proses"
-            android:layout_width="120dp"
-            android:layout_height="wrap_content"
-            android:padding="10dp"
-            android:layout_margin="4dp"
-            style="@style/ButtonTextCenter"
-            android:text="@string/btn_proses"
-            android:background="@drawable/button_shape_blue"/>
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:background="@drawable/button_blue"
+            android:text="@string/btn_retur"
+            android:textColor="@android:color/white"
+            android:textSize="20sp" />
 
     </LinearLayout>
 

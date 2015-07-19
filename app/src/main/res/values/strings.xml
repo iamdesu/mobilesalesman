@@ -9,6 +9,7 @@
     <string name="view_outlet_title">Pilih Outlet</string>
     <string name="view_stock_title">Pilih Stock</string>
     <string name="view_billing_title">Pilih Pelunasan</string>
+    <string name="view_edit_stock_title">Edit Stok</string>
 
     <string name="pop_up_order_edit">EDIT ORDER</string>
     <string name="pop_up_retur_edit">EDIT RETUR</string>
@@ -19,8 +20,12 @@
     <string name="action_reconnect">Reconnect</string>
     <string name="action_refresh_user">Refresh User</string>
     <string name="action_show_stock">Lihat Stock</string>
+    <string name="action_delete_stock">Delete</string>
+    <string name="action_edit_stock">Edit</string>
     <string name="action_show_billing">Lihat Invoice</string>
     <string name="action_sent_current_data">Kirim</string>
+    <string name="action_yes">Ya</string>
+    <string name="action_no">Tidak</string>
 
     <string name="btn_retrieve_data">Ambil Data</string>
     <string name="btn_transaction">Transaksi</string>
@@ -29,6 +34,7 @@
     <string name="btn_exit">Keluar</string>
     <string name="btn_batal">Batal</string>
     <string name="btn_proses">Proses</string>
+    <string name="btn_retur">Retur</string>
     <string name="btn_login">Login</string>
     <string name="btn_summary">Summary</string>
     <string name="hint_kode">Kode</string>
@@ -59,6 +65,7 @@
     <string name="file_setup">File Setup</string>
     <string name="failed_login">Failed to login. Please make sure User Id and Password are valid.</string>
     <string name="code_not_found">Kode Barang tidak di temukan.</string>
+    <string name="delete_stock_confirm">Anda yakin ingin menghapus stok yg tercentang?</string>
     <string name="invoice_no_not_found">Nomor Invoice tidak di temukan.</string>
 
     <!-- Style -->
