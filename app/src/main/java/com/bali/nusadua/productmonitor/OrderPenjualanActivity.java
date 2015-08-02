@@ -220,7 +220,7 @@ public class OrderPenjualanActivity extends ActionBarActivity implements android
     @Override
     public void onClick(View view) {
         Order order = new Order();
-        int padding_in_dp = 1;  // 6 dps
+        int padding_in_dp = 1;  // 8 = 6 dps
         final float scale = getResources().getDisplayMetrics().density;
         int padding_in_px = (int) (padding_in_dp * scale + 0.5f);
 
@@ -428,8 +428,6 @@ public class OrderPenjualanActivity extends ActionBarActivity implements android
             saveAllOrder();
             finish();
 
-        } else if (view == findViewById(R.id.button_batal)) {
-            finish();
         }
     }
 

@@ -13,10 +13,6 @@ import android.widget.EditText;
 import android.widget.Spinner;
 
 import com.bali.nusadua.productmonitor.model.Order;
-import com.bali.nusadua.productmonitor.model.StockBilling;
-import com.bali.nusadua.productmonitor.model.StockPrice;
-
-import java.io.Serializable;
 
 /**
  * Created by desu on 7/18/15.
@@ -92,6 +88,7 @@ public class EditOrderActivity extends ActionBarActivity implements android.view
             resultOrder.setHarga(Double.parseDouble(price.getText().toString()));
             resultOrder.setQty(Integer.parseInt(qty.getText().toString()));
             resultOrder.setUnit(unit.getSelectedItem().toString());
+            resultOrder.setKodeOutlet(order.getKodeOutlet());
 
             Intent resultIntent = new Intent();
             resultIntent.putExtra(Order.TABLE, resultOrder);

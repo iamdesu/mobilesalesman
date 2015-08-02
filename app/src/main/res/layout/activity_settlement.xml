@@ -4,8 +4,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <TableLayout
-        xmlns:android="http://schemas.android.com/apk/res/android"
+    <TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:id="@+id/tableLayoutAction"
         android:layout_width="match_parent"
         android:layout_height="50dp"
@@ -14,149 +13,159 @@
 
         <TableRow
             android:id="@+id/tableRowAction1"
-            android:layout_height="wrap_content"
-            android:layout_width="match_parent">
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
 
             <EditText
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:ems="10"
                 android:id="@+id/invoice_number"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
                 android:layout_weight="20"
-                android:maxLines="255"
-                android:hint="@string/hint_invoice_number"/>
+                android:ems="10"
+                android:hint="@string/hint_invoice_number"
+                android:maxLength="255"
+                android:singleLine="true" />
 
             <EditText
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:inputType="date"
                 android:id="@+id/invoice_date"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
                 android:layout_weight="20"
-                android:hint="@string/hint_invoice_date"/>
+                android:ems="10"
+                android:hint="@string/hint_invoice_date"
+                android:inputType="date"
+                android:singleLine="true" />
 
             <EditText
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:inputType="numberSigned"
-                android:ems="10"
                 android:id="@+id/settlement_credit"
-                android:layout_weight="20"
-                android:maxLines="9"
-                android:hint="@string/hint_credit"/>
-
-            <EditText
-                android:layout_width="0dp"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:id="@+id/payment_method"
                 android:layout_weight="20"
-                android:maxLines="255"
-                android:hint="@string/hint_payment_method"/>
-
-            <EditText
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:inputType="numberSigned"
                 android:ems="10"
+                android:hint="@string/hint_credit"
+                android:inputType="numberSigned"
+                android:maxLength="9"
+                android:singleLine="true" />
+
+            <EditText
+                android:id="@+id/payment_method"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="20"
+                android:ems="10"
+                android:hint="@string/hint_payment_method"
+                android:maxLength="255"
+                android:singleLine="true" />
+
+            <EditText
                 android:id="@+id/nominal_payment"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
                 android:layout_weight="10"
-                android:maxLines="9"
-                android:hint="@string/hint_nominal_payment"/>
+                android:ems="10"
+                android:hint="@string/hint_nominal_payment"
+                android:inputType="numberSigned"
+                android:maxLength="9"
+                android:singleLine="true" />
 
             <Button
                 android:id="@+id/button_add"
-                android:layout_width="0dp"
+                style="@style/ButtonTextCenter"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_column="0"
                 android:layout_weight="10"
-                style="@style/ButtonTextCenter"
-                android:text="+"
-                android:background="@drawable/button_shape"/>
+                android:background="@drawable/button_shape"
+                android:ems="5"
+                android:text="+" />
 
         </TableRow>
     </TableLayout>
+
+    <TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#3F51B5">
+
+        <TableRow
+            android:id="@+id/tableRowData1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="1dp">
+
+            <TextView
+                android:id="@+id/textView_head_invoice_number"
+                android:layout_height="wrap_content"
+                android:layout_weight="40"
+                android:maxEms="7"
+                android:text="@string/hint_invoice_number"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:textColor="@android:color/white" />
+
+            <TextView
+                android:id="@+id/textView_head_credit"
+                android:layout_height="wrap_content"
+                android:layout_weight="20"
+                android:gravity="center_horizontal"
+                android:text="@string/hint_credit"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:textColor="@android:color/white" />
+
+            <TextView
+                android:id="@+id/textView_head_payment_method"
+                android:layout_height="wrap_content"
+                android:layout_weight="20"
+                android:gravity="center_horizontal"
+                android:text="@string/hint_payment_method"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:textColor="@android:color/white" />
+
+            <TextView
+                android:id="@+id/textView_head_nominal_payment"
+                android:layout_height="wrap_content"
+                android:layout_weight="20"
+                android:gravity="center_horizontal"
+                android:text="@string/hint_nominal_payment"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:textColor="@android:color/white" />
+
+        </TableRow>
+    </TableLayout>
+
     <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1">
 
-        <TableLayout
-            xmlns:android="http://schemas.android.com/apk/res/android"
+        <TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
             android:id="@+id/tableLayoutData"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:shrinkColumns="*"
-            android:stretchColumns="*">
-
-            <TableRow android:id="@+id/tableRowData1"
-                android:layout_height="wrap_content"
-                android:layout_width="match_parent"
-                android:background="@drawable/table_row_even_shape"
-                android:padding="8dp">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textAppearance="?android:attr/textAppearanceMedium"
-                    android:text="@string/hint_invoice_number"
-                    android:id="@+id/textView_head_invoice_number"
-                    android:layout_weight="40"/>
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textAppearance="?android:attr/textAppearanceMedium"
-                    android:text="@string/hint_credit"
-                    android:id="@+id/textView_head_credit"
-                    android:layout_weight="20"/>
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textAppearance="?android:attr/textAppearanceMedium"
-                    android:text="@string/hint_payment_method"
-                    android:id="@+id/textView_head_payment_method"
-                    android:layout_weight="20"/>
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textAppearance="?android:attr/textAppearanceMedium"
-                    android:text="@string/hint_nominal_payment"
-                    android:id="@+id/textView_head_nominal_payment"
-                    android:layout_weight="20"/>
-
-            </TableRow>
-        </TableLayout>
+            android:background="#3F51B5"></TableLayout>
     </ScrollView>
 
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:background="@android:color/white">
 
-        <Button
-            android:id="@+id/button_batal"
-            android:layout_width="120dp"
-            android:layout_height="wrap_content"
-            android:padding="10dp"
-            android:layout_margin="4dp"
-            style="@style/ButtonTextCenter"
-            android:text="@string/btn_batal"
-            android:background="@drawable/button_shape_red"/>
-
-        <Space
-            android:layout_width="wrap_content"
+        <TextView
+            android:id="@+id/text_total"
+            android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_weight="1"/>
+            android:layout_weight="1"
+            android:gravity="center_vertical"
+            android:text="Total 1000000"
+            android:textSize="30sp" />
 
         <Button
             android:id="@+id/button_proses"
-            android:layout_width="120dp"
-            android:layout_height="wrap_content"
-            android:padding="10dp"
-            android:layout_margin="4dp"
-            style="@style/ButtonTextCenter"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:background="@drawable/button_blue"
             android:text="@string/btn_proses"
-            android:background="@drawable/button_shape"/>
+            android:textColor="@android:color/white"
+            android:textSize="20sp" />
 
     </LinearLayout>
 
@@ -165,6 +174,6 @@
         android:id="@+id/dp_fields"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:visibility="gone"/>
+        android:visibility="gone" />
 
 </LinearLayout>

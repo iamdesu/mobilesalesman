@@ -1,8 +1,9 @@
 package com.bali.nusadua.productmonitor.model;
 
+import java.io.Serializable;
 import java.util.Date;
 
-public class Settlement {
+public class Settlement implements Serializable {
     public static final String TABLE = "Settlement";
     public static final String ID = "id";
     public static final String GUID = "guid";

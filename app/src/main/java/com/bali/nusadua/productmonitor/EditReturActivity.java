@@ -87,6 +87,7 @@ public class EditReturActivity extends ActionBarActivity implements android.view
             resultRetur.setHarga(Double.parseDouble(price.getText().toString()));
             resultRetur.setQty(Integer.parseInt(qty.getText().toString()));
             resultRetur.setUnit(unit.getSelectedItem().toString());
+            resultRetur.setKodeOutlet(retur.getKodeOutlet());
 
             Intent resultIntent = new Intent();
             resultIntent.putExtra(Retur.TABLE, resultRetur);

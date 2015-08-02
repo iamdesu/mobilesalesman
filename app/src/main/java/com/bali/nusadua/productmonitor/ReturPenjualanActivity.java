@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 import android.view.Gravity;
@@ -23,7 +24,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bali.nusadua.productmonitor.model.Customer;
-import com.bali.nusadua.productmonitor.model.Order;
 import com.bali.nusadua.productmonitor.model.Retur;
 import com.bali.nusadua.productmonitor.model.StockBilling;
 import com.bali.nusadua.productmonitor.model.StockPrice;
@@ -65,6 +65,8 @@ public class ReturPenjualanActivity extends ActionBarActivity implements android
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_retur_penjualan);
+        ActionBar actionBar = getSupportActionBar();
+        actionBar.setDisplayHomeAsUpEnabled(true);
 
         //Declare UI component
         btnAdd = (Button) findViewById(R.id.button_add);
@@ -413,8 +415,6 @@ public class ReturPenjualanActivity extends ActionBarActivity implements android
             saveAllRetur();
             finish();
 
-        } else if (view == findViewById(R.id.button_batal)) {
-            finish();
         }
     }
 

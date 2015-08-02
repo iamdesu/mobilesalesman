@@ -1,17 +1,23 @@
 package com.bali.nusadua.productmonitor;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.TableLayout;
@@ -21,10 +27,12 @@ import android.widget.Toast;
 
 import com.bali.nusadua.productmonitor.model.Billing;
 import com.bali.nusadua.productmonitor.model.Customer;
+import com.bali.nusadua.productmonitor.model.Order;
 import com.bali.nusadua.productmonitor.model.Settlement;
 import com.bali.nusadua.productmonitor.repo.BillingRepo;
 import com.bali.nusadua.productmonitor.repo.SettlementRepo;
 
+import java.text.NumberFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -32,51 +40,58 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 public class SettlementActivity extends ActionBarActivity implements View.OnClickListener {
 
+    static final int DATE_DIALOG_ID = 999;
+    static final int DATE_POPUP_DIALOG_ID = 998;
     private static final int VIEW_BILLING_ACTIVITY = 1;
+    private static final int VIEW_EDIT_SETTLEMENT_ACTIVITY = 2;
 
+    private final Context context = this;
     private SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
-    private Button btnAdd, btnProses, btnBatal;
+    private Button btnAdd, btnProses;
     private TableLayout theGrid;
     private EditText etInvoiceNumber, etInvoiceDate, etCredit, etPaymentMethod, etNominalPayment;
+    private TextView tvTotal;
     private DatePicker datePickerField, datePickerPopupField;
     private String customerID;
     private int initYear, initMonth, initDay, initPopupYear, initPopupMonth, initPopupDay;
     private DatePickerDialog.OnDateSetListener datePickerListener, datePickerPopupListener;
-    private final Context context = this;
     private int countID;
+    private Double total = 0d;
 
-    static final int DATE_DIALOG_ID = 999;
-    static final int DATE_POPUP_DIALOG_ID = 998;
-
-    private Map<Integer, Settlement> mapSettlements = new HashMap<Integer, Settlement>();
+    private Map<String, Settlement> mapSettlements = new HashMap<String, Settlement>();
+    private Map<String, Integer> mapCheckBoxs = new HashMap<String, Integer>();
     private SettlementRepo settlementRepo = new SettlementRepo(this);
     private BillingRepo billingRepo = new BillingRepo(this);
+    private NumberFormat format = NumberFormat.getInstance(Locale.GERMAN);
+    private Menu actionBarMenu;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_settlement);
+        ActionBar actionBar = getSupportActionBar();
+        actionBar.setDisplayHomeAsUpEnabled(true);
 
         //Declare UI component
         btnAdd = (Button) findViewById(R.id.button_add);
         btnProses = (Button) findViewById(R.id.button_proses);
-        btnBatal = (Button) findViewById(R.id.button_batal);
         theGrid = (TableLayout) findViewById(R.id.tableLayoutData);
         etInvoiceNumber = (EditText) findViewById(R.id.invoice_number);
         etInvoiceDate = (EditText) findViewById(R.id.invoice_date);
         etCredit = (EditText) findViewById(R.id.settlement_credit);
         etPaymentMethod = (EditText) findViewById(R.id.payment_method);
         etNominalPayment = (EditText) findViewById(R.id.nominal_payment);
+        tvTotal = (TextView) findViewById(R.id.text_total);
         setCurrentDateOnDatePicker();
 
         //Declare Listener
         btnAdd.setOnClickListener(this);
         btnProses.setOnClickListener(this);
-        btnBatal.setOnClickListener(this);
         etInvoiceDate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -117,6 +132,7 @@ public class SettlementActivity extends ActionBarActivity implements View.OnClic
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
+        this.actionBarMenu = menu;
         getMenuInflater().inflate(R.menu.menu_settlement, menu);
         return true;
     }
@@ -127,26 +143,102 @@ public class SettlementActivity extends ActionBarActivity implements View.OnClic
         // automatically handle clicks on the Home/Up button, so long
         // as you medirecords_adminspecify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
+        Intent intent;
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_show_billing) {
-            Intent intent = new Intent(SettlementActivity.this, ViewBillingActivity.class);
-            intent.putExtra(Customer.CUST_ID, customerID);
-            startActivityForResult(intent, VIEW_BILLING_ACTIVITY);
+        switch (id) {
+            case android.R.id.home:
+                intent = new Intent();
+                setResult(RESULT_OK, intent);
+                finish();
+
+                break;
+
+            case R.id.action_show_billing:
+                intent = new Intent(SettlementActivity.this, ViewBillingActivity.class);
+                intent.putExtra(Customer.CUST_ID, customerID);
+                startActivityForResult(intent, VIEW_BILLING_ACTIVITY);
+
+                break;
+
+            case R.id.action_delete_settlement:
+                DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        switch (which) {
+                            case DialogInterface.BUTTON_POSITIVE:
+                                //Do your Yes progress
+                                for (Integer i : mapCheckBoxs.values()) {
+                                    mapSettlements.remove(String.valueOf(i));
+                                    TableRow selectedRow = (TableRow) findViewById(i);
+                                    theGrid.removeView(selectedRow);
+                                }
+                                calculateTotal(new ArrayList<Settlement>(mapSettlements.values()));
+                                showToast(mapCheckBoxs.values().size() + " telah di batalkan.");
+                                mapCheckBoxs.clear();
+                                actionBarMenu.setGroupVisible(R.id.menu_group_edit, false);
+                                actionBarMenu.setGroupVisible(R.id.menu_group_delete, false);
+
+                                break;
+
+                            case DialogInterface.BUTTON_NEGATIVE:
+                                //Do your No progress
+                                break;
+                        }
+                    }
+                };
+                AlertDialog.Builder ab = new AlertDialog.Builder(this);
+                ab.setMessage(getResources().getString(R.string.delete_stock_confirm)).setPositiveButton(getResources().getString(R.string.action_yes), dialogClickListener)
+                        .setNegativeButton(getResources().getString(R.string.action_no), dialogClickListener).show();
+
+                break;
+
+            case R.id.action_edit_settlement:
+                Integer i = new ArrayList<Integer>(mapCheckBoxs.values()).get(0);
+                Settlement settlement = mapSettlements.get(String.valueOf(i));
+                intent = new Intent(SettlementActivity.this, EditSettlementActivity.class);
+                intent.putExtra(Settlement.TABLE, settlement);
+                startActivityForResult(intent, VIEW_EDIT_SETTLEMENT_ACTIVITY);
+                break;
         }
 
-        return super.onOptionsItemSelected(item);
+        return true;
     }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        switch(requestCode) {
-            case (VIEW_BILLING_ACTIVITY) : {
+        switch (requestCode) {
+            case (VIEW_BILLING_ACTIVITY): {
                 if (resultCode == Activity.RESULT_OK) {
                     //Update your TextView
                     etInvoiceNumber.setText(data.getStringExtra(Billing.INVOICE_NO));
                     etInvoiceDate.setText(sdf.format(new Date()));
+                }
+                break;
+            }
+
+            case (VIEW_EDIT_SETTLEMENT_ACTIVITY): {
+                if (resultCode == Activity.RESULT_OK) {
+                    Settlement resultSettlement = (Settlement) data.getSerializableExtra(Settlement.TABLE);
+                    Settlement settlement = mapSettlements.get(String.valueOf(resultSettlement.getId()));
+                    settlement.setInvoiceNumber(resultSettlement.getInvoiceNumber());
+                    settlement.setInvoiceDate(resultSettlement.getInvoiceDate());
+                    settlement.setCredit(resultSettlement.getCredit());
+                    settlement.setPaymentMethod(resultSettlement.getPaymentMethod());
+                    settlement.setNominalPayment(resultSettlement.getNominalPayment());
+
+                    TableRow selectedRow = (TableRow) findViewById(resultSettlement.getId());
+                    TextView textInvNumber = (TextView) selectedRow.getChildAt(1);
+                    textInvNumber.setText(settlement.getInvoiceNumber());
+                    TextView textCredit = (TextView) selectedRow.getChildAt(2);
+                    textCredit.setText(settlement.getCredit().toString());
+                    TextView textPayMethod = (TextView) selectedRow.getChildAt(3);
+                    textPayMethod.setText(settlement.getPaymentMethod());
+                    TextView textNominal = (TextView) selectedRow.getChildAt(4);
+                    textNominal.setText(format.format(settlement.getNominalPayment()).toString());
+
+                    calculateTotal(new ArrayList<Settlement>(mapSettlements.values()));
                 }
                 break;
             }
@@ -156,7 +248,7 @@ public class SettlementActivity extends ActionBarActivity implements View.OnClic
     @Override
     public void onClick(View view) {
         Settlement settlement = new Settlement();
-        int padding_in_dp = 8;  // 6 dps
+        int padding_in_dp = 1;  // 8 = 6 dps
         final float scale = getResources().getDisplayMetrics().density;
         int padding_in_px = (int) (padding_in_dp * scale + 0.5f);
 
@@ -169,17 +261,57 @@ public class SettlementActivity extends ActionBarActivity implements View.OnClic
                 if (billingRepo.getBillingByCustoMerInvoiceNo(customerID, etInvoiceNumber.getText().toString()) != null) {
                     countID = countID + 1;
                     int count = countID;
-                    TableRow tableRow = new TableRow(this);
+                    final TableRow tableRow = new TableRow(this);
                     tableRow.setPadding(padding_in_px, padding_in_px, padding_in_px, padding_in_px);
-
-                    tableRow.setBackgroundResource(R.drawable.table_row_even_shape);
+                    tableRow.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.WRAP_CONTENT, 0f));
                     tableRow.setId(count + 1);
+                    settlement.setId(tableRow.getId());
+
+                    CheckBox box = new CheckBox(this);
+                    box.setBackgroundColor(getResources().getColor(android.R.color.white));
+                    TableRow.LayoutParams layoutCheckBox = new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT, TableRow.LayoutParams.MATCH_PARENT, 0f);
+                    layoutCheckBox.setMargins(1, 0, 1, 0);
+                    box.setLayoutParams(layoutCheckBox);
+                    box.setOnCheckedChangeListener(
+                            new CompoundButton.OnCheckedChangeListener() {
+
+                                @Override
+                                public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                                    if (b) {
+                                        mapCheckBoxs.put(String.valueOf(tableRow.getId()), tableRow.getId());
+                                        if (mapCheckBoxs.values().size() == 1) {
+                                            actionBarMenu.setGroupVisible(R.id.menu_group_edit, true);
+                                        } else {
+                                            actionBarMenu.setGroupVisible(R.id.menu_group_edit, false);
+                                        }
+                                        actionBarMenu.setGroupVisible(R.id.menu_group_delete, true);
+                                    } else {
+                                        mapCheckBoxs.remove(String.valueOf(tableRow.getId()));
+                                        if (mapCheckBoxs.values().size() == 1) {
+                                            actionBarMenu.setGroupVisible(R.id.menu_group_edit, true);
+                                        } else {
+                                            actionBarMenu.setGroupVisible(R.id.menu_group_edit, false);
+                                        }
+
+                                        if (mapCheckBoxs.values().size() == 0) {
+                                            actionBarMenu.setGroupVisible(R.id.menu_group_delete, false);
+                                        }
+                                    }
+                                }
+                            }
+                    );
+
+                    tableRow.addView(box);
 
                     TextView labelCode = new TextView(this);
                     labelCode.setId(200 + count + 1);
                     labelCode.setText(etInvoiceNumber.getText() + " | " + etInvoiceDate.getText());
                     labelCode.setTextAppearance(SettlementActivity.this, android.R.style.TextAppearance_Medium);
-                    labelCode.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT, TableRow.LayoutParams.WRAP_CONTENT, 40f));
+                    TableRow.LayoutParams layoutCode = new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.MATCH_PARENT, 40f);
+                    layoutCode.setMargins(1, 0, 1, 0);
+                    labelCode.setLayoutParams(layoutCode);
+                    labelCode.setBackgroundColor(getResources().getColor(android.R.color.white));
+                    labelCode.setMaxEms(7);
                     tableRow.addView(labelCode);
                     settlement.setInvoiceNumber(etInvoiceNumber.getText().toString());
                     try {
@@ -193,7 +325,12 @@ public class SettlementActivity extends ActionBarActivity implements View.OnClic
                     labelPrice.setId(300 + count + 1);
                     labelPrice.setText(etCredit.getText());
                     labelPrice.setTextAppearance(SettlementActivity.this, android.R.style.TextAppearance_Medium);
-                    labelPrice.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT, TableRow.LayoutParams.WRAP_CONTENT, 20f));
+                    TableRow.LayoutParams layoutPrice = new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.MATCH_PARENT, 20f);
+                    layoutPrice.setMargins(1, 0, 1, 0);
+                    labelPrice.setLayoutParams(layoutPrice);
+                    labelPrice.setGravity(Gravity.END);
+                    labelPrice.setBackgroundColor(getResources().getColor(android.R.color.white));
+                    labelPrice.setMaxEms(3);
                     tableRow.addView(labelPrice);
                     settlement.setCredit(Long.valueOf(etCredit.getText().toString()));
 
@@ -201,7 +338,12 @@ public class SettlementActivity extends ActionBarActivity implements View.OnClic
                     labelQty.setId(400 + count + 1);
                     labelQty.setText(etPaymentMethod.getText());
                     labelQty.setTextAppearance(SettlementActivity.this, android.R.style.TextAppearance_Medium);
-                    labelQty.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT, TableRow.LayoutParams.WRAP_CONTENT, 20f));
+                    TableRow.LayoutParams layoutQty = new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.MATCH_PARENT, 20f);
+                    layoutQty.setMargins(1, 0, 1, 0);
+                    labelQty.setLayoutParams(layoutQty);
+                    labelQty.setGravity(Gravity.END);
+                    labelQty.setBackgroundColor(getResources().getColor(android.R.color.white));
+                    labelQty.setMaxEms(3);
                     tableRow.addView(labelQty);
                     settlement.setPaymentMethod(etPaymentMethod.getText().toString());
                     settlement.setKodeOutlet(customerID);
@@ -209,12 +351,17 @@ public class SettlementActivity extends ActionBarActivity implements View.OnClic
                     TextView labelSummary = new TextView(this);
                     labelSummary.setId(500 + count + 1);
                     labelSummary.setTextAppearance(SettlementActivity.this, android.R.style.TextAppearance_Medium);
-                    labelSummary.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT, TableRow.LayoutParams.WRAP_CONTENT, 20f));
+                    TableRow.LayoutParams layoutSummary = new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.MATCH_PARENT, 20f);
+                    layoutSummary.setMargins(1, 0, 1, 0);
+                    labelSummary.setLayoutParams(layoutSummary);
                     labelSummary.setText(etNominalPayment.getText().toString());
+                    labelSummary.setGravity(Gravity.END);
+                    labelSummary.setBackgroundColor(getResources().getColor(android.R.color.white));
+                    labelSummary.setMaxEms(3);
                     settlement.setNominalPayment(Long.valueOf(etNominalPayment.getText().toString()));
                     tableRow.addView(labelSummary);
 
-                    tableRow.setOnLongClickListener(
+                    /*tableRow.setOnLongClickListener(
                             new View.OnLongClickListener() {
                                 @Override
                                 public boolean onLongClick(View v) {
@@ -236,7 +383,7 @@ public class SettlementActivity extends ActionBarActivity implements View.OnClic
                                     edInvoiceDate.setEnabled(false);
                                     //setCurrentDateOnDatePickerPopup();
 
-                                    /*datePickerPopupField = (DatePicker) dialog.findViewById(R.id.popup_dp_fields);
+                                    *//*datePickerPopupField = (DatePicker) dialog.findViewById(R.id.popup_dp_fields);
 
                                     final Calendar c = Calendar.getInstance();
                                     initPopupYear = c.get(Calendar.YEAR);
@@ -272,7 +419,7 @@ public class SettlementActivity extends ActionBarActivity implements View.OnClic
                                             datePickerPopupField.init(initPopupYear, initPopupMonth, initPopupDay, null);
 
                                         }
-                                    };*/
+                                    };*//*
 
                                     final EditText edSettlementCredit = (EditText) dialog.findViewById(R.id.popup_settlement_credit);
                                     edSettlementCredit.setText(String.valueOf(settlement.getCredit()));
@@ -290,11 +437,11 @@ public class SettlementActivity extends ActionBarActivity implements View.OnClic
                                         @Override
                                         public void onClick(View v) {
                                             Settlement settlement = mapSettlements.get(selectedRow.getId());
-                                            /*try {
+                                            *//*try {
                                                 settlement.setInvoiceDate(sdf.parse(edInvoiceDate.getText().toString()));
                                             } catch (ParseException e) {
                                                 settlement.setInvoiceDate(null);
-                                            }*/
+                                            }*//*
                                             settlement.setCredit(Long.valueOf(edSettlementCredit.getText().toString()));
                                             settlement.setPaymentMethod(edPaymentMethod.getText().toString());
                                             settlement.setNominalPayment(Long.valueOf(edSettlementNominal.getText().toString()));
@@ -325,10 +472,11 @@ public class SettlementActivity extends ActionBarActivity implements View.OnClic
                                     return true;
                                 }
                             }
-                    );
+                    );*/
 
                     theGrid.addView(tableRow, new TableLayout.LayoutParams(TableLayout.LayoutParams.MATCH_PARENT, TableLayout.LayoutParams.WRAP_CONTENT));
-                    mapSettlements.put(tableRow.getId(), settlement);
+                    mapSettlements.put(String.valueOf(tableRow.getId()), settlement);
+                    addTotal(settlement);
 
                     etInvoiceNumber.setText(null);
                     etInvoiceDate.setText(null);
@@ -343,8 +491,6 @@ public class SettlementActivity extends ActionBarActivity implements View.OnClic
             saveAllSettlement();
             finish();
 
-        } else if (view == findViewById(R.id.button_batal)) {
-            finish();
         }
     }
 
@@ -394,5 +540,23 @@ public class SettlementActivity extends ActionBarActivity implements View.OnClic
     private void showToast(String msg) {
         Toast error = Toast.makeText(this, msg, Toast.LENGTH_LONG);
         error.show();
+    }
+
+    private void addTotal(Settlement settlement) {
+        total = total + settlement.getNominalPayment();
+        tvTotal.setText(getResources().getString(R.string.currency_symbol) + " " + format.format(total).toString());
+    }
+
+    private void subTotal(Settlement settlement) {
+        total = total - settlement.getNominalPayment();
+        tvTotal.setText(getResources().getString(R.string.currency_symbol) + " " + format.format(total).toString());
+    }
+
+    private void calculateTotal(List<Settlement> settlements) {
+        total = 0d;
+        for (Settlement settlement : settlements) {
+            total = total + settlement.getNominalPayment();
+        }
+        tvTotal.setText(getResources().getString(R.string.currency_symbol) + " " + format.format(total).toString());
     }
 }

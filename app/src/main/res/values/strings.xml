@@ -10,6 +10,7 @@
     <string name="view_stock_title">Pilih Stock</string>
     <string name="view_billing_title">Pilih Pelunasan</string>
     <string name="view_edit_stock_title">Edit Stok</string>
+    <string name="view_edit_settlement_title">Edit Pelunasan</string>
 
     <string name="pop_up_order_edit">EDIT ORDER</string>
     <string name="pop_up_retur_edit">EDIT RETUR</string>
