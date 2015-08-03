@@ -63,10 +63,12 @@
     <string name="download_success">File download successfully!</string>
     <string name="download_failed">FAILED downloading file!</string>
     <string name="file_downloading">File downloading ...</string>
+    <string name="file_uploading">File uploading ...</string>
     <string name="file_setup">File Setup</string>
     <string name="failed_login">Failed to login. Please make sure User Id and Password are valid.</string>
     <string name="code_not_found">Kode Barang tidak di temukan.</string>
     <string name="delete_stock_confirm">Anda yakin ingin menghapus stok yg tercentang?</string>
+    <string name="delete_settlement_confirm">Anda yakin ingin menghapus pelunasan yg tercentang?</string>
     <string name="invoice_no_not_found">Nomor Invoice tidak di temukan.</string>
 
     <!-- Style -->

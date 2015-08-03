@@ -188,7 +188,7 @@ public class SettlementActivity extends ActionBarActivity implements View.OnClic
                     }
                 };
                 AlertDialog.Builder ab = new AlertDialog.Builder(this);
-                ab.setMessage(getResources().getString(R.string.delete_stock_confirm)).setPositiveButton(getResources().getString(R.string.action_yes), dialogClickListener)
+                ab.setMessage(getResources().getString(R.string.delete_settlement_confirm)).setPositiveButton(getResources().getString(R.string.action_yes), dialogClickListener)
                         .setNegativeButton(getResources().getString(R.string.action_no), dialogClickListener).show();
 
                 break;

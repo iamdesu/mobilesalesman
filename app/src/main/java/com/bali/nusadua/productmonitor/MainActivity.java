@@ -320,10 +320,16 @@ public class MainActivity extends ActionBarActivity implements View.OnClickListe
     }
 
     private void uploadFileToDropBox() {
-        btnSendData.setEnabled(false);
+        ProgressDialog progressBar = new ProgressDialog(MainActivity.this);
+        progressBar.setCancelable(false);
+        progressBar.setMessage(getResources().getString(R.string.file_uploading));
+        progressBar.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
+        progressBar.setProgress(0);
+        progressBar.setMax(100);
+        progressBar.show();
+
         UploadFileToDropbox upload = new UploadFileToDropbox(this, dropboxApi, FILE_DIR_EXPORT);
         upload.execute();
-        btnSendData.setEnabled(true);
     }
 
     private void downloadFileFromDropBox() {

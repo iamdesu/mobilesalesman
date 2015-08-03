@@ -7,9 +7,11 @@ import android.os.AsyncTask;
 import android.widget.Toast;
 
 import com.bali.nusadua.productmonitor.MSConstantsIntf;
+import com.bali.nusadua.productmonitor.model.Customer;
 import com.bali.nusadua.productmonitor.model.Order;
 import com.bali.nusadua.productmonitor.model.Retur;
 import com.bali.nusadua.productmonitor.model.Settlement;
+import com.bali.nusadua.productmonitor.repo.CustomerRepo;
 import com.bali.nusadua.productmonitor.repo.OrderRepo;
 import com.bali.nusadua.productmonitor.repo.ReturRepo;
 import com.bali.nusadua.productmonitor.repo.SettlementRepo;
@@ -26,31 +28,37 @@ import java.util.Date;
 import java.util.List;
 
 /**
- * Created by Langit_P on 4/21/2015.
+ * Created by desu on 8/3/15.
  */
-public class UploadFileToDropbox extends AsyncTask<Void, Void, Boolean> {
+public class UploadOutletFileToDropbox extends AsyncTask<Void, Void, Boolean> {
     private DropboxAPI<?> dropbox;
     private String path;
     private Context context;
+    private CustomerRepo customerRepo;
+    private Customer customer;
     private ProgressDialog progressBar;
 
-    public UploadFileToDropbox(Context context, DropboxAPI<?> dropbox,
-                               String path, ProgressDialog progressBar) {
+    public UploadOutletFileToDropbox(Context context, DropboxAPI<?> dropbox, String path, ProgressDialog progressBar, Customer customer) {
         this.context = context.getApplicationContext();
         this.dropbox = dropbox;
         this.path = path;
+        this.customer = customer;
         this.progressBar = progressBar;
     }
 
     @Override
-    protected Boolean doInBackground(Void... params) {
+    protected Boolean doInBackground(Void... voids) {
         try {
             SharedPreferences prefs = this.context.getSharedPreferences(MSConstantsIntf.MOBILESALES_PREFS_NAME, 0);
             String team = prefs.getString(MSConstantsIntf.TEAM, null);
 
-            uploadOrderTable(team);
-            uploadReturTable(team);
-            uploadSettlementTable(team);
+            progressBar.setProgress(30);
+            uploadOrderTable(team, customer.getCustomerId());
+            progressBar.setProgress(60);
+            uploadReturTable(team, customer.getCustomerId());
+            progressBar.setProgress(90);
+            uploadSettlementTable(team, customer.getCustomerId());
+
             return true;
         } catch (IOException e) {
             e.printStackTrace();
@@ -74,7 +82,7 @@ public class UploadFileToDropbox extends AsyncTask<Void, Void, Boolean> {
         }
     }
 
-    private void uploadOrderTable(String team) throws IOException, DropboxException {
+    private void uploadOrderTable(String team, String customerId) throws IOException, DropboxException {
         final File tempDir = context.getCacheDir();
         File tempFile;
         FileWriter fr;
@@ -82,7 +90,7 @@ public class UploadFileToDropbox extends AsyncTask<Void, Void, Boolean> {
         tempFile = File.createTempFile("file", ".csv", tempDir);
         fr = new FileWriter(tempFile);
         OrderRepo orderRepo = new OrderRepo(context);
-        List<Order> orders = orderRepo.getAll();
+        List<Order> orders = orderRepo.getOrderByCustomer(customerId);
 
         fr.append("GUID");
         fr.append(",");
@@ -101,7 +109,7 @@ public class UploadFileToDropbox extends AsyncTask<Void, Void, Boolean> {
         fr.append("Create Date");
         fr.append('\n');
 
-        for (Order order : orders) {
+        for(Order order : orders) {
             fr.append(order.getGuid());
             fr.append(",");
             fr.append(order.getKode());
@@ -126,12 +134,12 @@ public class UploadFileToDropbox extends AsyncTask<Void, Void, Boolean> {
         DateFormat df = new SimpleDateFormat("yyMMdd");
 
         FileInputStream fileInputStream = new FileInputStream(tempFile);
-        dropbox.putFile(path + "ORDER_" + team + "_" + df.format(date) + ".csv", fileInputStream,
-                tempFile.length(), null, null);
+        dropbox.putFileOverwrite(path + "ORDER_" + team + "_" + customerId + "_" + df.format(date) + ".csv", fileInputStream,
+                tempFile.length(), null);
         tempFile.delete();
     }
 
-    private void uploadReturTable(String team) throws IOException, DropboxException {
+    private void uploadReturTable(String team, String customerId) throws IOException, DropboxException {
         final File tempDir = context.getCacheDir();
         File tempFile;
         FileWriter fr;
@@ -139,7 +147,7 @@ public class UploadFileToDropbox extends AsyncTask<Void, Void, Boolean> {
         tempFile = File.createTempFile("file", ".csv", tempDir);
         fr = new FileWriter(tempFile);
         ReturRepo returRepo = new ReturRepo(context);
-        List<Retur> returs = returRepo.getAll();
+        List<Retur> returs = returRepo.getReturByCustomer(customerId);
 
         fr.append("GUID");
         fr.append(",");
@@ -158,7 +166,7 @@ public class UploadFileToDropbox extends AsyncTask<Void, Void, Boolean> {
         fr.append("Create Date");
         fr.append('\n');
 
-        for (Retur retur : returs) {
+        for(Retur retur : returs) {
             fr.append(retur.getGuid());
             fr.append(",");
             fr.append(retur.getKode());
@@ -183,12 +191,12 @@ public class UploadFileToDropbox extends AsyncTask<Void, Void, Boolean> {
         DateFormat df = new SimpleDateFormat("yyMMdd");
 
         FileInputStream fileInputStream = new FileInputStream(tempFile);
-        dropbox.putFile(path + "RETUR_" + team + "_" + df.format(date) + ".csv", fileInputStream,
-                tempFile.length(), null, null);
+        dropbox.putFileOverwrite(path + "RETUR_" + team + "_" + customerId + "_" + df.format(date) + ".csv", fileInputStream,
+                tempFile.length(), null);
         tempFile.delete();
     }
 
-    private void uploadSettlementTable(String team) throws IOException, DropboxException {
+    private void uploadSettlementTable(String team, String customerId) throws IOException, DropboxException {
         final File tempDir = context.getCacheDir();
         File tempFile;
         FileWriter fr;
@@ -196,7 +204,7 @@ public class UploadFileToDropbox extends AsyncTask<Void, Void, Boolean> {
         tempFile = File.createTempFile("file", ".csv", tempDir);
         fr = new FileWriter(tempFile);
         SettlementRepo settlementRepo = new SettlementRepo(context);
-        List<Settlement> settlements = settlementRepo.getAll();
+        List<Settlement> settlements = settlementRepo.getSettlementByCustomer(customerId);
         DateFormat df = new SimpleDateFormat("yyMMdd");
 
         fr.append("GUID");
@@ -216,7 +224,7 @@ public class UploadFileToDropbox extends AsyncTask<Void, Void, Boolean> {
         fr.append("Create Date");
         fr.append('\n');
 
-        for (Settlement settlement : settlements) {
+        for(Settlement settlement : settlements) {
             fr.append(settlement.getGuid());
             fr.append(",");
             fr.append(settlement.INVOICE_NUMBER);
@@ -240,8 +248,8 @@ public class UploadFileToDropbox extends AsyncTask<Void, Void, Boolean> {
         Date date = new Date();
 
         FileInputStream fileInputStream = new FileInputStream(tempFile);
-        dropbox.putFile(path + "LUNAS_" + team + "_" + df.format(date) + ".csv", fileInputStream,
-                tempFile.length(), null, null);
+        dropbox.putFileOverwrite(path + "LUNAS_"+ team + "_" + customerId + "_" + df.format(date)+".csv", fileInputStream,
+                tempFile.length(), null);
         tempFile.delete();
     }
 }
