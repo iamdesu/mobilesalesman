@@ -92,6 +92,7 @@ public class SettlementActivity extends ActionBarActivity implements View.OnClic
         //Declare Listener
         btnAdd.setOnClickListener(this);
         btnProses.setOnClickListener(this);
+        tvTotal.setText("Rp 0");
         etInvoiceDate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -307,11 +308,11 @@ public class SettlementActivity extends ActionBarActivity implements View.OnClic
                     labelCode.setId(200 + count + 1);
                     labelCode.setText(etInvoiceNumber.getText() + " | " + etInvoiceDate.getText());
                     labelCode.setTextAppearance(SettlementActivity.this, android.R.style.TextAppearance_Medium);
-                    TableRow.LayoutParams layoutCode = new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.MATCH_PARENT, 40f);
+                    TableRow.LayoutParams layoutCode = new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.MATCH_PARENT, 30f);
                     layoutCode.setMargins(1, 0, 1, 0);
                     labelCode.setLayoutParams(layoutCode);
                     labelCode.setBackgroundColor(getResources().getColor(android.R.color.white));
-                    labelCode.setMaxEms(7);
+                    labelCode.setMaxEms(5);
                     tableRow.addView(labelCode);
                     settlement.setInvoiceNumber(etInvoiceNumber.getText().toString());
                     try {
@@ -338,12 +339,12 @@ public class SettlementActivity extends ActionBarActivity implements View.OnClic
                     labelQty.setId(400 + count + 1);
                     labelQty.setText(etPaymentMethod.getText());
                     labelQty.setTextAppearance(SettlementActivity.this, android.R.style.TextAppearance_Medium);
-                    TableRow.LayoutParams layoutQty = new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.MATCH_PARENT, 20f);
+                    TableRow.LayoutParams layoutQty = new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.MATCH_PARENT, 30f);
                     layoutQty.setMargins(1, 0, 1, 0);
                     labelQty.setLayoutParams(layoutQty);
                     labelQty.setGravity(Gravity.END);
                     labelQty.setBackgroundColor(getResources().getColor(android.R.color.white));
-                    labelQty.setMaxEms(3);
+                    labelQty.setMaxEms(5);
                     tableRow.addView(labelQty);
                     settlement.setPaymentMethod(etPaymentMethod.getText().toString());
                     settlement.setKodeOutlet(customerID);

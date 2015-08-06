@@ -56,6 +56,7 @@
     <string name="hint_nominal_payment">Nominal</string>
     <string name="hint_search_outlet">Cari Outlet..</string>
     <string name="hint_search_stock">Cari Stock..</string>
+    <string name="hint_search_billing">Cari Billing..</string>
     <string name="invoice_no">Invoice</string>
     <string name="currency_symbol">Rp</string>
 

@@ -8,7 +8,7 @@
     <EditText android:id="@+id/inputSearchBilling"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:hint="Search stock.."
+        android:hint="@string/hint_search_billing"
         android:inputType="textVisiblePassword"/>
 
     <!-- List View -->

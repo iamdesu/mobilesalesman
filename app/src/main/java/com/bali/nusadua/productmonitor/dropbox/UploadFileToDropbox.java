@@ -48,8 +48,11 @@ public class UploadFileToDropbox extends AsyncTask<Void, Void, Boolean> {
             SharedPreferences prefs = this.context.getSharedPreferences(MSConstantsIntf.MOBILESALES_PREFS_NAME, 0);
             String team = prefs.getString(MSConstantsIntf.TEAM, null);
 
+            progressBar.setProgress(30);
             uploadOrderTable(team);
+            progressBar.setProgress(60);
             uploadReturTable(team);
+            progressBar.setProgress(90);
             uploadSettlementTable(team);
             return true;
         } catch (IOException e) {

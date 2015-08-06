@@ -328,7 +328,7 @@ public class MainActivity extends ActionBarActivity implements View.OnClickListe
         progressBar.setMax(100);
         progressBar.show();
 
-        UploadFileToDropbox upload = new UploadFileToDropbox(this, dropboxApi, FILE_DIR_EXPORT);
+        UploadFileToDropbox upload = new UploadFileToDropbox(this, dropboxApi, FILE_DIR_EXPORT, progressBar);
         upload.execute();
     }
 
