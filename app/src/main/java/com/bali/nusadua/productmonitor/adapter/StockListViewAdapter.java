@@ -77,7 +77,7 @@ public class StockListViewAdapter extends ArrayAdapter<StockView> implements Fil
         NumberFormat format = NumberFormat.getInstance(Locale.GERMAN);
 
         viewHolder.stock_icon.setText(sv.getStockBilling().getScode().toUpperCase().substring(0, 1));
-        viewHolder.stock_code.setText(sv.getStockBilling().getScode());
+        viewHolder.stock_code.setText(sv.getStockBilling().getStockId() + " - " + sv.getStockBilling().getScode());
         viewHolder.stock_description.setText(sv.getStockBilling().getDescription().trim());
         viewHolder.stock_price.setText(parent.getResources().getString(R.string.currency_symbol) + " " + format.format(sv.getStockPrice().getPrice()).toString());
 
@@ -95,8 +95,8 @@ public class StockListViewAdapter extends ArrayAdapter<StockView> implements Fil
 
                 for (int i = 0, l = stockViews.size(); i < l; i++) {
                     StockView sv = stockViews.get(i);
-                    if (sv.getStockBilling().getScode().toLowerCase().contains(constraint) ||
-                            sv.getStockBilling().getDescription().toLowerCase().contains(constraint)) {
+                    if (sv.getStockBilling().getStockId().toLowerCase().contains(constraint) ||
+                            sv.getStockBilling().getScode().toLowerCase().contains(constraint)) {
                         filteredItems.add(sv);
                     }
                 }

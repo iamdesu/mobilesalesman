@@ -48,7 +48,7 @@ public class OrderPenjualanActivity extends ActionBarActivity implements android
     private final Context context = this;
     private Button btnAdd, btnProses;
     private TableLayout theGrid;
-    private EditText tvCode, tvName, tvPrice, tvQty;
+    private EditText tvStockID, tvName, tvPrice, tvQty;
     private TextView tvTotal;
     private Spinner unitSpinner;
     private String customerID, prevPrice;
@@ -74,7 +74,7 @@ public class OrderPenjualanActivity extends ActionBarActivity implements android
         btnAdd = (Button) findViewById(R.id.button_add);
         btnProses = (Button) findViewById(R.id.button_proses);
         theGrid = (TableLayout) findViewById(R.id.tableLayoutData);
-        tvCode = (EditText) findViewById(R.id.order_code);
+        tvStockID = (EditText) findViewById(R.id.order_code);
         tvName = (EditText) findViewById(R.id.order_name);
         tvPrice = (EditText) findViewById(R.id.order_price);
         tvQty = (EditText) findViewById(R.id.order_qty);
@@ -185,7 +185,7 @@ public class OrderPenjualanActivity extends ActionBarActivity implements android
             case (VIEW_STOCK_ACTIVITY): {
                 if (resultCode == Activity.RESULT_OK) {
                     // Update your TextView
-                    tvCode.setText(data.getStringExtra(StockBilling.SCODE));
+                    tvStockID.setText(data.getStringExtra(StockBilling.STOCK_ID));
                     tvName.setText(data.getStringExtra(StockBilling.DESCRIPTION));
                     tvPrice.setText(data.getStringExtra(StockPrice.PRICE));
                 }
@@ -225,12 +225,12 @@ public class OrderPenjualanActivity extends ActionBarActivity implements android
         int padding_in_px = (int) (padding_in_dp * scale + 0.5f);
 
         if (view == findViewById(R.id.button_add)) {
-            if (!tvCode.getText().toString().isEmpty() && tvCode.getText().toString().trim() != ""
+            if (!tvStockID.getText().toString().isEmpty() && tvStockID.getText().toString().trim() != ""
                     && !tvName.getText().toString().isEmpty() && tvName.getText().toString().trim() != ""
                     && !tvPrice.getText().toString().isEmpty() && tvPrice.getText().toString().trim() != ""
                     && !tvQty.getText().toString().isEmpty() && tvQty.getText().toString().trim() != "") {
 
-                if (stockBillingRepo.getByStockCode(tvCode.getText().toString()) != null) {
+                if (stockBillingRepo.getByStockId(tvStockID.getText().toString()) != null) {
                     countID = countID + 1;
                     int count = countID;
                     final TableRow tableRow = new TableRow(this);
@@ -277,7 +277,7 @@ public class OrderPenjualanActivity extends ActionBarActivity implements android
 
                     TextView labelCode = new TextView(this);
                     labelCode.setId(200 + count + 1);
-                    labelCode.setText(tvCode.getText() + " | " + tvName.getText());
+                    labelCode.setText(tvStockID.getText() + " | " + tvName.getText());
                     labelCode.setTextAppearance(OrderPenjualanActivity.this, android.R.style.TextAppearance_Medium);
                     TableRow.LayoutParams layoutCode = new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.MATCH_PARENT, 40f);
                     layoutCode.setMargins(1, 0, 1, 0);
@@ -285,7 +285,7 @@ public class OrderPenjualanActivity extends ActionBarActivity implements android
                     labelCode.setBackgroundColor(getResources().getColor(android.R.color.white));
                     labelCode.setMaxEms(7);
                     tableRow.addView(labelCode);
-                    order.setKode(tvCode.getText().toString());
+                    order.setKode(tvStockID.getText().toString());
                     order.setNamaBarang(tvName.getText().toString());
 
                     TextView labelPrice = new TextView(this);
@@ -413,7 +413,7 @@ public class OrderPenjualanActivity extends ActionBarActivity implements android
                     mapOrders.put(String.valueOf(tableRow.getId()), order);
                     addTotal(order);
 
-                    tvCode.setText(null);
+                    tvStockID.setText(null);
                     tvName.setText(null);
                     tvPrice.setText(null);
                     tvQty.setText(null);

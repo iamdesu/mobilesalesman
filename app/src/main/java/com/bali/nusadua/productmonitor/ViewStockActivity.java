@@ -25,6 +25,7 @@ import com.bali.nusadua.productmonitor.repo.StockPriceRepo;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 /**
  * Created by desu sudarsana on 6/7/2015.
@@ -55,7 +56,8 @@ public class ViewStockActivity extends ActionBarActivity {
 
         StockPriceRepo stockPriceRepo = new StockPriceRepo(this);
         Log.i("Customer Level : ", customer.getPriceLevel().toString());
-        adapter = new StockListViewAdapter(this, stockPriceRepo.getStockByCustomerLevel(customer.getPriceLevel()));
+        List<StockView> stockViews = stockPriceRepo.getStockByCustomerLevel(customer.getPriceLevel());
+        adapter = new StockListViewAdapter(this, stockViews);
         lv.setAdapter(adapter);
 
         lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -64,7 +66,7 @@ public class ViewStockActivity extends ActionBarActivity {
                 StockView stockView = (StockView) lv.getItemAtPosition(position);
 
                 Intent resultIntent = new Intent();
-                resultIntent.putExtra(StockBilling.SCODE, stockView.getStockBilling().getScode());
+                resultIntent.putExtra(StockBilling.STOCK_ID, stockView.getStockBilling().getStockId());
                 resultIntent.putExtra(StockBilling.DESCRIPTION, stockView.getStockBilling().getDescription());
                 resultIntent.putExtra(StockPrice.PRICE, stockView.getStockPrice().getPrice().toString());
 

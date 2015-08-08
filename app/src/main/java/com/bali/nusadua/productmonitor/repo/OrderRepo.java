@@ -43,11 +43,11 @@ public class OrderRepo {
         return (int) order_id;
     }
 
-    public void insertAll(List<Order> orders){
+    public void insertAll(List<Order> orders) {
         SQLiteDatabase db = dbHelper.getWritableDatabase();
 
         int size = orders.size();
-        for(int i = 0; i < size; i++){
+        for (int i = 0; i < size; i++) {
             Order order = new Order();
             ContentValues contentValues = new ContentValues();
             order = orders.get(i);
@@ -104,9 +104,9 @@ public class OrderRepo {
                 Order.GUID + " = ?";
 
         Order order = new Order();
-        Cursor cursor = db.rawQuery(selectQuery, new String[]{ guid } );
+        Cursor cursor = db.rawQuery(selectQuery, new String[]{guid});
 
-        if(cursor.moveToFirst()) {
+        if (cursor.moveToFirst()) {
             do {
                 order.setId(cursor.getInt(cursor.getColumnIndex(Order.ID)));
                 order.setGuid(cursor.getString(cursor.getColumnIndex(Order.GUID)));
@@ -141,7 +141,7 @@ public class OrderRepo {
         Cursor cursor = db.rawQuery(selectQuery, null);
 
         //Looping through all rows and adding to list  (cursor.getColumnIndex(Team.ID
-        if(cursor.moveToFirst()){
+        if (cursor.moveToFirst()) {
             do {
                 Order order = new Order();
                 order.setId((int) cursor.getLong(cursor.getColumnIndex(Order.ID)));
@@ -161,7 +161,7 @@ public class OrderRepo {
                 }
 
                 listOrder.add(order);
-            } while(cursor.moveToNext());
+            } while (cursor.moveToNext());
         }
 
         cursor.close();
@@ -187,13 +187,13 @@ public class OrderRepo {
                 Outlet.TABLE + "." + Outlet.KODE + " as outletKode, " +
                 Outlet.TABLE + "." + Outlet.NAME + " as outletName" +
                 " FROM " + Order.TABLE + " LEFT JOIN " + Outlet.TABLE +
-                " ON "+ Order.TABLE + "." + Order.KODE_OUTLET +" = "+ Outlet.TABLE + "." + Outlet.KODE;
+                " ON " + Order.TABLE + "." + Order.KODE_OUTLET + " = " + Outlet.TABLE + "." + Outlet.KODE;
 
         List<Order> listOrder = new ArrayList<Order>();
         Cursor cursor = db.rawQuery(selectQuery, null);
 
         //Looping through all rows and adding to list
-        if(cursor.moveToFirst()){
+        if (cursor.moveToFirst()) {
             do {
                 Order order = new Order();
                 order.setId((int) cursor.getLong(cursor.getColumnIndex(Order.ID)));
@@ -221,7 +221,7 @@ public class OrderRepo {
                 order.setOutlet(outlet);
 
                 listOrder.add(order);
-            } while(cursor.moveToNext());
+            } while (cursor.moveToNext());
         }
 
         cursor.close();
@@ -245,10 +245,10 @@ public class OrderRepo {
                 Order.KODE_OUTLET + " = ?";
 
         List<Order> listOrder = new ArrayList<Order>();
-        Cursor cursor = db.rawQuery(selectQuery, new String[]{ customerId } );
+        Cursor cursor = db.rawQuery(selectQuery, new String[]{customerId});
 
         //Looping through all rows and adding to list
-        if(cursor.moveToFirst()){
+        if (cursor.moveToFirst()) {
             do {
                 Order order = new Order();
                 order.setId(cursor.getInt(cursor.getColumnIndex(Order.ID)));
@@ -268,11 +268,33 @@ public class OrderRepo {
                 }
 
                 listOrder.add(order);
-            } while(cursor.moveToNext());
+            } while (cursor.moveToNext());
         }
 
         cursor.close();
         db.close();
         return listOrder;
+    }
+
+    public List<String> getCustomerOnOrder() {
+        SQLiteDatabase db = dbHelper.getReadableDatabase();
+        String selectQuery = "SELECT DISTINCT " +
+                Order.KODE_OUTLET + " FROM " +
+                Order.TABLE;
+
+        List<String> listCustomerID = new ArrayList<String>();
+        Cursor cursor = db.rawQuery(selectQuery, null);
+
+        //Looping through all rows and adding to list
+        if (cursor.moveToFirst()) {
+            do {
+                String customerID = cursor.getString(cursor.getColumnIndex(Order.KODE_OUTLET));
+                listCustomerID.add(customerID);
+            } while (cursor.moveToNext());
+        }
+
+        cursor.close();
+        db.close();
+        return listCustomerID;
     }
 }

@@ -53,6 +53,7 @@ public class ViewBillingActivity extends ActionBarActivity {
 
                 Intent resultIntent = new Intent();
                 resultIntent.putExtra(Billing.INVOICE_NO, billing.getInvoiceNo());
+                resultIntent.putExtra(Billing.TOTAL_AMOUNT, billing.getTotalAmount());
 
                 setResult(Activity.RESULT_OK, resultIntent);
                 finish();

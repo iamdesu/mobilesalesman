@@ -5,8 +5,8 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
-import com.bali.nusadua.productmonitor.model.Settlement;
 import com.bali.nusadua.productmonitor.model.Outlet;
+import com.bali.nusadua.productmonitor.model.Settlement;
 import com.bali.nusadua.productmonitor.sqlitedb.DBHelper;
 
 import java.text.ParseException;
@@ -293,5 +293,27 @@ public class SettlementRepo {
         cursor.close();
         db.close();
         return settlements;
+    }
+
+    public List<String> getCustomerOnSettlement() {
+        SQLiteDatabase db = dbHelper.getReadableDatabase();
+        String selectQuery = "SELECT DISTINCT " +
+                Settlement.KODE_OUTLET + " FROM " +
+                Settlement.TABLE;
+
+        List<String> listCustomerID = new ArrayList<String>();
+        Cursor cursor = db.rawQuery(selectQuery, null);
+
+        //Looping through all rows and adding to list
+        if (cursor.moveToFirst()) {
+            do {
+                String customerID = cursor.getString(cursor.getColumnIndex(Settlement.KODE_OUTLET));
+                listCustomerID.add(customerID);
+            } while (cursor.moveToNext());
+        }
+
+        cursor.close();
+        db.close();
+        return listCustomerID;
     }
 }

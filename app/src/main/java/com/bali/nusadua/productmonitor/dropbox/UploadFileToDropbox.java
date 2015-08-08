@@ -34,12 +34,19 @@ public class UploadFileToDropbox extends AsyncTask<Void, Void, Boolean> {
     private Context context;
     private ProgressDialog progressBar;
 
+    private OrderRepo orderRepo;
+    private ReturRepo returRepo;
+    private SettlementRepo settlementRepo;
+
     public UploadFileToDropbox(Context context, DropboxAPI<?> dropbox,
                                String path, ProgressDialog progressBar) {
         this.context = context.getApplicationContext();
         this.dropbox = dropbox;
         this.path = path;
         this.progressBar = progressBar;
+        this.orderRepo = new OrderRepo(this.context);
+        this.returRepo = new ReturRepo(this.context);
+        this.settlementRepo = new SettlementRepo(this.context);
     }
 
     @Override
@@ -78,14 +85,21 @@ public class UploadFileToDropbox extends AsyncTask<Void, Void, Boolean> {
     }
 
     private void uploadOrderTable(String team) throws IOException, DropboxException {
+        List<String> customerIDs = orderRepo.getCustomerOnOrder();
+        for(String customerID : customerIDs) {
+            uploadCustomerOrderTable(team, customerID);
+        }
+    }
+
+    private void uploadCustomerOrderTable(String team, String customerId) throws IOException, DropboxException {
         final File tempDir = context.getCacheDir();
         File tempFile;
         FileWriter fr;
 
         tempFile = File.createTempFile("file", ".csv", tempDir);
         fr = new FileWriter(tempFile);
-        OrderRepo orderRepo = new OrderRepo(context);
-        List<Order> orders = orderRepo.getAll();
+        //OrderRepo orderRepo = new OrderRepo(context);
+        List<Order> orders = orderRepo.getOrderByCustomer(customerId);
 
         fr.append("GUID");
         fr.append(",");
@@ -129,20 +143,27 @@ public class UploadFileToDropbox extends AsyncTask<Void, Void, Boolean> {
         DateFormat df = new SimpleDateFormat("yyMMdd");
 
         FileInputStream fileInputStream = new FileInputStream(tempFile);
-        dropbox.putFile(path + "ORDER_" + team + "_" + df.format(date) + ".csv", fileInputStream,
-                tempFile.length(), null, null);
+        dropbox.putFileOverwrite(path + "ORDER_" + team + "_" + customerId + "_" + df.format(date) + ".csv", fileInputStream,
+                tempFile.length(), null);
         tempFile.delete();
     }
 
     private void uploadReturTable(String team) throws IOException, DropboxException {
+        List<String> customerIDs = returRepo.getCustomerOnRetur();
+        for(String customerID : customerIDs) {
+            uploadCustomerReturTable(team, customerID);
+        }
+    }
+
+    private void uploadCustomerReturTable(String team, String customerId) throws IOException, DropboxException {
         final File tempDir = context.getCacheDir();
         File tempFile;
         FileWriter fr;
 
         tempFile = File.createTempFile("file", ".csv", tempDir);
         fr = new FileWriter(tempFile);
-        ReturRepo returRepo = new ReturRepo(context);
-        List<Retur> returs = returRepo.getAll();
+        //ReturRepo returRepo = new ReturRepo(context);
+        List<Retur> returs = returRepo.getReturByCustomer(customerId);
 
         fr.append("GUID");
         fr.append(",");
@@ -186,19 +207,26 @@ public class UploadFileToDropbox extends AsyncTask<Void, Void, Boolean> {
         DateFormat df = new SimpleDateFormat("yyMMdd");
 
         FileInputStream fileInputStream = new FileInputStream(tempFile);
-        dropbox.putFile(path + "RETUR_" + team + "_" + df.format(date) + ".csv", fileInputStream,
-                tempFile.length(), null, null);
+        dropbox.putFileOverwrite(path + "RETUR_" + team + "_" + customerId + "_" + df.format(date) + ".csv", fileInputStream,
+                tempFile.length(), null);
         tempFile.delete();
     }
 
     private void uploadSettlementTable(String team) throws IOException, DropboxException {
+        List<String> customerIDs = settlementRepo.getCustomerOnSettlement();
+        for(String customerID : customerIDs) {
+            uploadCustomerSettlementTable(team, customerID);
+        }
+    }
+
+    private void uploadCustomerSettlementTable(String team, String customerId) throws IOException, DropboxException {
         final File tempDir = context.getCacheDir();
         File tempFile;
         FileWriter fr;
 
         tempFile = File.createTempFile("file", ".csv", tempDir);
         fr = new FileWriter(tempFile);
-        SettlementRepo settlementRepo = new SettlementRepo(context);
+        //SettlementRepo settlementRepo = new SettlementRepo(context);
         List<Settlement> settlements = settlementRepo.getAll();
         DateFormat df = new SimpleDateFormat("yyMMdd");
 
@@ -243,8 +271,8 @@ public class UploadFileToDropbox extends AsyncTask<Void, Void, Boolean> {
         Date date = new Date();
 
         FileInputStream fileInputStream = new FileInputStream(tempFile);
-        dropbox.putFile(path + "LUNAS_" + team + "_" + df.format(date) + ".csv", fileInputStream,
-                tempFile.length(), null, null);
+        dropbox.putFileOverwrite(path + "LUNAS_"+ team + "_" + customerId + "_" + df.format(date)+".csv", fileInputStream,
+                tempFile.length(), null);
         tempFile.delete();
     }
 }

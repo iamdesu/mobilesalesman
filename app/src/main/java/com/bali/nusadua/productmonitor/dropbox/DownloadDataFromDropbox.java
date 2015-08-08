@@ -179,16 +179,19 @@ public class DownloadDataFromDropbox extends AsyncTask<Void, Void, Boolean> {
                 if (!first && line.trim() != "" && !line.isEmpty()) {
                     String[] data = line.split(DELIMITED, -1);
 
-                    StaffBilling staffBilling = new StaffBilling();
-                    staffBilling.setStaff(data[0].trim());
-                    staffBilling.setStaffName(data[1].trim());
-                    staffBilling.setPassword(data[2]);
-                    staffBilling.setLevel(data[3].trim().equals("") ? null : Integer.valueOf(data[3]));
-                    staffBilling.setUserID(data[4].trim());
-                    staffBilling.setTeam(data[5].trim());
-                    staffBilling.setExpire(data[6].trim().equals("") ? null : Integer.valueOf(data[6]));
+                    //Do not accept empty data
+                    if (!data[0].trim().isEmpty() && !data[1].trim().isEmpty() && !data[2].isEmpty() && !data[4].trim().isEmpty() && !data[5].trim().isEmpty()) {
+                        StaffBilling staffBilling = new StaffBilling();
+                        staffBilling.setStaff(data[0].trim());
+                        staffBilling.setStaffName(data[1].trim());
+                        staffBilling.setPassword(data[2]);
+                        staffBilling.setLevel(data[3].trim().equals("") ? null : Integer.valueOf(data[3]));
+                        staffBilling.setUserID(data[4].trim());
+                        staffBilling.setTeam(data[5].trim());
+                        staffBilling.setExpire(data[6].trim().equals("") ? null : Integer.valueOf(data[6]));
 
-                    staffBillingRepo.insert(staffBilling);
+                        staffBillingRepo.insert(staffBilling);
+                    }
                 } else {
                     first = false;
                 }
@@ -227,19 +230,23 @@ public class DownloadDataFromDropbox extends AsyncTask<Void, Void, Boolean> {
         try {
             br = new BufferedReader(new FileReader(tempfile));
             String line = "";
-            boolean first = true; //First is column name
+            boolean first = true; //First is column name / column header
             while ((line = br.readLine()) != null) {
 
                 if (!first && line.trim() != "" && !line.isEmpty()) {
                     // use | as separator
                     String[] data = line.split(DELIMITED, -1);
 
-                    StockBilling stockBilling = new StockBilling();
-                    stockBilling.setStockId(data[0].trim());
-                    stockBilling.setScode(data[1].trim());
-                    stockBilling.setDescription(data[2].trim());
+                    //Do not accept empty data
+                    if (!isEmptyData(data[0]) && !isEmptyData(data[1]) && !isEmptyData(data[2])) {
+                        StockBilling stockBilling = new StockBilling();
+                        stockBilling.setStockId(data[0].trim());
+                        stockBilling.setScode(data[1].trim());
+                        stockBilling.setDescription(data[2].trim());
 
-                    stockBillingRepo.insert(stockBilling);
+                        stockBillingRepo.insert(stockBilling);
+                    }
+
                 } else {
                     first = false;
                 }
@@ -282,12 +289,16 @@ public class DownloadDataFromDropbox extends AsyncTask<Void, Void, Boolean> {
                     // use | as separator
                     String[] data = line.split(DELIMITED, -1);
 
-                    StockPrice stockPrice = new StockPrice();
-                    stockPrice.setStockId(data[0].trim());
-                    stockPrice.setPriceLevel(data[1].trim().equals("") ? null : Integer.valueOf(data[1]));
-                    stockPrice.setPrice(data[2].trim().equals("") ? null : Double.valueOf(data[2]));
+                    //Do not accept empty data
+                    if (!isEmptyData(data[0]) && !isEmptyData(data[1]) && !isEmptyData(data[2])) {
+                        StockPrice stockPrice = new StockPrice();
+                        stockPrice.setStockId(data[0].trim());
+                        stockPrice.setPriceLevel(data[1].trim().equals("") ? null : Integer.valueOf(data[1]));
+                        stockPrice.setPrice(data[2].trim().equals("") ? null : Double.valueOf(data[2]));
 
-                    stockPriceRepo.insert(stockPrice);
+                        stockPriceRepo.insert(stockPrice);
+                    }
+
                 } else {
                     first = false;
                 }
@@ -330,17 +341,21 @@ public class DownloadDataFromDropbox extends AsyncTask<Void, Void, Boolean> {
                     // use | as separator
                     String[] data = line.split(DELIMITED, -1);
 
-                    Customer customer = new Customer();
-                    customer.setCustomerId(data[0].trim());
-                    customer.setCompanyName(data[1].trim());
-                    customer.setPersonName(data[2].trim());
-                    customer.setAddress(data[3].trim());
-                    customer.setRegion(data[4].trim());
-                    customer.setCity(data[5].trim());
-                    customer.setVisit(data[6].trim());
-                    customer.setPriceLevel(data[7].trim().equals("") ? null : Integer.valueOf(data[7]));
+                    //Do not accept empty data
+                    if (!isEmptyData(data[0]) && !isEmptyData(data[2])) {
+                        Customer customer = new Customer();
+                        customer.setCustomerId(data[0].trim());
+                        customer.setCompanyName(data[1].trim());
+                        customer.setPersonName(data[2].trim());
+                        customer.setAddress(data[3].trim());
+                        customer.setRegion(data[4].trim());
+                        customer.setCity(data[5].trim());
+                        customer.setVisit(data[6].trim());
+                        customer.setPriceLevel(data[7].trim().equals("") ? null : Integer.valueOf(data[7]));
 
-                    customerRepo.insert(customer);
+                        customerRepo.insert(customer);
+                    }
+
                 } else {
                     first = false;
                 }
@@ -383,13 +398,17 @@ public class DownloadDataFromDropbox extends AsyncTask<Void, Void, Boolean> {
                     // use | as separator
                     String[] data = line.split(DELIMITED, -1);
 
-                    Billing billing = new Billing();
-                    billing.setInvoiceNo(data[0].trim());
-                    billing.setCustomerId(data[1].trim());
-                    billing.setTotalAmount(data[2].trim().equals("") ? null : Double.valueOf(data[2]));
-                    billing.setPaidAmount(data[3].trim().equals("") ? null : Double.valueOf(data[3]));
+                    //Do not accept empty data
+                    if (!isEmptyData(data[0]) && !isEmptyData(data[1]) && !isEmptyData(data[2]) && !isEmptyData(data[3])) {
+                        Billing billing = new Billing();
+                        billing.setInvoiceNo(data[0].trim());
+                        billing.setCustomerId(data[1].trim());
+                        billing.setTotalAmount(data[2].trim().equals("") ? null : Double.valueOf(data[2]));
+                        billing.setPaidAmount(data[3].trim().equals("") ? null : Double.valueOf(data[3]));
 
-                    billingRepo.insert(billing);
+                        billingRepo.insert(billing);
+                    }
+
                 } else {
                     first = false;
                 }
@@ -405,5 +424,9 @@ public class DownloadDataFromDropbox extends AsyncTask<Void, Void, Boolean> {
                 ex.printStackTrace();
             }
         }
+    }
+
+    private boolean isEmptyData(String data) {
+        return data.trim().isEmpty() || data.trim().equals("");
     }
 }

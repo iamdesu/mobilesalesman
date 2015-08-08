@@ -47,7 +47,7 @@ public class ReturPenjualanActivity extends ActionBarActivity implements android
     private final Context context = this;
     private Button btnAdd, btnProses, btnBatal;
     private TableLayout theGrid;
-    private EditText tvCode, tvName, tvPrice, tvQty;
+    private EditText tvStockID, tvName, tvPrice, tvQty;
     private TextView tvTotal;
     private Spinner unitSpinner;
     private String customerID;
@@ -72,7 +72,7 @@ public class ReturPenjualanActivity extends ActionBarActivity implements android
         btnAdd = (Button) findViewById(R.id.button_add);
         btnProses = (Button) findViewById(R.id.button_proses);
         theGrid = (TableLayout) findViewById(R.id.tableLayoutData);
-        tvCode = (EditText) findViewById(R.id.order_code);
+        tvStockID = (EditText) findViewById(R.id.order_code);
         tvName = (EditText) findViewById(R.id.order_name);
         tvPrice = (EditText) findViewById(R.id.order_price);
         tvQty = (EditText) findViewById(R.id.order_qty);
@@ -173,7 +173,7 @@ public class ReturPenjualanActivity extends ActionBarActivity implements android
             case (VIEW_STOCK_ACTIVITY): {
                 if (resultCode == Activity.RESULT_OK) {
                     //Update your TextView
-                    tvCode.setText(data.getStringExtra(StockBilling.SCODE));
+                    tvStockID.setText(data.getStringExtra(StockBilling.STOCK_ID));
                     tvName.setText(data.getStringExtra(StockBilling.DESCRIPTION));
                     tvPrice.setText(data.getStringExtra(StockPrice.PRICE));
                 }
@@ -214,12 +214,12 @@ public class ReturPenjualanActivity extends ActionBarActivity implements android
         int padding_in_px = (int) (padding_in_dp * scale + 0.5f);
 
         if (view == findViewById(R.id.button_add)) {
-            if (!tvCode.getText().toString().isEmpty() && tvCode.getText().toString().trim() != ""
+            if (!tvStockID.getText().toString().isEmpty() && tvStockID.getText().toString().trim() != ""
                     && !tvName.getText().toString().isEmpty() && tvName.getText().toString().trim() != ""
                     && !tvPrice.getText().toString().isEmpty() && tvPrice.getText().toString().trim() != ""
                     && !tvQty.getText().toString().isEmpty() && tvQty.getText().toString().trim() != "") {
 
-                if (stockBillingRepo.getByStockCode(tvCode.getText().toString()) != null) {
+                if (stockBillingRepo.getByStockId(tvStockID.getText().toString()) != null) {
                     countID = countID + 1;
                     int count = countID;
                     final TableRow tableRow = new TableRow(this);
@@ -266,7 +266,7 @@ public class ReturPenjualanActivity extends ActionBarActivity implements android
 
                     TextView labelCode = new TextView(this);
                     labelCode.setId(200 + count + 1);
-                    labelCode.setText(tvCode.getText() + " | " + tvName.getText());
+                    labelCode.setText(tvStockID.getText() + " | " + tvName.getText());
                     labelCode.setTextAppearance(ReturPenjualanActivity.this, android.R.style.TextAppearance_Medium);
                     TableRow.LayoutParams layoutCode = new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.MATCH_PARENT, 40f);
                     layoutCode.setMargins(1, 0, 1, 0);
@@ -274,7 +274,7 @@ public class ReturPenjualanActivity extends ActionBarActivity implements android
                     labelCode.setBackgroundColor(getResources().getColor(android.R.color.white));
                     labelCode.setMaxEms(7);
                     tableRow.addView(labelCode);
-                    retur.setKode(tvCode.getText().toString());
+                    retur.setKode(tvStockID.getText().toString());
                     retur.setNamaBarang(tvName.getText().toString());
 
                     TextView labelPrice = new TextView(this);
@@ -330,77 +330,12 @@ public class ReturPenjualanActivity extends ActionBarActivity implements android
                     labelSummary.setText(summary.toString());
                     tableRow.addView(labelSummary);
 
-                    /*tableRow.setOnLongClickListener(
-                            new View.OnLongClickListener() {
-                                @Override
-                                public boolean onLongClick(View v) {
-                                    final TableRow selectedRow = (TableRow) v;
-                                    TextView labelCode = (TextView) findViewById(200 + selectedRow.getId());
-                                    final String tvReturCode = labelCode.getText().toString().split("\\|")[0].trim();
-                                    final Retur retur = mapReturs.get(tvReturCode);
-
-                                    // custom dialog
-                                    final Dialog dialog = new Dialog(context);
-                                    dialog.setContentView(R.layout.popup_edit_retur);
-                                    dialog.setTitle(getResources().getString(R.string.pop_up_retur_edit));
-
-                                    // set the custom dialog components - text, image and button
-                                    final EditText edReturCode = (EditText) dialog.findViewById(R.id.popup_retur_code);
-                                    edReturCode.setText(retur.getKode());
-                                    edReturCode.setEnabled(false);
-                                    final EditText edReturNamaBrg = (EditText) dialog.findViewById(R.id.popup_retur_nama_brg);
-                                    edReturNamaBrg.setText(retur.getNamaBarang());
-                                    final EditText edReturPrice = (EditText) dialog.findViewById(R.id.popup_retur_price);
-                                    edReturPrice.setText(String.valueOf(retur.getHarga()));
-                                    final EditText edReturQty = (EditText) dialog.findViewById(R.id.popup_retur_qty);
-                                    edReturQty.setText(String.valueOf(retur.getQty()));
-
-                                    Button popupSaveButton = (Button) dialog.findViewById(R.id.popup_btn_save_data_retur);
-                                    Button popupDeleteButton = (Button) dialog.findViewById(R.id.popup_btn_delete_data_retur);
-
-                                    // if button is clicked, close the custom dialog
-                                    popupSaveButton.setOnClickListener(new View.OnClickListener() {
-                                        @Override
-                                        public void onClick(View v) {
-                                            Retur retur = mapReturs.get(edReturCode.getText().toString());
-                                            retur.setNamaBarang(edReturNamaBrg.getText().toString());
-                                            retur.setHarga(Double.valueOf(edReturPrice.getText().toString()));
-                                            retur.setQty(Integer.valueOf(edReturQty.getText().toString()));
-
-                                            TextView labelCode = (TextView) findViewById(200 + selectedRow.getId());
-                                            labelCode.setText(retur.getKode() + " | " + retur.getNamaBarang());
-                                            TextView labelPrice = (TextView) findViewById(300 + selectedRow.getId());
-                                            labelPrice.setText(retur.getHarga().toString());
-                                            TextView labelQty = (TextView) findViewById(400 + selectedRow.getId());
-                                            labelQty.setText(String.valueOf(retur.getQty()) + "/" + retur.getUnit());
-                                            TextView labelSummary = (TextView) findViewById(500 + selectedRow.getId());
-                                            Double summary = retur.getQty() * retur.getHarga();
-                                            labelSummary.setText(summary.toString());
-
-                                            dialog.dismiss();
-                                        }
-                                    });
-
-                                    popupDeleteButton.setOnClickListener(new View.OnClickListener() {
-                                        @Override
-                                        public void onClick(View v) {
-                                            mapReturs.remove(edReturCode.getText().toString());
-                                            theGrid.removeView(selectedRow);
-                                            dialog.dismiss();
-                                        }
-                                    });
-
-                                    dialog.show();
-                                    return true;
-                                }
-                            }
-                    );*/
 
                     theGrid.addView(tableRow, new TableLayout.LayoutParams(TableLayout.LayoutParams.MATCH_PARENT, TableLayout.LayoutParams.WRAP_CONTENT));
                     mapReturs.put(String.valueOf(tableRow.getId()), retur);
                     addTotal(retur);
 
-                    tvCode.setText(null);
+                    tvStockID.setText(null);
                     tvName.setText(null);
                     tvPrice.setText(null);
                     tvQty.setText(null);

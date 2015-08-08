@@ -70,8 +70,8 @@ public class StockPriceRepo {
                 + StockPrice.TABLE + "." + StockPrice.STOCK_ID + ", "
                 + StockPrice.TABLE + "." + StockPrice.PRICE_LEVEL + ", "
                 + StockPrice.TABLE + "." + StockPrice.PRICE
-                + " FROM " + StockPrice.TABLE + " LEFT JOIN " + StockBilling.TABLE
-                + " ON "+ StockPrice.TABLE + "." + StockPrice.STOCK_ID + " = " + StockBilling.TABLE + "." + StockBilling.STOCK_ID
+                + " FROM " + StockBilling.TABLE + " INNER JOIN " + StockPrice.TABLE
+                + " ON "+ StockBilling.TABLE + "." + StockBilling.STOCK_ID + " = " + StockPrice.TABLE + "." + StockPrice.STOCK_ID
                 + " WHERE " + StockPrice.TABLE + "." + StockPrice.PRICE_LEVEL + "= ? "
                 + " ORDER BY " + StockBilling.TABLE + "." + StockBilling.SCODE + " ASC";
 

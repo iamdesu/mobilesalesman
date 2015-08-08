@@ -215,6 +215,7 @@ public class SettlementActivity extends ActionBarActivity implements View.OnClic
                     //Update your TextView
                     etInvoiceNumber.setText(data.getStringExtra(Billing.INVOICE_NO));
                     etInvoiceDate.setText(sdf.format(new Date()));
+                    etCredit.setText(data.getStringExtra(Billing.TOTAL_AMOUNT));
                 }
                 break;
             }
