@@ -2,19 +2,45 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:gravity="center">
+    android:orientation="vertical"
+    android:padding="16dp">
 
-    <ImageView
-        android:layout_width="250dp"
-        android:layout_height="250dp"
-        android:id="@+id/imageView_splash_activity"
-        android:src="@drawable/profesional_icon"/>
-
-    <TextView
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceMedium"
-        android:text="Mobile Salesman version 1.0"
-        android:id="@+id/textView_splash_title"
-        android:textSize="25dp"/>
+        android:layout_weight="2"
+        android:gravity="center"
+        android:layout_marginBottom="20dp">
+
+        <ImageView
+            android:layout_width="250dp"
+            android:layout_height="250dp"
+            android:id="@+id/imageView_splash_activity"
+            android:src="@drawable/profesional_icon"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="Mobile Salesman\nversion 1.0"
+            android:id="@+id/textView_splash_title"
+            android:textSize="25dp"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:gravity="bottom">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="Aplikasi ini di bangun dengan SDK Android dan memanfaatkan Icons8.com (http://icons8.com/android-L)"
+            android:id="@+id/textView_splash_text"
+            android:textSize="12dp"
+            android:gravity="center"/>
+    </LinearLayout>
+
 </LinearLayout>

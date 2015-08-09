@@ -18,7 +18,7 @@ public class SplashScreenActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash_screen);
 
-        /* New handkre to start the Menu Activity and close this Splash-Screen after some seconds. */
+        /* New handle to start the Menu Activity and close this Splash-Screen after some seconds. */
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
