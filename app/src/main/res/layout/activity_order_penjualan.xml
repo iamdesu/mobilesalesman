@@ -43,9 +43,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="20"
+                android:editable="false"
                 android:ems="10"
                 android:hint="@string/hint_harga"
-                android:inputType="numberSigned"
                 android:maxLength="9"
                 android:singleLine="true" />
 

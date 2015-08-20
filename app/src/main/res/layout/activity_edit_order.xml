@@ -40,6 +40,8 @@
                 android:id="@+id/order_name"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:clickable="false"
+                android:enabled="false"
                 android:textSize="20sp" />
         </LinearLayout>
 
@@ -60,6 +62,8 @@
                 android:id="@+id/order_price"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:clickable="false"
+                android:enabled="false"
                 android:inputType="numberSigned"
                 android:maxLength="9"
                 android:singleLine="true"
@@ -90,8 +94,6 @@
                 android:id="@+id/unit_spinner"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:clickable="false"
-                android:enabled="false"
                 android:entries="@array/unit_arrays"
                 android:textSize="20sp" />
         </LinearLayout>

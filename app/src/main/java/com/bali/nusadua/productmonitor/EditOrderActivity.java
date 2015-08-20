@@ -8,6 +8,7 @@ import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
@@ -23,6 +24,8 @@ public class EditOrderActivity extends ActionBarActivity implements android.view
     private EditText orderCode, orderName, price, qty;
     private Spinner unit;
     private Button btnSave;
+    private Double tempPrice = 0d;
+    private int currentUnitSelection;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -45,7 +48,30 @@ public class EditOrderActivity extends ActionBarActivity implements android.view
         orderName.setText(order.getNamaBarang());
         price.setText(String.valueOf(order.getHarga()));
         qty.setText(String.valueOf(order.getQty()));
-        unit.setSelection(order.getUnit().toLowerCase() == Order.LOOKUP_DUS ? 0 : 1);
+
+        currentUnitSelection = order.getUnit().equalsIgnoreCase(Order.LOOKUP_DUS) ? 0 : 1;
+        unit.setSelection(currentUnitSelection);
+        unit.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                if (currentUnitSelection != i){
+                    if(i == Order.LOOKUP_DUS_index) {
+                        Double newPrice = order.getHarga() * 12;
+                        newPrice = newPrice + tempPrice;
+                        order.setHarga(newPrice);
+                    } else {
+                        Double newPrice = order.getHarga() / 12;
+                        tempPrice = order.getHarga() - (newPrice * 12);
+                        order.setHarga(newPrice);
+                    }
+                }
+                price.setText(String.valueOf(order.getHarga()));
+                currentUnitSelection = i;
+            }
+
+            public void onNothingSelected(AdapterView<?> adapterView) {
+                return;
+            }
+        });
 
         btnSave.setOnClickListener(this);
     }

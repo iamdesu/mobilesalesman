@@ -8,10 +8,12 @@ import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
 
+import com.bali.nusadua.productmonitor.model.Order;
 import com.bali.nusadua.productmonitor.model.Retur;
 
 /**
@@ -22,6 +24,8 @@ public class EditReturActivity extends ActionBarActivity implements android.view
     private EditText returCode, returName, price, qty;
     private Spinner unit;
     private Button btnSave;
+    private Double tempPrice = 0d;
+    private int currentUnitSelection;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -44,7 +48,30 @@ public class EditReturActivity extends ActionBarActivity implements android.view
         returName.setText(retur.getNamaBarang());
         price.setText(String.valueOf(retur.getHarga()));
         qty.setText(String.valueOf(retur.getQty()));
-        unit.setSelection(retur.getUnit().toLowerCase() == Retur.LOOKUP_DUS ? 0 : 1);
+
+        currentUnitSelection = retur.getUnit().equalsIgnoreCase(Retur.LOOKUP_DUS) ? 0 : 1;
+        unit.setSelection(currentUnitSelection);
+        unit.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                if (currentUnitSelection != i) {
+                    if (i == Order.LOOKUP_DUS_index) {
+                        Double newPrice = retur.getHarga() * 12;
+                        newPrice = newPrice + tempPrice;
+                        retur.setHarga(newPrice);
+                    } else {
+                        Double newPrice = retur.getHarga() / 12;
+                        tempPrice = retur.getHarga() - (newPrice * 12);
+                        retur.setHarga(newPrice);
+                    }
+                }
+                price.setText(String.valueOf(retur.getHarga()));
+                currentUnitSelection = i;
+            }
+
+            public void onNothingSelected(AdapterView<?> adapterView) {
+                return;
+            }
+        });
 
         btnSave.setOnClickListener(this);
     }

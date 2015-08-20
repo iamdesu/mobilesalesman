@@ -20,6 +20,8 @@ public class Order implements Serializable {
 
     public static final String LOOKUP_DUS = "dus";
     public static final String LOOKUP_PCS = "pcs";
+    public static final int LOOKUP_DUS_index = 0;
+    public static final int LOOKUP_PCS_index = 1;
 
     private int id;
     private String guid;

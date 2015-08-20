@@ -342,7 +342,7 @@ public class DownloadDataFromDropbox extends AsyncTask<Void, Void, Boolean> {
                     String[] data = line.split(DELIMITED, -1);
 
                     //Do not accept empty data
-                    if (!isEmptyData(data[0]) && !isEmptyData(data[2])) {
+                    if (!isEmptyData(data[0]) && !isEmptyData(data[1])) {
                         Customer customer = new Customer();
                         customer.setCustomerId(data[0].trim());
                         customer.setCompanyName(data[1].trim());
