@@ -27,7 +27,6 @@ import android.widget.Toast;
 
 import com.bali.nusadua.productmonitor.model.Billing;
 import com.bali.nusadua.productmonitor.model.Customer;
-import com.bali.nusadua.productmonitor.model.Order;
 import com.bali.nusadua.productmonitor.model.Settlement;
 import com.bali.nusadua.productmonitor.repo.BillingRepo;
 import com.bali.nusadua.productmonitor.repo.SettlementRepo;

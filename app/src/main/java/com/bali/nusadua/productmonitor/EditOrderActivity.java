@@ -13,14 +13,14 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
 
-import com.bali.nusadua.productmonitor.model.Order;
+import com.bali.nusadua.productmonitor.model.OrderItem;
 
 /**
  * Created by desu on 7/18/15.
  */
 public class EditOrderActivity extends ActionBarActivity implements android.view.View.OnClickListener {
 
-    private Order order = new Order();
+    private OrderItem order = new OrderItem();
     private EditText orderCode, orderName, price, qty;
     private Spinner unit;
     private Button btnSave;
@@ -42,19 +42,19 @@ public class EditOrderActivity extends ActionBarActivity implements android.view
         btnSave = (Button) findViewById(R.id.button_save);
 
         Intent intent = getIntent();
-        order = (Order) intent.getSerializableExtra(Order.TABLE);
+        order = (OrderItem) intent.getSerializableExtra(OrderItem.TABLE);
 
         orderCode.setText(order.getKode());
         orderName.setText(order.getNamaBarang());
         price.setText(String.valueOf(order.getHarga()));
         qty.setText(String.valueOf(order.getQty()));
 
-        currentUnitSelection = order.getUnit().equalsIgnoreCase(Order.LOOKUP_DUS) ? 0 : 1;
+        currentUnitSelection = order.getUnit().equalsIgnoreCase(OrderItem.LOOKUP_DUS) ? 0 : 1;
         unit.setSelection(currentUnitSelection);
         unit.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
                 if (currentUnitSelection != i){
-                    if(i == Order.LOOKUP_DUS_index) {
+                    if(i == OrderItem.LOOKUP_DUS_index) {
                         Double newPrice = order.getHarga() * 12;
                         newPrice = newPrice + tempPrice;
                         order.setHarga(newPrice);
@@ -107,7 +107,7 @@ public class EditOrderActivity extends ActionBarActivity implements android.view
     @Override
     public void onClick(View view) {
         if (view == findViewById(R.id.button_save)) {
-            Order resultOrder = new Order();
+            OrderItem resultOrder = new OrderItem();
             resultOrder.setId(order.getId());
             resultOrder.setKode(orderCode.getText().toString());
             resultOrder.setNamaBarang(orderName.getText().toString());
@@ -117,7 +117,7 @@ public class EditOrderActivity extends ActionBarActivity implements android.view
             resultOrder.setKodeOutlet(order.getKodeOutlet());
 
             Intent resultIntent = new Intent();
-            resultIntent.putExtra(Order.TABLE, resultOrder);
+            resultIntent.putExtra(OrderItem.TABLE, resultOrder);
 
             setResult(Activity.RESULT_OK, resultIntent);
             finish();

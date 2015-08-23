@@ -6,21 +6,17 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
-import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bali.nusadua.productmonitor.dropbox.DropboxHelper;
-import com.bali.nusadua.productmonitor.dropbox.UploadFileToDropbox;
 import com.bali.nusadua.productmonitor.dropbox.UploadOutletFileToDropbox;
 import com.bali.nusadua.productmonitor.model.Customer;
-import com.bali.nusadua.productmonitor.model.Order;
+import com.bali.nusadua.productmonitor.model.OrderItem;
 import com.bali.nusadua.productmonitor.model.Retur;
 import com.bali.nusadua.productmonitor.model.Settlement;
 import com.bali.nusadua.productmonitor.repo.CustomerRepo;
@@ -156,7 +152,7 @@ public class TransactionActivity extends ActionBarActivity implements View.OnCli
 
     private void setTransactionCount() {
         OrderRepo orderRepo = new OrderRepo(getApplicationContext());
-        List<Order> orders = orderRepo.getOrderByCustomer(customer.getCustomerId());
+        List<OrderItem> orders = orderRepo.getOrderByCustomer(customer.getCustomerId());
         labelOrderData.setText(String.valueOf(orders.size()));
 
         ReturRepo returRepo = new ReturRepo(getApplicationContext());

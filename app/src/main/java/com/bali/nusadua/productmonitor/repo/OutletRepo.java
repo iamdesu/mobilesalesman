@@ -100,7 +100,7 @@ public class OutletRepo {
         return outlet;
     }
 
-    //Retrieve all records and populate List<Order>
+    //Retrieve all records and populate List<OrderItem>
     public List<Outlet> getAll() {
         SQLiteDatabase db = dbHelper.getReadableDatabase();
         String selectQuery = "SELECT * FROM " + Outlet.TABLE;

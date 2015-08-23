@@ -7,9 +7,11 @@ import android.os.AsyncTask;
 import android.widget.Toast;
 
 import com.bali.nusadua.productmonitor.MSConstantsIntf;
-import com.bali.nusadua.productmonitor.model.Order;
+import com.bali.nusadua.productmonitor.model.OrderItem;
 import com.bali.nusadua.productmonitor.model.Retur;
 import com.bali.nusadua.productmonitor.model.Settlement;
+import com.bali.nusadua.productmonitor.modelView.OrderHeaderItemView;
+import com.bali.nusadua.productmonitor.repo.OrderHeaderRepo;
 import com.bali.nusadua.productmonitor.repo.OrderRepo;
 import com.bali.nusadua.productmonitor.repo.ReturRepo;
 import com.bali.nusadua.productmonitor.repo.SettlementRepo;
@@ -34,6 +36,7 @@ public class UploadFileToDropbox extends AsyncTask<Void, Void, Boolean> {
     private Context context;
     private ProgressDialog progressBar;
 
+    private OrderHeaderRepo orderHeaderRepo;
     private OrderRepo orderRepo;
     private ReturRepo returRepo;
     private SettlementRepo settlementRepo;
@@ -44,6 +47,7 @@ public class UploadFileToDropbox extends AsyncTask<Void, Void, Boolean> {
         this.dropbox = dropbox;
         this.path = path;
         this.progressBar = progressBar;
+        this.orderHeaderRepo = new OrderHeaderRepo(this.context);
         this.orderRepo = new OrderRepo(this.context);
         this.returRepo = new ReturRepo(this.context);
         this.settlementRepo = new SettlementRepo(this.context);
@@ -85,10 +89,16 @@ public class UploadFileToDropbox extends AsyncTask<Void, Void, Boolean> {
     }
 
     private void uploadOrderTable(String team) throws IOException, DropboxException {
-        List<String> customerIDs = orderRepo.getCustomerOnOrder();
+        List<String> customerIDs = orderHeaderRepo.getCustomerOnOrderHeader();
         for(String customerID : customerIDs) {
             uploadCustomerOrderTable(team, customerID);
         }
+
+        final File tempDir = context.getCacheDir();
+        File tempFile;
+        FileWriter fr;
+
+        List<OrderHeaderItemView> orders = orderHeaderRepo.getOrderHeaderItem();
     }
 
     private void uploadCustomerOrderTable(String team, String customerId) throws IOException, DropboxException {
@@ -99,7 +109,7 @@ public class UploadFileToDropbox extends AsyncTask<Void, Void, Boolean> {
         tempFile = File.createTempFile("file", ".csv", tempDir);
         fr = new FileWriter(tempFile);
         //OrderRepo orderRepo = new OrderRepo(context);
-        List<Order> orders = orderRepo.getOrderByCustomer(customerId);
+        List<OrderItem> orders = orderRepo.getOrderByCustomer(customerId);
 
         fr.append("GUID");
         fr.append(",");
@@ -118,7 +128,7 @@ public class UploadFileToDropbox extends AsyncTask<Void, Void, Boolean> {
         fr.append("Create Date");
         fr.append('\n');
 
-        for (Order order : orders) {
+        for (OrderItem order : orders) {
             fr.append(order.getGuid());
             fr.append(",");
             fr.append(order.getKode());

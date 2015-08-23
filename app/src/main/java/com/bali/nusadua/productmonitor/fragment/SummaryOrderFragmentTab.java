@@ -12,7 +12,7 @@ import android.widget.TableRow;
 import android.widget.TextView;
 
 import com.bali.nusadua.productmonitor.R;
-import com.bali.nusadua.productmonitor.model.Order;
+import com.bali.nusadua.productmonitor.model.OrderItem;
 import com.bali.nusadua.productmonitor.repo.OrderRepo;
 
 import java.util.ArrayList;
@@ -23,7 +23,7 @@ public class SummaryOrderFragmentTab extends Fragment {
     private TableLayout orderGrid;
     private OrderRepo orderRepo;
     private Context context;
-    private List<Order> orders = new ArrayList<Order>();
+    private List<OrderItem> orders = new ArrayList<OrderItem>();
 
     @Override
     public void onCreate(Bundle savedInstaceState) {
@@ -44,7 +44,7 @@ public class SummaryOrderFragmentTab extends Fragment {
         final float scale = getResources().getDisplayMetrics().density;
         int padding_in_px = (int) (padding_in_dp * scale + 0.5f);
 
-        for(Order order : orders) {
+        for(OrderItem order : orders) {
             int count = orderGrid.getChildCount();
             TableRow tableRow = new TableRow(context);
             tableRow.setPadding(padding_in_px, padding_in_px, padding_in_px, padding_in_px);

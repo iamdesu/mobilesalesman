@@ -46,4 +46,20 @@ public class Outlet {
     public void setName(String name) {
         this.name = name;
     }
+
+    /**
+     * This method to generate Database
+     *
+     * @return String
+     */
+    public static String CREATE_TABLE() {
+        String CREATE_TABLE = "CREATE TABLE " + Outlet.TABLE + " ( "
+                + Outlet.ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
+                + Outlet.GUID + " TEXT, "
+                + Outlet.KODE + " TEXT, "
+                + Outlet.NAME + " TEXT ) ";
+
+        return CREATE_TABLE;
+    }
+
 }

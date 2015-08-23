@@ -25,7 +25,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bali.nusadua.productmonitor.model.Customer;
-import com.bali.nusadua.productmonitor.model.Order;
+import com.bali.nusadua.productmonitor.model.OrderItem;
 import com.bali.nusadua.productmonitor.model.StockBilling;
 import com.bali.nusadua.productmonitor.model.StockPrice;
 import com.bali.nusadua.productmonitor.repo.OrderRepo;
@@ -55,7 +55,7 @@ public class OrderPenjualanActivity extends ActionBarActivity implements android
     private int countID;
     private Double total = 0d;
 
-    private Map<String, Order> mapOrders = new HashMap<String, Order>();
+    private Map<String, OrderItem> mapOrders = new HashMap<String, OrderItem>();
     private Map<String, Integer> mapCheckBoxs = new HashMap<String, Integer>();
     private OrderRepo orderRepo = new OrderRepo(this);
     private StockBillingRepo stockBillingRepo = new StockBillingRepo(this);
@@ -136,7 +136,7 @@ public class OrderPenjualanActivity extends ActionBarActivity implements android
                                     TableRow selectedRow = (TableRow) findViewById(i);
                                     theGrid.removeView(selectedRow);
                                 }
-                                calculateTotal(new ArrayList<Order>(mapOrders.values()));
+                                calculateTotal(new ArrayList<OrderItem>(mapOrders.values()));
                                 showToast(mapCheckBoxs.values().size() + " telah di batalkan.");
                                 mapCheckBoxs.clear();
                                 actionBarMenu.setGroupVisible(R.id.menu_group_edit, false);
@@ -158,9 +158,9 @@ public class OrderPenjualanActivity extends ActionBarActivity implements android
 
             case R.id.action_edit_stock:
                 Integer i = new ArrayList<Integer>(mapCheckBoxs.values()).get(0);
-                Order order = mapOrders.get(String.valueOf(i));
+                OrderItem order = mapOrders.get(String.valueOf(i));
                 intent = new Intent(OrderPenjualanActivity.this, EditOrderActivity.class);
-                intent.putExtra(Order.TABLE, order);
+                intent.putExtra(OrderItem.TABLE, order);
                 startActivityForResult(intent, VIEW_EDIT_STOCK_ACTIVITY);
                 break;
         }
@@ -193,8 +193,8 @@ public class OrderPenjualanActivity extends ActionBarActivity implements android
             }
             case (VIEW_EDIT_STOCK_ACTIVITY): {
                 if (resultCode == Activity.RESULT_OK) {
-                    Order resultOrder = (Order) data.getSerializableExtra(Order.TABLE);
-                    Order order = mapOrders.get(String.valueOf(resultOrder.getId()));
+                    OrderItem resultOrder = (OrderItem) data.getSerializableExtra(OrderItem.TABLE);
+                    OrderItem order = mapOrders.get(String.valueOf(resultOrder.getId()));
                     order.setNamaBarang(resultOrder.getNamaBarang());
                     order.setHarga(resultOrder.getHarga());
                     order.setQty(resultOrder.getQty());
@@ -210,7 +210,7 @@ public class OrderPenjualanActivity extends ActionBarActivity implements android
                     TextView textSummary = (TextView) selectedRow.getChildAt(4);
                     textSummary.setText(format.format(order.getQty() * order.getHarga()).toString());
 
-                    calculateTotal(new ArrayList<Order>(mapOrders.values()));
+                    calculateTotal(new ArrayList<OrderItem>(mapOrders.values()));
                 }
                 break;
             }
@@ -219,7 +219,7 @@ public class OrderPenjualanActivity extends ActionBarActivity implements android
 
     @Override
     public void onClick(View view) {
-        Order order = new Order();
+        OrderItem order = new OrderItem();
         int padding_in_dp = 1;  // 8 = 6 dps
         final float scale = getResources().getDisplayMetrics().density;
         int padding_in_px = (int) (padding_in_dp * scale + 0.5f);
@@ -348,7 +348,7 @@ public class OrderPenjualanActivity extends ActionBarActivity implements android
                                     final TableRow selectedRow = (TableRow) v;
                                     TextView labelCode = (TextView) findViewById(200 + selectedRow.getId());
                                     final String tvOrderCode = labelCode.getText().toString().split("\\|")[0].trim();
-                                    final Order order = mapOrders.get(tvOrderCode);
+                                    final OrderItem order = mapOrders.get(tvOrderCode);
 
                                     // custom dialog
                                     final Dialog dialog = new Dialog(context);
@@ -373,7 +373,7 @@ public class OrderPenjualanActivity extends ActionBarActivity implements android
                                     popupSaveButton.setOnClickListener(new View.OnClickListener() {
                                         @Override
                                         public void onClick(View v) {
-                                            Order order = mapOrders.get(edOrderCode.getText().toString());
+                                            OrderItem order = mapOrders.get(edOrderCode.getText().toString());
                                             order.setNamaBarang(edOrderNamaBrg.getText().toString());
                                             order.setHarga(Double.parseDouble(edOrderPrice.getText().toString()));
                                             order.setQty(Integer.valueOf(edOrderQty.getText().toString()));
@@ -395,7 +395,7 @@ public class OrderPenjualanActivity extends ActionBarActivity implements android
                                     popupDeleteButton.setOnClickListener(new View.OnClickListener() {
                                         @Override
                                         public void onClick(View v) {
-                                            Order removeorder = mapOrders.get(edOrderCode.getText().toString());
+                                            OrderItem removeorder = mapOrders.get(edOrderCode.getText().toString());
                                             subTotal(removeorder);
                                             mapOrders.remove(edOrderCode.getText().toString());
                                             theGrid.removeView(selectedRow);
@@ -432,7 +432,7 @@ public class OrderPenjualanActivity extends ActionBarActivity implements android
     }
 
     private void saveAllOrder() {
-        orderRepo.insertAll(new ArrayList<Order>(mapOrders.values()));
+        orderRepo.insertAll(new ArrayList<OrderItem>(mapOrders.values()));
     }
 
     private void showToast(String msg) {
@@ -440,19 +440,19 @@ public class OrderPenjualanActivity extends ActionBarActivity implements android
         error.show();
     }
 
-    private void addTotal(Order order) {
+    private void addTotal(OrderItem order) {
         total = total + (order.getQty() * order.getHarga());
         tvTotal.setText(getResources().getString(R.string.currency_symbol) + " " + format.format(total).toString());
     }
 
-    private void subTotal(Order order) {
+    private void subTotal(OrderItem order) {
         total = total - (order.getQty() * order.getHarga());
         tvTotal.setText(getResources().getString(R.string.currency_symbol) + " " + format.format(total).toString());
     }
 
-    private void calculateTotal(List<Order> orders) {
+    private void calculateTotal(List<OrderItem> orders) {
         total = 0d;
-        for (Order order : orders) {
+        for (OrderItem order : orders) {
             total = total + (order.getQty() * order.getHarga());
         }
         tvTotal.setText(getResources().getString(R.string.currency_symbol) + " " + format.format(total).toString());

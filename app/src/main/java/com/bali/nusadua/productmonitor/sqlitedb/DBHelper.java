@@ -6,7 +6,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 import com.bali.nusadua.productmonitor.model.Billing;
 import com.bali.nusadua.productmonitor.model.Customer;
-import com.bali.nusadua.productmonitor.model.Order;
+import com.bali.nusadua.productmonitor.model.OrderItem;
 import com.bali.nusadua.productmonitor.model.Outlet;
 import com.bali.nusadua.productmonitor.model.Retur;
 import com.bali.nusadua.productmonitor.model.Settlement;
@@ -22,7 +22,7 @@ import java.util.UUID;
  */
 public class DBHelper extends SQLiteOpenHelper{
     //Version number to upgrade database version
-    private static final int DATABASE_VERSION = 1;
+    private static final int DATABASE_VERSION = 2;
 
     //Database Name
     private static final String DATABASE_NAME = "mobilesalesman.db";
@@ -34,51 +34,12 @@ public class DBHelper extends SQLiteOpenHelper{
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-        String CREATE_TABLE_TEAM = "CREATE TABLE " + Team.TABLE + "( "
+        /*String CREATE_TABLE_TEAM = "CREATE TABLE " + Team.TABLE + "( "
                 + Team.ID +  " INTEGER PRIMARY KEY AUTOINCREMENT, "
                 + Team.GUID + " TEXT, "
                 + Team.NAME + " TEXT )";
 
         db.execSQL(CREATE_TABLE_TEAM);
-
-        /*String CREATE_TABLE_ORDER = "CREATE TABLE " + Order.TABLE + " ( "
-                + Order.ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
-                + Order.GUID + " TEXT, "
-                + Order.KODE + " TEXT, "
-                + Order.NAMA_BARANG + " TEXT, "
-                + Order.HARGA + " INTEGER, "
-                + Order.QTY + " INTEGER, "
-                + Order.UNIT + " TEXT, "
-                + Order.KODE_OUTLET + " TEXT, "
-                + Order.CREATE_DATE + " TEXT ) ";
-
-        db.execSQL(CREATE_TABLE_ORDER);*/
-
-        /*String CREATE_TABLE_RETUR = "CREATE TABLE " + Retur.TABLE + " ( "
-                + Retur.ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
-                + Retur.GUID + " TEXT, "
-                + Retur.KODE + " TEXT, "
-                + Retur.NAMA_BARANG + " TEXT, "
-                + Retur.HARGA + " INTEGER, "
-                + Retur.QTY + " INTEGER, "
-                + Retur.UNIT + " TEXT, "
-                + Retur.KODE_OUTLET + " TEXT, "
-                + Retur.CREATE_DATE + " TEXT ) ";
-
-        db.execSQL(CREATE_TABLE_RETUR);*/
-
-        /*String CREATE_TABLE_SETTLEMENT = "CREATE TABLE " + Settlement.TABLE + " ( "
-                + Settlement.ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
-                + Settlement.GUID + " TEXT, "
-                + Settlement.INVOICE_NUMBER + " TEXT, "
-                + Settlement.INVOICE_DATE + " TEXT, "
-                + Settlement.CREDIT + " INTEGER, "
-                + Settlement.PAYMENT_METHOD + " TEXT, "
-                + Settlement.NOMINAL_PAYMENT + " INTEGER, "
-                + Settlement.KODE_OUTLET + " TEXT, "
-                + Settlement.CREATE_DATE + " TEXT ) ";
-
-        db.execSQL(CREATE_TABLE_SETTLEMENT);*/
 
         String CREATE_TABLE_OUTLET = "CREATE TABLE " + Outlet.TABLE + " ( "
                 + Outlet.ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
@@ -86,9 +47,11 @@ public class DBHelper extends SQLiteOpenHelper{
                 + Outlet.KODE + " TEXT, "
                 + Outlet.NAME + " TEXT ) ";
 
-        db.execSQL(CREATE_TABLE_OUTLET);
+        db.execSQL(CREATE_TABLE_OUTLET);*/
 
-        db.execSQL(Order.CREATE_TABLE());
+        db.execSQL(Team.CREATE_TABLE());
+        db.execSQL(Outlet.CREATE_TABLE());
+        db.execSQL(OrderItem.CREATE_TABLE());
         db.execSQL(Retur.CREATE_TABLE());
         db.execSQL(Settlement.CREATE_TABLE());
         db.execSQL(StaffBilling.CREATE_TABLE());
@@ -124,7 +87,7 @@ public class DBHelper extends SQLiteOpenHelper{
         //Drop older table if existed, all data will be gone
         db.execSQL("DROP TABLE IF EXISTS " + Team.TABLE);
         db.execSQL("DROP TABLE IF EXISTS " + Outlet.TABLE);
-        db.execSQL("DROP TABLE IF EXISTS " + Order.TABLE);
+        db.execSQL("DROP TABLE IF EXISTS " + OrderItem.TABLE);
         db.execSQL("DROP TABLE IF EXISTS " + Retur.TABLE);
         db.execSQL("DROP TABLE IF EXISTS " + Settlement.TABLE);
         db.execSQL("DROP TABLE IF EXISTS " + StaffBilling.TABLE);

@@ -5,7 +5,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
-import com.bali.nusadua.productmonitor.model.Order;
+import com.bali.nusadua.productmonitor.model.OrderItem;
 import com.bali.nusadua.productmonitor.model.Outlet;
 import com.bali.nusadua.productmonitor.model.Retur;
 import com.bali.nusadua.productmonitor.sqlitedb.DBHelper;
@@ -288,7 +288,7 @@ public class ReturRepo {
         //Looping through all rows and adding to list
         if (cursor.moveToFirst()) {
             do {
-                String customerID = cursor.getString(cursor.getColumnIndex(Order.KODE_OUTLET));
+                String customerID = cursor.getString(cursor.getColumnIndex(OrderItem.KODE_OUTLET));
                 listCustomerID.add(customerID);
             } while (cursor.moveToNext());
         }

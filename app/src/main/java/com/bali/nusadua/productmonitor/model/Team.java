@@ -39,4 +39,18 @@ public class Team {
     public void setName(String name) {
         this.name = name;
     }
+
+    /**
+     * This method to generate Database
+     *
+     * @return String
+     */
+    public static String CREATE_TABLE() {
+        String CREATE_TABLE = "CREATE TABLE " + Team.TABLE + "( "
+                + Team.ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
+                + Team.GUID + " TEXT, "
+                + Team.NAME + " TEXT )";
+
+        return CREATE_TABLE;
+    }
 }

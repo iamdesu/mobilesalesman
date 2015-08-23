@@ -35,7 +35,7 @@ public class StockPriceRepo {
         return (int) id;
     }
 
-    //Retrieve all records and populate List<Order>
+    //Retrieve all records and populate List<OrderItem>
     public List<StockPrice> getAll() {
         SQLiteDatabase db = dbHelper.getReadableDatabase();
         String selectQuery = "SELECT * FROM " + StockPrice.TABLE;

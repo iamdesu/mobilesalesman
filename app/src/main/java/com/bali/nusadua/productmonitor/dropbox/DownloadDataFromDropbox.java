@@ -13,7 +13,7 @@ import com.bali.nusadua.productmonitor.MSConstantsIntf;
 import com.bali.nusadua.productmonitor.R;
 import com.bali.nusadua.productmonitor.model.Billing;
 import com.bali.nusadua.productmonitor.model.Customer;
-import com.bali.nusadua.productmonitor.model.Order;
+import com.bali.nusadua.productmonitor.model.OrderItem;
 import com.bali.nusadua.productmonitor.model.Retur;
 import com.bali.nusadua.productmonitor.model.Settlement;
 import com.bali.nusadua.productmonitor.model.StaffBilling;
@@ -133,8 +133,8 @@ public class DownloadDataFromDropbox extends AsyncTask<Void, Void, Boolean> {
     private void clearOrder() {
         DBHelper dbHelper = new DBHelper(context);
         SQLiteDatabase db = dbHelper.getWritableDatabase();
-        db.execSQL("DELETE FROM " + Order.TABLE);
-        db.execSQL("DELETE FROM sqlite_sequence where name='" + Order.TABLE + "'");
+        db.execSQL("DELETE FROM " + OrderItem.TABLE);
+        db.execSQL("DELETE FROM sqlite_sequence where name='" + OrderItem.TABLE + "'");
         db.close();
     }
 

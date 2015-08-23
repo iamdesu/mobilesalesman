@@ -8,7 +8,7 @@ import android.widget.Toast;
 
 import com.bali.nusadua.productmonitor.MSConstantsIntf;
 import com.bali.nusadua.productmonitor.model.Customer;
-import com.bali.nusadua.productmonitor.model.Order;
+import com.bali.nusadua.productmonitor.model.OrderItem;
 import com.bali.nusadua.productmonitor.model.Retur;
 import com.bali.nusadua.productmonitor.model.Settlement;
 import com.bali.nusadua.productmonitor.repo.CustomerRepo;
@@ -90,7 +90,7 @@ public class UploadOutletFileToDropbox extends AsyncTask<Void, Void, Boolean> {
         tempFile = File.createTempFile("file", ".csv", tempDir);
         fr = new FileWriter(tempFile);
         OrderRepo orderRepo = new OrderRepo(context);
-        List<Order> orders = orderRepo.getOrderByCustomer(customerId);
+        List<OrderItem> orders = orderRepo.getOrderByCustomer(customerId);
 
         fr.append("GUID");
         fr.append(",");
@@ -109,7 +109,7 @@ public class UploadOutletFileToDropbox extends AsyncTask<Void, Void, Boolean> {
         fr.append("Create Date");
         fr.append('\n');
 
-        for(Order order : orders) {
+        for(OrderItem order : orders) {
             fr.append(order.getGuid());
             fr.append(",");
             fr.append(order.getKode());

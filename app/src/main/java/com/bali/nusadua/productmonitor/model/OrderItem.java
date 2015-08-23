@@ -6,16 +6,16 @@ import java.util.Date;
 /**
  * Created by desu sudarsana on 4/15/2015.
  */
-public class Order implements Serializable {
-    public static final String TABLE = "OrderPenjualan";
+public class OrderItem implements Serializable {
+    public static final String TABLE = "OrderItem";
     public static final String ID = "id";
     public static final String GUID = "guid";
+    public static final String ORDER_HEADER_GUID = "orderHeaderGuid";
     public static final String KODE = "kode";
     public static final String NAMA_BARANG = "nama_barang";
     public static final String HARGA = "harga";
     public static final String QTY = "qty";
     public static final String UNIT = "unit";
-    public static final String KODE_OUTLET = "kode_outlet";
     public static final String CREATE_DATE = "create_date";
 
     public static final String LOOKUP_DUS = "dus";
@@ -25,12 +25,12 @@ public class Order implements Serializable {
 
     private int id;
     private String guid;
+    private String orderHeaderGuid;
     private String kode;
     private String namaBarang;
     private Double harga;
     private int qty;
     private String unit;
-    private String kodeOutlet;
     private Date createDate;
 
     /* Object aggregate */
@@ -50,6 +50,14 @@ public class Order implements Serializable {
 
     public void setGuid(String guid) {
         this.guid = guid;
+    }
+
+    public String getOrderHeaderGuid() {
+        return orderHeaderGuid;
+    }
+
+    public void setOrderHeaderGuid(String orderHeaderGuid) {
+        this.orderHeaderGuid = orderHeaderGuid;
     }
 
     public String getKode() {
@@ -92,14 +100,6 @@ public class Order implements Serializable {
         this.unit = unit;
     }
 
-    public String getKodeOutlet() {
-        return kodeOutlet;
-    }
-
-    public void setKodeOutlet(String kodeOutlet) {
-        this.kodeOutlet = kodeOutlet;
-    }
-
     public Date getCreateDate() {
         return createDate;
     }
@@ -125,12 +125,12 @@ public class Order implements Serializable {
         String CREATE_TABLE = "CREATE TABLE " + TABLE + " ( "
                 + ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
                 + GUID + " TEXT, "
+                + ORDER_HEADER_GUID + " TEXT, "
                 + KODE + " TEXT, "
                 + NAMA_BARANG + " TEXT, "
                 + HARGA + " REAL, "
                 + QTY + " INTEGER, "
                 + UNIT + " TEXT, "
-                + KODE_OUTLET + " TEXT, "
                 + CREATE_DATE + " TEXT ) ";
 
         return CREATE_TABLE;

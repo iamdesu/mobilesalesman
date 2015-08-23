@@ -13,7 +13,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
 
-import com.bali.nusadua.productmonitor.model.Order;
+import com.bali.nusadua.productmonitor.model.OrderItem;
 import com.bali.nusadua.productmonitor.model.Retur;
 
 /**
@@ -54,7 +54,7 @@ public class EditReturActivity extends ActionBarActivity implements android.view
         unit.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
                 if (currentUnitSelection != i) {
-                    if (i == Order.LOOKUP_DUS_index) {
+                    if (i == OrderItem.LOOKUP_DUS_index) {
                         Double newPrice = retur.getHarga() * 12;
                         newPrice = newPrice + tempPrice;
                         retur.setHarga(newPrice);

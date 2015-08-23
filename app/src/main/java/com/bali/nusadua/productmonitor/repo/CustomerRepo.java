@@ -6,12 +6,9 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
 import com.bali.nusadua.productmonitor.model.Customer;
-import com.bali.nusadua.productmonitor.model.Order;
 import com.bali.nusadua.productmonitor.sqlitedb.DBHelper;
 
-import java.text.ParseException;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 public class CustomerRepo {
@@ -78,7 +75,7 @@ public class CustomerRepo {
         return customer;
     }
 
-    //Retrieve all records and populate List<Order>
+    //Retrieve all records and populate List<OrderItem>
     public List<Customer> getAll() {
         SQLiteDatabase db = dbHelper.getReadableDatabase();
         String selectQuery = "SELECT * FROM " + Customer.TABLE + " ORDER BY " + Customer.COMPANY_NAME + " ASC";

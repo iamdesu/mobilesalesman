@@ -36,7 +36,7 @@ public class StaffBillingRepo {
         return (int) staffBilling_id;
     }
 
-    //Retrieve all records and populate List<Order>
+    //Retrieve all records and populate List<OrderItem>
     public List<StaffBilling> getAll() {
         SQLiteDatabase db = dbHelper.getReadableDatabase();
         String selectQuery = "SELECT * FROM " + StaffBilling.TABLE;
