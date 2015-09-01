@@ -25,6 +25,7 @@
     <string name="action_edit_stock">Edit</string>
     <string name="action_show_billing">Lihat Invoice</string>
     <string name="action_sent_current_data">Kirim</string>
+    <string name="action_ok">Ok</string>
     <string name="action_yes">Ya</string>
     <string name="action_no">Tidak</string>
 
@@ -63,6 +64,8 @@
     <string name="team_prompt">Pilih Team</string>
     <string name="download_success">File download successfully!</string>
     <string name="download_failed">FAILED downloading file!</string>
+    <string name="upload_success">File Berhasil di unggah!</string>
+    <string name="upload_failed">Gagal mengunggah file!</string>
     <string name="file_downloading">File downloading ...</string>
     <string name="file_uploading">File uploading ...</string>
     <string name="file_setup">File Setup</string>

@@ -14,13 +14,13 @@ import android.widget.EditText;
 import android.widget.Spinner;
 
 import com.bali.nusadua.productmonitor.model.OrderItem;
-import com.bali.nusadua.productmonitor.model.Retur;
+import com.bali.nusadua.productmonitor.model.ReturItem;
 
 /**
  * Created by desu on 7/19/15.
  */
 public class EditReturActivity extends ActionBarActivity implements android.view.View.OnClickListener {
-    private Retur retur = new Retur();
+    private ReturItem retur = new ReturItem();
     private EditText returCode, returName, price, qty;
     private Spinner unit;
     private Button btnSave;
@@ -42,14 +42,14 @@ public class EditReturActivity extends ActionBarActivity implements android.view
         btnSave = (Button) findViewById(R.id.button_save);
 
         Intent intent = getIntent();
-        retur = (Retur) intent.getSerializableExtra(Retur.TABLE);
+        retur = (ReturItem) intent.getSerializableExtra(ReturItem.TABLE);
 
         returCode.setText(retur.getKode());
         returName.setText(retur.getNamaBarang());
         price.setText(String.valueOf(retur.getHarga()));
         qty.setText(String.valueOf(retur.getQty()));
 
-        currentUnitSelection = retur.getUnit().equalsIgnoreCase(Retur.LOOKUP_DUS) ? 0 : 1;
+        currentUnitSelection = retur.getUnit().equalsIgnoreCase(ReturItem.LOOKUP_DUS) ? 0 : 1;
         unit.setSelection(currentUnitSelection);
         unit.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
@@ -107,17 +107,17 @@ public class EditReturActivity extends ActionBarActivity implements android.view
     @Override
     public void onClick(View view) {
         if (view == findViewById(R.id.button_save)) {
-            Retur resultRetur = new Retur();
+            ReturItem resultRetur = new ReturItem();
             resultRetur.setId(retur.getId());
+            resultRetur.setReturHeaderId(retur.getReturHeaderId());
             resultRetur.setKode(returCode.getText().toString());
             resultRetur.setNamaBarang(returName.getText().toString());
             resultRetur.setHarga(Double.parseDouble(price.getText().toString()));
             resultRetur.setQty(Integer.parseInt(qty.getText().toString()));
             resultRetur.setUnit(unit.getSelectedItem().toString());
-            resultRetur.setKodeOutlet(retur.getKodeOutlet());
 
             Intent resultIntent = new Intent();
-            resultIntent.putExtra(Retur.TABLE, resultRetur);
+            resultIntent.putExtra(ReturItem.TABLE, resultRetur);
 
             setResult(Activity.RESULT_OK, resultIntent);
             finish();

@@ -12,7 +12,7 @@ import android.widget.TableRow;
 import android.widget.TextView;
 
 import com.bali.nusadua.productmonitor.R;
-import com.bali.nusadua.productmonitor.model.Retur;
+import com.bali.nusadua.productmonitor.model.ReturItem;
 import com.bali.nusadua.productmonitor.repo.ReturRepo;
 
 import java.util.List;
@@ -24,7 +24,7 @@ public class SummaryReturFragmentTab extends Fragment {
     /* Widget */
     private TableLayout returGrid;
     private Context context;
-    private List<Retur> returs;
+    private List<ReturItem> returs;
 
     @Override
     public void onCreate(Bundle savedInstaceState) {
@@ -37,7 +37,7 @@ public class SummaryReturFragmentTab extends Fragment {
         context = getActivity();
         returRepo = new ReturRepo(context);
         returs = returRepo.getAll();
-        Log.i("Summary Retur di database : ", Integer.toString(returs.size()));
+        Log.i("Summary ReturItem di database : ", Integer.toString(returs.size()));
 
         returGrid = (TableLayout) v.findViewById(R.id.tableLayoutData);
 
@@ -45,7 +45,7 @@ public class SummaryReturFragmentTab extends Fragment {
         final float scale = getResources().getDisplayMetrics().density;
         int padding_in_px = (int) (padding_in_dp * scale + 0.5f);
 
-        for(Retur retur : returs) {
+        for(ReturItem retur : returs) {
             int count = returGrid.getChildCount();
             TableRow tableRow = new TableRow(context);
             tableRow.setPadding(padding_in_px, padding_in_px, padding_in_px, padding_in_px);

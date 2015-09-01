@@ -25,11 +25,14 @@ import android.widget.TableRow;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bali.nusadua.productmonitor.businessObject.OrderBO;
+import com.bali.nusadua.productmonitor.businessObject.SettlementBO;
 import com.bali.nusadua.productmonitor.model.Billing;
 import com.bali.nusadua.productmonitor.model.Customer;
-import com.bali.nusadua.productmonitor.model.Settlement;
+import com.bali.nusadua.productmonitor.model.OrderItem;
+import com.bali.nusadua.productmonitor.model.SettlementItem;
 import com.bali.nusadua.productmonitor.repo.BillingRepo;
-import com.bali.nusadua.productmonitor.repo.SettlementRepo;
+import com.bali.nusadua.productmonitor.repo.SettlementItemRepo;
 
 import java.text.NumberFormat;
 import java.text.ParseException;
@@ -62,9 +65,10 @@ public class SettlementActivity extends ActionBarActivity implements View.OnClic
     private int countID;
     private Double total = 0d;
 
-    private Map<String, Settlement> mapSettlements = new HashMap<String, Settlement>();
+    private Map<String, SettlementItem> mapSettlements = new HashMap<String, SettlementItem>();
     private Map<String, Integer> mapCheckBoxs = new HashMap<String, Integer>();
-    private SettlementRepo settlementRepo = new SettlementRepo(this);
+    private SettlementItemRepo settlementItemRepo = new SettlementItemRepo(this);
+    private SettlementBO settlementBO = new SettlementBO(this);
     private BillingRepo billingRepo = new BillingRepo(this);
     private NumberFormat format = NumberFormat.getInstance(Locale.GERMAN);
     private Menu actionBarMenu;
@@ -173,7 +177,7 @@ public class SettlementActivity extends ActionBarActivity implements View.OnClic
                                     TableRow selectedRow = (TableRow) findViewById(i);
                                     theGrid.removeView(selectedRow);
                                 }
-                                calculateTotal(new ArrayList<Settlement>(mapSettlements.values()));
+                                calculateTotal(new ArrayList<SettlementItem>(mapSettlements.values()));
                                 showToast(mapCheckBoxs.values().size() + " telah di batalkan.");
                                 mapCheckBoxs.clear();
                                 actionBarMenu.setGroupVisible(R.id.menu_group_edit, false);
@@ -195,9 +199,9 @@ public class SettlementActivity extends ActionBarActivity implements View.OnClic
 
             case R.id.action_edit_settlement:
                 Integer i = new ArrayList<Integer>(mapCheckBoxs.values()).get(0);
-                Settlement settlement = mapSettlements.get(String.valueOf(i));
+                SettlementItem settlementItem = mapSettlements.get(String.valueOf(i));
                 intent = new Intent(SettlementActivity.this, EditSettlementActivity.class);
-                intent.putExtra(Settlement.TABLE, settlement);
+                intent.putExtra(SettlementItem.TABLE, settlementItem);
                 startActivityForResult(intent, VIEW_EDIT_SETTLEMENT_ACTIVITY);
                 break;
         }
@@ -221,25 +225,25 @@ public class SettlementActivity extends ActionBarActivity implements View.OnClic
 
             case (VIEW_EDIT_SETTLEMENT_ACTIVITY): {
                 if (resultCode == Activity.RESULT_OK) {
-                    Settlement resultSettlement = (Settlement) data.getSerializableExtra(Settlement.TABLE);
-                    Settlement settlement = mapSettlements.get(String.valueOf(resultSettlement.getId()));
-                    settlement.setInvoiceNumber(resultSettlement.getInvoiceNumber());
-                    settlement.setInvoiceDate(resultSettlement.getInvoiceDate());
-                    settlement.setCredit(resultSettlement.getCredit());
-                    settlement.setPaymentMethod(resultSettlement.getPaymentMethod());
-                    settlement.setNominalPayment(resultSettlement.getNominalPayment());
+                    SettlementItem resultSettlementItem = (SettlementItem) data.getSerializableExtra(SettlementItem.TABLE);
+                    SettlementItem settlementItem = mapSettlements.get(String.valueOf(resultSettlementItem.getId()));
+                    settlementItem.setInvoiceNumber(resultSettlementItem.getInvoiceNumber());
+                    settlementItem.setInvoiceDate(resultSettlementItem.getInvoiceDate());
+                    settlementItem.setCredit(resultSettlementItem.getCredit());
+                    settlementItem.setPaymentMethod(resultSettlementItem.getPaymentMethod());
+                    settlementItem.setNominalPayment(resultSettlementItem.getNominalPayment());
 
-                    TableRow selectedRow = (TableRow) findViewById(resultSettlement.getId());
+                    TableRow selectedRow = (TableRow) findViewById(resultSettlementItem.getId());
                     TextView textInvNumber = (TextView) selectedRow.getChildAt(1);
-                    textInvNumber.setText(settlement.getInvoiceNumber());
+                    textInvNumber.setText(settlementItem.getInvoiceNumber());
                     TextView textCredit = (TextView) selectedRow.getChildAt(2);
-                    textCredit.setText(settlement.getCredit().toString());
+                    textCredit.setText(settlementItem.getCredit().toString());
                     TextView textPayMethod = (TextView) selectedRow.getChildAt(3);
-                    textPayMethod.setText(settlement.getPaymentMethod());
+                    textPayMethod.setText(settlementItem.getPaymentMethod());
                     TextView textNominal = (TextView) selectedRow.getChildAt(4);
-                    textNominal.setText(format.format(settlement.getNominalPayment()).toString());
+                    textNominal.setText(format.format(settlementItem.getNominalPayment()).toString());
 
-                    calculateTotal(new ArrayList<Settlement>(mapSettlements.values()));
+                    calculateTotal(new ArrayList<SettlementItem>(mapSettlements.values()));
                 }
                 break;
             }
@@ -248,7 +252,7 @@ public class SettlementActivity extends ActionBarActivity implements View.OnClic
 
     @Override
     public void onClick(View view) {
-        Settlement settlement = new Settlement();
+        SettlementItem settlementItem = new SettlementItem();
         int padding_in_dp = 1;  // 8 = 6 dps
         final float scale = getResources().getDisplayMetrics().density;
         int padding_in_px = (int) (padding_in_dp * scale + 0.5f);
@@ -266,7 +270,7 @@ public class SettlementActivity extends ActionBarActivity implements View.OnClic
                     tableRow.setPadding(padding_in_px, padding_in_px, padding_in_px, padding_in_px);
                     tableRow.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.WRAP_CONTENT, 0f));
                     tableRow.setId(count + 1);
-                    settlement.setId(tableRow.getId());
+                    settlementItem.setId(tableRow.getId());
 
                     CheckBox box = new CheckBox(this);
                     box.setBackgroundColor(getResources().getColor(android.R.color.white));
@@ -314,11 +318,11 @@ public class SettlementActivity extends ActionBarActivity implements View.OnClic
                     labelCode.setBackgroundColor(getResources().getColor(android.R.color.white));
                     labelCode.setMaxEms(5);
                     tableRow.addView(labelCode);
-                    settlement.setInvoiceNumber(etInvoiceNumber.getText().toString());
+                    settlementItem.setInvoiceNumber(etInvoiceNumber.getText().toString());
                     try {
-                        settlement.setInvoiceDate(sdf.parse(etInvoiceDate.getText().toString()));
+                        settlementItem.setInvoiceDate(sdf.parse(etInvoiceDate.getText().toString()));
                     } catch (ParseException e) {
-                        settlement.setInvoiceDate(null);
+                        settlementItem.setInvoiceDate(null);
                     }
 
 
@@ -333,7 +337,7 @@ public class SettlementActivity extends ActionBarActivity implements View.OnClic
                     labelPrice.setBackgroundColor(getResources().getColor(android.R.color.white));
                     labelPrice.setMaxEms(3);
                     tableRow.addView(labelPrice);
-                    settlement.setCredit(Long.valueOf(etCredit.getText().toString()));
+                    settlementItem.setCredit(Long.valueOf(etCredit.getText().toString()));
 
                     TextView labelQty = new TextView(this);
                     labelQty.setId(400 + count + 1);
@@ -346,8 +350,7 @@ public class SettlementActivity extends ActionBarActivity implements View.OnClic
                     labelQty.setBackgroundColor(getResources().getColor(android.R.color.white));
                     labelQty.setMaxEms(5);
                     tableRow.addView(labelQty);
-                    settlement.setPaymentMethod(etPaymentMethod.getText().toString());
-                    settlement.setKodeOutlet(customerID);
+                    settlementItem.setPaymentMethod(etPaymentMethod.getText().toString());
 
                     TextView labelSummary = new TextView(this);
                     labelSummary.setId(500 + count + 1);
@@ -359,125 +362,12 @@ public class SettlementActivity extends ActionBarActivity implements View.OnClic
                     labelSummary.setGravity(Gravity.END);
                     labelSummary.setBackgroundColor(getResources().getColor(android.R.color.white));
                     labelSummary.setMaxEms(3);
-                    settlement.setNominalPayment(Long.valueOf(etNominalPayment.getText().toString()));
+                    settlementItem.setNominalPayment(Long.valueOf(etNominalPayment.getText().toString()));
                     tableRow.addView(labelSummary);
 
-                    /*tableRow.setOnLongClickListener(
-                            new View.OnLongClickListener() {
-                                @Override
-                                public boolean onLongClick(View v) {
-                                    final TableRow selectedRow = (TableRow) v;
-                                    TextView labelCode = (TextView) findViewById(200 + selectedRow.getId());
-                                    final Settlement settlement = mapSettlements.get(selectedRow.getId());
-
-                                    // custom dialog
-                                    final Dialog dialog = new Dialog(context);
-                                    dialog.setContentView(R.layout.popup_edit_settlement);
-                                    dialog.setTitle(getResources().getString(R.string.pop_up_settlement_edit));
-
-                                    // set the custom dialog components - text, image and button
-                                    final EditText edSettlementCode = (EditText) dialog.findViewById(R.id.popup_settlement_code);
-                                    edSettlementCode.setText(settlement.getInvoiceNumber());
-                                    edSettlementCode.setEnabled(false);
-                                    final EditText edInvoiceDate = (EditText) dialog.findViewById(R.id.popup_invoice_date);
-                                    edInvoiceDate.setText(sdf.format(settlement.getInvoiceDate()));
-                                    edInvoiceDate.setEnabled(false);
-                                    //setCurrentDateOnDatePickerPopup();
-
-                                    *//*datePickerPopupField = (DatePicker) dialog.findViewById(R.id.popup_dp_fields);
-
-                                    final Calendar c = Calendar.getInstance();
-                                    initPopupYear = c.get(Calendar.YEAR);
-                                    initPopupMonth = c.get(Calendar.MONTH);
-                                    initPopupDay = c.get(Calendar.DAY_OF_MONTH);
-
-                                    // set current date into datepicker
-                                    datePickerPopupField.init(initPopupYear, initPopupMonth, initPopupDay, null);
-
-                                    edInvoiceDate.setOnClickListener(new View.OnClickListener() {
-                                        @Override
-                                        public void onClick(View v) {
-                                            showDialog(DATE_POPUP_DIALOG_ID);
-                                        }
-                                    });
-
-                                    datePickerPopupListener = new DatePickerDialog.OnDateSetListener() {
-
-                                        // when dialog box is closed, below method will be called.
-                                        public void onDateSet(DatePicker view, int selectedYear,
-                                                              int selectedMonth, int selectedDay) {
-
-                                            initPopupYear = selectedYear;
-                                            initPopupMonth = selectedMonth;
-                                            initPopupDay = selectedDay;
-
-                                            // set selected date into textview
-                                            edInvoiceDate.setText(new StringBuilder().append(initPopupMonth + 1)
-                                                    .append("-").append(initPopupDay).append("-").append(initPopupYear)
-                                                    .append(" "));
-
-                                            // set selected date into datepicker also
-                                            datePickerPopupField.init(initPopupYear, initPopupMonth, initPopupDay, null);
-
-                                        }
-                                    };*//*
-
-                                    final EditText edSettlementCredit = (EditText) dialog.findViewById(R.id.popup_settlement_credit);
-                                    edSettlementCredit.setText(String.valueOf(settlement.getCredit()));
-                                    final EditText edPaymentMethod = (EditText) dialog.findViewById(R.id.popup_payment_method);
-                                    edPaymentMethod.setText(settlement.getPaymentMethod().toString());
-                                    final EditText edSettlementNominal = (EditText) dialog.findViewById(R.id.popup_settlement_nominal);
-                                    edSettlementNominal.setText(settlement.getNominalPayment().toString());
-
-
-                                    Button popupSaveButton = (Button) dialog.findViewById(R.id.popup_btn_save_data_settlement);
-                                    Button popupDeleteButton = (Button) dialog.findViewById(R.id.popup_btn_delete_data_settlement);
-
-                                    // if button is clicked, close the custom dialog
-                                    popupSaveButton.setOnClickListener(new View.OnClickListener() {
-                                        @Override
-                                        public void onClick(View v) {
-                                            Settlement settlement = mapSettlements.get(selectedRow.getId());
-                                            *//*try {
-                                                settlement.setInvoiceDate(sdf.parse(edInvoiceDate.getText().toString()));
-                                            } catch (ParseException e) {
-                                                settlement.setInvoiceDate(null);
-                                            }*//*
-                                            settlement.setCredit(Long.valueOf(edSettlementCredit.getText().toString()));
-                                            settlement.setPaymentMethod(edPaymentMethod.getText().toString());
-                                            settlement.setNominalPayment(Long.valueOf(edSettlementNominal.getText().toString()));
-
-                                            TextView labelCode = (TextView) findViewById(200 + selectedRow.getId());
-                                            labelCode.setText(edSettlementCode.getText() + " | " + edInvoiceDate.getText());
-                                            TextView labelCredit = (TextView) findViewById(300 + selectedRow.getId());
-                                            labelCredit.setText(edSettlementCredit.getText());
-                                            TextView labelPaymentMethod = (TextView) findViewById(400 + selectedRow.getId());
-                                            labelPaymentMethod.setText(edPaymentMethod.getText());
-                                            TextView labelNominalPayment = (TextView) findViewById(500 + selectedRow.getId());
-                                            labelNominalPayment.setText(edSettlementNominal.getText());
-
-                                            dialog.dismiss();
-                                        }
-                                    });
-
-                                    popupDeleteButton.setOnClickListener(new View.OnClickListener() {
-                                        @Override
-                                        public void onClick(View v) {
-                                            mapSettlements.remove(edSettlementCode.getText().toString());
-                                            theGrid.removeView(selectedRow);
-                                            dialog.dismiss();
-                                        }
-                                    });
-
-                                    dialog.show();
-                                    return true;
-                                }
-                            }
-                    );*/
-
                     theGrid.addView(tableRow, new TableLayout.LayoutParams(TableLayout.LayoutParams.MATCH_PARENT, TableLayout.LayoutParams.WRAP_CONTENT));
-                    mapSettlements.put(String.valueOf(tableRow.getId()), settlement);
-                    addTotal(settlement);
+                    mapSettlements.put(String.valueOf(tableRow.getId()), settlementItem);
+                    addTotal(settlementItem);
 
                     etInvoiceNumber.setText(null);
                     etInvoiceDate.setText(null);
@@ -510,8 +400,7 @@ public class SettlementActivity extends ActionBarActivity implements View.OnClic
     }
 
     private void saveAllSettlement() {
-        List<Settlement> settlements = new ArrayList<Settlement>(mapSettlements.values());
-        settlementRepo.insertAll(settlements);
+        settlementBO.insertAll(customerID, new ArrayList<SettlementItem>(mapSettlements.values()));
     }
 
     private void setCurrentDateOnDatePicker() {
@@ -543,20 +432,20 @@ public class SettlementActivity extends ActionBarActivity implements View.OnClic
         error.show();
     }
 
-    private void addTotal(Settlement settlement) {
-        total = total + settlement.getNominalPayment();
+    private void addTotal(SettlementItem settlementItem) {
+        total = total + settlementItem.getNominalPayment();
         tvTotal.setText(getResources().getString(R.string.currency_symbol) + " " + format.format(total).toString());
     }
 
-    private void subTotal(Settlement settlement) {
-        total = total - settlement.getNominalPayment();
+    private void subTotal(SettlementItem settlementItem) {
+        total = total - settlementItem.getNominalPayment();
         tvTotal.setText(getResources().getString(R.string.currency_symbol) + " " + format.format(total).toString());
     }
 
-    private void calculateTotal(List<Settlement> settlements) {
+    private void calculateTotal(List<SettlementItem> settlementItems) {
         total = 0d;
-        for (Settlement settlement : settlements) {
-            total = total + settlement.getNominalPayment();
+        for (SettlementItem settlementItem : settlementItems) {
+            total = total + settlementItem.getNominalPayment();
         }
         tvTotal.setText(getResources().getString(R.string.currency_symbol) + " " + format.format(total).toString());
     }

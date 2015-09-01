@@ -4,10 +4,11 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.util.Log;
 
 import com.bali.nusadua.productmonitor.model.OrderItem;
-import com.bali.nusadua.productmonitor.model.Outlet;
-import com.bali.nusadua.productmonitor.model.Retur;
+import com.bali.nusadua.productmonitor.model.ReturHeader;
+import com.bali.nusadua.productmonitor.model.ReturItem;
 import com.bali.nusadua.productmonitor.sqlitedb.DBHelper;
 
 import java.text.ParseException;
@@ -25,99 +26,98 @@ public class ReturRepo {
         dbHelper = new DBHelper(context);
     }
 
-    public int insert(Retur retur) {
+    public int insert(ReturItem retur) {
         SQLiteDatabase db = dbHelper.getWritableDatabase();
         ContentValues values = new ContentValues();
         retur.setGuid(UUID.randomUUID().toString());
-        values.put(Retur.GUID, retur.getGuid());
-        values.put(Retur.KODE, retur.getKode());
-        values.put(Retur.NAMA_BARANG, retur.getNamaBarang());
-        values.put(Retur.HARGA, retur.getHarga());
-        values.put(Retur.QTY, retur.getQty());
-        values.put(Retur.UNIT, retur.getUnit());
-        values.put(Retur.KODE_OUTLET, retur.getKodeOutlet());
-        values.put(Retur.CREATE_DATE, sdf.format(new Date()));
+        values.put(ReturItem.GUID, retur.getGuid());
+        values.put(ReturItem.RETUR_HEADER_ID, retur.getReturHeaderId());
+        values.put(ReturItem.KODE, retur.getKode());
+        values.put(ReturItem.NAMA_BARANG, retur.getNamaBarang());
+        values.put(ReturItem.HARGA, retur.getHarga());
+        values.put(ReturItem.QTY, retur.getQty());
+        values.put(ReturItem.UNIT, retur.getUnit());
+        values.put(ReturItem.CREATE_DATE, sdf.format(new Date()));
 
         //Inserting row
-        long retur_id = db.insert(Retur.TABLE, null, values);
+        long retur_id = db.insert(ReturItem.TABLE, null, values);
         db.close();
         return (int) retur_id;
     }
 
-    public void insertAll(List<Retur> returs) {
+    public void insertAll(List<ReturItem> returs) {
         SQLiteDatabase db = dbHelper.getWritableDatabase();
 
-        for(Retur retur : returs) {
+        for (ReturItem retur : returs) {
             ContentValues contentValues = new ContentValues();
 
             retur.setGuid(UUID.randomUUID().toString());
-            contentValues.put(Retur.GUID, retur.getGuid());
-            contentValues.put(Retur.KODE, retur.getKode());
-            contentValues.put(Retur.NAMA_BARANG, retur.getNamaBarang());
-            contentValues.put(Retur.HARGA, retur.getHarga());
-            contentValues.put(Retur.QTY, retur.getQty());
-            contentValues.put(Retur.UNIT, retur.getUnit());
-            contentValues.put(Retur.KODE_OUTLET, retur.getKodeOutlet());
-            contentValues.put(Retur.CREATE_DATE, sdf.format(new Date()));
+            contentValues.put(ReturItem.GUID, retur.getGuid());
+            contentValues.put(ReturItem.RETUR_HEADER_ID, retur.getReturHeaderId());
+            contentValues.put(ReturItem.KODE, retur.getKode());
+            contentValues.put(ReturItem.NAMA_BARANG, retur.getNamaBarang());
+            contentValues.put(ReturItem.HARGA, retur.getHarga());
+            contentValues.put(ReturItem.QTY, retur.getQty());
+            contentValues.put(ReturItem.UNIT, retur.getUnit());
+            contentValues.put(ReturItem.CREATE_DATE, sdf.format(new Date()));
 
-            db.insert(Retur.TABLE, null, contentValues);
+            db.insert(ReturItem.TABLE, null, contentValues);
         }
         db.close();
     }
 
     public void deleteAll() {
         SQLiteDatabase db = dbHelper.getWritableDatabase();
-        db.delete(Retur.TABLE, null, null);
+        db.delete(ReturItem.TABLE, null, null);
         db.close();
     }
 
-    public void update(Retur retur) {
+    public void update(ReturItem retur) {
         SQLiteDatabase db = dbHelper.getWritableDatabase();
 
         ContentValues values = new ContentValues();
-        values.put(Retur.KODE, retur.getKode());
-        values.put(Retur.NAMA_BARANG, retur.getNamaBarang());
-        values.put(Retur.HARGA, retur.getHarga());
-        values.put(Retur.QTY, retur.getQty());
-        values.put(Retur.UNIT, retur.getUnit());
-        values.put(Retur.KODE_OUTLET, retur.getKodeOutlet());
+        values.put(ReturItem.KODE, retur.getKode());
+        values.put(ReturItem.NAMA_BARANG, retur.getNamaBarang());
+        values.put(ReturItem.HARGA, retur.getHarga());
+        values.put(ReturItem.QTY, retur.getQty());
+        values.put(ReturItem.UNIT, retur.getUnit());
 
         // It's a good practice to use parameter ?, instead of concatenate string
-        db.update(Retur.TABLE, values, Retur.GUID + "= ?", new String[]{retur.getGuid()});
+        db.update(ReturItem.TABLE, values, ReturItem.GUID + "= ?", new String[]{retur.getGuid()});
         db.close();
     }
 
-    public Retur findByGUID(String guid) {
+    public ReturItem findByGUID(String guid) {
         SQLiteDatabase db = dbHelper.getReadableDatabase();
         String selectQuery = "SELECT " +
-                Retur.ID + ", " +
-                Retur.GUID + ", " +
-                Retur.KODE + ", " +
-                Retur.NAMA_BARANG + ", " +
-                Retur.HARGA + ", " +
-                Retur.QTY + ", " +
-                Retur.UNIT + ", " +
-                Retur.KODE_OUTLET + ", " +
-                Retur.CREATE_DATE + " FROM " +
-                Retur.TABLE + " WHERE " +
-                Retur.GUID + " = ?";
+                ReturItem.ID + ", " +
+                ReturItem.GUID + ", " +
+                ReturItem.RETUR_HEADER_ID + ", " +
+                ReturItem.KODE + ", " +
+                ReturItem.NAMA_BARANG + ", " +
+                ReturItem.HARGA + ", " +
+                ReturItem.QTY + ", " +
+                ReturItem.UNIT + ", " +
+                ReturItem.CREATE_DATE + " FROM " +
+                ReturItem.TABLE + " WHERE " +
+                ReturItem.GUID + " = ?";
 
-        Retur retur = new Retur();
-        Cursor cursor = db.rawQuery(selectQuery, new String[]{ guid } );
+        ReturItem retur = new ReturItem();
+        Cursor cursor = db.rawQuery(selectQuery, new String[]{guid});
 
-        if(cursor.moveToFirst()) {
+        if (cursor.moveToFirst()) {
             do {
-                retur.setId(cursor.getInt(cursor.getColumnIndex(Retur.ID)));
-                retur.setGuid(cursor.getString(cursor.getColumnIndex(Retur.GUID)));
-                retur.setKode(cursor.getString(cursor.getColumnIndex(Retur.KODE)));
-                retur.setNamaBarang(cursor.getString(cursor.getColumnIndex(Retur.NAMA_BARANG)));
-                retur.setHarga(cursor.getDouble(cursor.getColumnIndex(Retur.HARGA)));
-                retur.setQty(cursor.getInt(cursor.getColumnIndex(Retur.QTY)));
-                retur.setUnit(cursor.getString(cursor.getColumnIndex(Retur.UNIT)));
-                retur.setKodeOutlet(cursor.getString(cursor.getColumnIndex(Retur.KODE_OUTLET)));
+                retur.setId(cursor.getInt(cursor.getColumnIndex(ReturItem.ID)));
+                retur.setGuid(cursor.getString(cursor.getColumnIndex(ReturItem.GUID)));
+                retur.setReturHeaderId(cursor.getInt(cursor.getColumnIndex(ReturItem.RETUR_HEADER_ID)));
+                retur.setKode(cursor.getString(cursor.getColumnIndex(ReturItem.KODE)));
+                retur.setNamaBarang(cursor.getString(cursor.getColumnIndex(ReturItem.NAMA_BARANG)));
+                retur.setHarga(cursor.getDouble(cursor.getColumnIndex(ReturItem.HARGA)));
+                retur.setQty(cursor.getInt(cursor.getColumnIndex(ReturItem.QTY)));
+                retur.setUnit(cursor.getString(cursor.getColumnIndex(ReturItem.UNIT)));
 
                 try {
-                    Date createDate = sdf.parse(cursor.getString(cursor.getColumnIndex(Retur.CREATE_DATE)));
+                    Date createDate = sdf.parse(cursor.getString(cursor.getColumnIndex(ReturItem.CREATE_DATE)));
                     retur.setCreateDate(createDate);
                 } catch (ParseException e) {
                     retur.setCreateDate(null);
@@ -132,169 +132,63 @@ public class ReturRepo {
     }
 
     /**
-     * Retrieve all records and populate List<Retur>
+     * Retrieve all records and populate List<ReturItem>
      */
-    public List<Retur> getAll() {
+    public List<ReturItem> getAll() {
         SQLiteDatabase db = dbHelper.getReadableDatabase();
-        String selectQuery = "SELECT * FROM " + Retur.TABLE;
+        String selectQuery = "SELECT * FROM " + ReturItem.TABLE;
 
-        List<Retur> listRetur = new ArrayList<Retur>();
+        List<ReturItem> listRetur = new ArrayList<ReturItem>();
         Cursor cursor = db.rawQuery(selectQuery, null);
 
         //Looping through all rows and adding to list  (cursor.getColumnIndex(Team.ID
-        if(cursor.moveToFirst()){
-            do {
-                Retur retur = new Retur();
-                retur.setId((int) cursor.getLong(cursor.getColumnIndex(Retur.ID)));
-                retur.setUnit(cursor.getString(cursor.getColumnIndex(Retur.UNIT)));
-                retur.setHarga(cursor.getDouble(cursor.getColumnIndex(Retur.HARGA)));
-                retur.setNamaBarang(cursor.getString(cursor.getColumnIndex(Retur.NAMA_BARANG)));
-                retur.setGuid(cursor.getString(cursor.getColumnIndex(Retur.GUID)));
-                retur.setQty(cursor.getInt(cursor.getColumnIndex(Retur.QTY)));
-                retur.setKode(cursor.getString(cursor.getColumnIndex(Retur.KODE)));
-                retur.setKodeOutlet(cursor.getString(cursor.getColumnIndex(Retur.KODE_OUTLET)));
-
-                try {
-                    Date createDate = sdf.parse(cursor.getString(cursor.getColumnIndex(Retur.CREATE_DATE)));
-                    retur.setCreateDate(createDate);
-                } catch (ParseException e) {
-                    retur.setCreateDate(null);
-                }
-
-                listRetur.add(retur);
-            } while(cursor.moveToNext());
-        }
-
-        cursor.close();
-        db.close();
-        return listRetur;
-    }
-
-    public List<Retur> getAllWithOutlet() {
-        SQLiteDatabase db = dbHelper.getReadableDatabase();
-        String selectQuery = "SELECT " +
-                Retur.TABLE + "." + Retur.ID + ", " +
-                Retur.TABLE + "." + Retur.GUID + ", " +
-                Retur.TABLE + "." + Retur.KODE + ", " +
-                Retur.TABLE + "." + Retur.NAMA_BARANG + ", " +
-                Retur.TABLE + "." + Retur.HARGA + ", " +
-                Retur.TABLE + "." + Retur.QTY + ", " +
-                Retur.TABLE + "." + Retur.UNIT + ", " +
-                Retur.TABLE + "." + Retur.KODE_OUTLET + ", " +
-                Retur.TABLE + "." + Retur.CREATE_DATE + ", " +
-                Outlet.TABLE + "." + Outlet.ID + " as outletID, " +
-                Outlet.TABLE + "." + Outlet.GUID + " as outletGUID, " +
-                Outlet.TABLE + "." + Outlet.KODE + " as outletKode, " +
-                Outlet.TABLE + "." + Outlet.NAME + " as outletName" +
-                " FROM " + Retur.TABLE + " LEFT JOIN " + Outlet.TABLE +
-                " ON "+ Retur.TABLE + "." + Retur.KODE_OUTLET +" = "+ Outlet.TABLE + "." + Outlet.KODE;
-
-        List<Retur> listRetur = new ArrayList<Retur>();
-        Cursor cursor = db.rawQuery(selectQuery, null);
-
-        //Looping through all rows and adding to list
-        if(cursor.moveToFirst()){
-            do {
-                Retur retur = new Retur();
-                retur.setId((int) cursor.getLong(cursor.getColumnIndex(Retur.ID)));
-                retur.setUnit(cursor.getString(cursor.getColumnIndex(Retur.UNIT)));
-                retur.setHarga(cursor.getDouble(cursor.getColumnIndex(Retur.HARGA)));
-                retur.setNamaBarang(cursor.getString(cursor.getColumnIndex(Retur.NAMA_BARANG)));
-                retur.setGuid(cursor.getString(cursor.getColumnIndex(Retur.GUID)));
-                retur.setQty(cursor.getInt(cursor.getColumnIndex(Retur.QTY)));
-                retur.setKode(cursor.getString(cursor.getColumnIndex(Retur.KODE)));
-                retur.setKodeOutlet(cursor.getString(cursor.getColumnIndex(Retur.KODE_OUTLET)));
-
-                try {
-                    Date createDate = sdf.parse(cursor.getString(cursor.getColumnIndex(Retur.CREATE_DATE)));
-                    retur.setCreateDate(createDate);
-                } catch (ParseException e) {
-                    retur.setCreateDate(null);
-                }
-
-                Outlet outlet = new Outlet();
-                outlet.setId((int) cursor.getLong(cursor.getColumnIndex("outletID")));
-                outlet.setGuid(cursor.getString(cursor.getColumnIndex("outletGUID")));
-                outlet.setKode(cursor.getString(cursor.getColumnIndex("outletKode")));
-                outlet.setName(cursor.getString(cursor.getColumnIndex("outletName")));
-
-                retur.setOutlet(outlet);
-
-                listRetur.add(retur);
-            } while(cursor.moveToNext());
-        }
-
-        cursor.close();
-        db.close();
-        return listRetur;
-    }
-
-    public List<Retur> getReturByCustomer(String customerId) {
-        SQLiteDatabase db = dbHelper.getReadableDatabase();
-        String selectQuery = "SELECT " +
-                Retur.ID + ", " +
-                Retur.GUID + ", " +
-                Retur.KODE + ", " +
-                Retur.NAMA_BARANG + ", " +
-                Retur.HARGA + ", " +
-                Retur.QTY + ", " +
-                Retur.UNIT + ", " +
-                Retur.KODE_OUTLET + ", " +
-                Retur.CREATE_DATE + " FROM " +
-                Retur.TABLE + " WHERE " +
-                Retur.KODE_OUTLET + " = ?";
-
-        List<Retur> returs = new ArrayList<Retur>();
-        Cursor cursor = db.rawQuery(selectQuery, new String[]{ customerId } );
-
-        //Looping through all rows and adding to list
-        if(cursor.moveToFirst()){
-            do {
-                Retur retur = new Retur();
-                retur.setId((int) cursor.getLong(cursor.getColumnIndex(Retur.ID)));
-                retur.setUnit(cursor.getString(cursor.getColumnIndex(Retur.UNIT)));
-                retur.setHarga(cursor.getDouble(cursor.getColumnIndex(Retur.HARGA)));
-                retur.setNamaBarang(cursor.getString(cursor.getColumnIndex(Retur.NAMA_BARANG)));
-                retur.setGuid(cursor.getString(cursor.getColumnIndex(Retur.GUID)));
-                retur.setQty(cursor.getInt(cursor.getColumnIndex(Retur.QTY)));
-                retur.setKode(cursor.getString(cursor.getColumnIndex(Retur.KODE)));
-                retur.setKodeOutlet(cursor.getString(cursor.getColumnIndex(Retur.KODE_OUTLET)));
-
-                try {
-                    Date createDate = sdf.parse(cursor.getString(cursor.getColumnIndex(Retur.CREATE_DATE)));
-                    retur.setCreateDate(createDate);
-                } catch (ParseException e) {
-                    retur.setCreateDate(null);
-                }
-
-                returs.add(retur);
-            } while(cursor.moveToNext());
-        }
-
-        cursor.close();
-        db.close();
-        return returs;
-    }
-
-    public List<String> getCustomerOnRetur() {
-        SQLiteDatabase db = dbHelper.getReadableDatabase();
-        String selectQuery = "SELECT DISTINCT " +
-                Retur.KODE_OUTLET + " FROM " +
-                Retur.TABLE;
-
-        List<String> listCustomerID = new ArrayList<String>();
-        Cursor cursor = db.rawQuery(selectQuery, null);
-
-        //Looping through all rows and adding to list
         if (cursor.moveToFirst()) {
             do {
-                String customerID = cursor.getString(cursor.getColumnIndex(OrderItem.KODE_OUTLET));
-                listCustomerID.add(customerID);
+                ReturItem retur = new ReturItem();
+                retur.setId((int) cursor.getLong(cursor.getColumnIndex(ReturItem.ID)));
+                retur.setReturHeaderId(cursor.getInt(cursor.getColumnIndex(ReturItem.RETUR_HEADER_ID)));
+                retur.setUnit(cursor.getString(cursor.getColumnIndex(ReturItem.UNIT)));
+                retur.setHarga(cursor.getDouble(cursor.getColumnIndex(ReturItem.HARGA)));
+                retur.setNamaBarang(cursor.getString(cursor.getColumnIndex(ReturItem.NAMA_BARANG)));
+                retur.setGuid(cursor.getString(cursor.getColumnIndex(ReturItem.GUID)));
+                retur.setQty(cursor.getInt(cursor.getColumnIndex(ReturItem.QTY)));
+                retur.setKode(cursor.getString(cursor.getColumnIndex(ReturItem.KODE)));
+
+                try {
+                    Date createDate = sdf.parse(cursor.getString(cursor.getColumnIndex(ReturItem.CREATE_DATE)));
+                    retur.setCreateDate(createDate);
+                } catch (ParseException e) {
+                    retur.setCreateDate(null);
+                }
+
+                listRetur.add(retur);
             } while (cursor.moveToNext());
         }
 
         cursor.close();
         db.close();
-        return listCustomerID;
+        return listRetur;
+    }
+
+    public Integer getCountByCustomer(String kodeOutlet) {
+        SQLiteDatabase db = dbHelper.getReadableDatabase();
+        String selectQuery = "SELECT COUNT (*) " +
+                "FROM " + ReturHeader.TABLE + " LEFT JOIN " + ReturItem.TABLE +
+                " ON " + ReturHeader.TABLE + "." + ReturHeader.ID + " = " + ReturItem.TABLE + "." + ReturItem.RETUR_HEADER_ID +
+                " WHERE " + ReturHeader.KODE_OUTLET + " = ? ";
+
+        Log.i("getCountByCustomer : ", selectQuery);
+
+        Cursor cursor = db.rawQuery(selectQuery, new String[]{kodeOutlet});
+        Integer count = 0;
+
+        //Looping through all rows and adding to list
+        if (cursor.moveToFirst()) {
+            count = cursor.getInt(0);
+        }
+
+        cursor.close();
+        db.close();
+        return count;
     }
 }

@@ -14,7 +14,7 @@ import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 
-import com.bali.nusadua.productmonitor.model.Settlement;
+import com.bali.nusadua.productmonitor.model.SettlementItem;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -27,7 +27,7 @@ public class EditSettlementActivity extends ActionBarActivity implements android
 
     private static final int DATE_DIALOG_ID = 999;
 
-    private Settlement settlement = new Settlement();
+    private SettlementItem settlementItem = new SettlementItem();
     private EditText etInvoiceNumber, etInvoiceDate, etCredit, etPayMethod, etNominalPayment;
     private DatePicker datePickerField;
     private Button btnSave;
@@ -52,13 +52,13 @@ public class EditSettlementActivity extends ActionBarActivity implements android
         btnSave = (Button) findViewById(R.id.button_save);
 
         Intent intent = getIntent();
-        settlement = (Settlement) intent.getSerializableExtra(Settlement.TABLE);
+        settlementItem = (SettlementItem) intent.getSerializableExtra(SettlementItem.TABLE);
 
-        etInvoiceNumber.setText(settlement.getInvoiceNumber());
-        etInvoiceDate.setText(sdf.format(settlement.getInvoiceDate()));
-        etCredit.setText(settlement.getCredit().toString());
-        etPayMethod.setText(settlement.getPaymentMethod());
-        etNominalPayment.setText(settlement.getNominalPayment().toString());
+        etInvoiceNumber.setText(settlementItem.getInvoiceNumber());
+        etInvoiceDate.setText(sdf.format(settlementItem.getInvoiceDate()));
+        etCredit.setText(settlementItem.getCredit().toString());
+        etPayMethod.setText(settlementItem.getPaymentMethod());
+        etNominalPayment.setText(settlementItem.getNominalPayment().toString());
         setCurrentDateOnDatePicker();
 
         //Declare Listener
@@ -127,21 +127,21 @@ public class EditSettlementActivity extends ActionBarActivity implements android
     @Override
     public void onClick(View view) {
         if (view == findViewById(R.id.button_save)) {
-            Settlement resultSettlement = new Settlement();
-            resultSettlement.setId(settlement.getId());
-            resultSettlement.setInvoiceNumber(etInvoiceNumber.getText().toString());
+            SettlementItem resultSettlementItem = new SettlementItem();
+            resultSettlementItem.setId(settlementItem.getId());
+            resultSettlementItem.setSettlementHeaderId(settlementItem.getSettlementHeaderId());
+            resultSettlementItem.setInvoiceNumber(etInvoiceNumber.getText().toString());
             try {
-                resultSettlement.setInvoiceDate(sdf.parse(etInvoiceDate.getText().toString()));
+                resultSettlementItem.setInvoiceDate(sdf.parse(etInvoiceDate.getText().toString()));
             } catch (ParseException e) {
-                settlement.setInvoiceDate(null);
+                settlementItem.setInvoiceDate(null);
             }
-            resultSettlement.setCredit(Long.parseLong(etCredit.getText().toString()));
-            resultSettlement.setPaymentMethod(etPayMethod.getText().toString());
-            resultSettlement.setNominalPayment(Long.parseLong(etNominalPayment.getText().toString()));
-            resultSettlement.setKodeOutlet(settlement.getKodeOutlet());
+            resultSettlementItem.setCredit(Long.parseLong(etCredit.getText().toString()));
+            resultSettlementItem.setPaymentMethod(etPayMethod.getText().toString());
+            resultSettlementItem.setNominalPayment(Long.parseLong(etNominalPayment.getText().toString()));
 
             Intent resultIntent = new Intent();
-            resultIntent.putExtra(Settlement.TABLE, resultSettlement);
+            resultIntent.putExtra(SettlementItem.TABLE, resultSettlementItem);
 
             setResult(Activity.RESULT_OK, resultIntent);
             finish();

@@ -14,8 +14,8 @@ import com.bali.nusadua.productmonitor.R;
 import com.bali.nusadua.productmonitor.model.Billing;
 import com.bali.nusadua.productmonitor.model.Customer;
 import com.bali.nusadua.productmonitor.model.OrderItem;
-import com.bali.nusadua.productmonitor.model.Retur;
-import com.bali.nusadua.productmonitor.model.Settlement;
+import com.bali.nusadua.productmonitor.model.ReturItem;
+import com.bali.nusadua.productmonitor.model.SettlementItem;
 import com.bali.nusadua.productmonitor.model.StaffBilling;
 import com.bali.nusadua.productmonitor.model.StockBilling;
 import com.bali.nusadua.productmonitor.model.StockPrice;
@@ -141,16 +141,16 @@ public class DownloadDataFromDropbox extends AsyncTask<Void, Void, Boolean> {
     private void clearRetur() {
         DBHelper dbHelper = new DBHelper(context);
         SQLiteDatabase db = dbHelper.getWritableDatabase();
-        db.execSQL("DELETE FROM " + Retur.TABLE);
-        db.execSQL("DELETE FROM sqlite_sequence where name='" + Retur.TABLE + "'");
+        db.execSQL("DELETE FROM " + ReturItem.TABLE);
+        db.execSQL("DELETE FROM sqlite_sequence where name='" + ReturItem.TABLE + "'");
         db.close();
     }
 
     private void clearSettlement() {
         DBHelper dbHelper = new DBHelper(context);
         SQLiteDatabase db = dbHelper.getWritableDatabase();
-        db.execSQL("DELETE FROM " + Settlement.TABLE);
-        db.execSQL("DELETE FROM sqlite_sequence where name='" + Settlement.TABLE + "'");
+        db.execSQL("DELETE FROM " + SettlementItem.TABLE);
+        db.execSQL("DELETE FROM sqlite_sequence where name='" + SettlementItem.TABLE + "'");
         db.close();
     }
 

@@ -23,8 +23,10 @@ import android.widget.TableRow;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bali.nusadua.productmonitor.businessObject.ReturBO;
 import com.bali.nusadua.productmonitor.model.Customer;
-import com.bali.nusadua.productmonitor.model.Retur;
+import com.bali.nusadua.productmonitor.model.ReturHeader;
+import com.bali.nusadua.productmonitor.model.ReturItem;
 import com.bali.nusadua.productmonitor.model.StockBilling;
 import com.bali.nusadua.productmonitor.model.StockPrice;
 import com.bali.nusadua.productmonitor.repo.ReturRepo;
@@ -45,7 +47,7 @@ public class ReturPenjualanActivity extends ActionBarActivity implements android
     private static final int VIEW_EDIT_STOCK_ACTIVITY = 2;
 
     private final Context context = this;
-    private Button btnAdd, btnProses, btnBatal;
+    private Button btnAdd, btnProses;
     private TableLayout theGrid;
     private EditText tvStockID, tvName, tvPrice, tvQty;
     private TextView tvTotal;
@@ -54,9 +56,10 @@ public class ReturPenjualanActivity extends ActionBarActivity implements android
     private int countID;
     private Double total = 0d;
 
-    private Map<String, Retur> mapReturs = new HashMap<String, Retur>();
+    private Map<String, ReturItem> mapReturs = new HashMap<String, ReturItem>();
     private Map<String, Integer> mapCheckBoxs = new HashMap<String, Integer>();
     private ReturRepo returRepo = new ReturRepo(this);
+    private ReturBO returBO = new ReturBO(this);
     private StockBillingRepo stockBillingRepo = new StockBillingRepo(this);
     private NumberFormat format = NumberFormat.getInstance(Locale.GERMAN);
     private Menu actionBarMenu;
@@ -134,7 +137,7 @@ public class ReturPenjualanActivity extends ActionBarActivity implements android
                                     TableRow selectedRow = (TableRow) findViewById(i);
                                     theGrid.removeView(selectedRow);
                                 }
-                                calculateTotal(new ArrayList<Retur>(mapReturs.values()));
+                                calculateTotal(new ArrayList<ReturItem>(mapReturs.values()));
                                 showToast(mapCheckBoxs.values().size() + " telah di batalkan.");
                                 mapCheckBoxs.clear();
                                 actionBarMenu.setGroupVisible(R.id.menu_group_edit, false);
@@ -156,9 +159,9 @@ public class ReturPenjualanActivity extends ActionBarActivity implements android
 
             case R.id.action_edit_stock:
                 Integer i = new ArrayList<Integer>(mapCheckBoxs.values()).get(0);
-                Retur retur = mapReturs.get(String.valueOf(i));
+                ReturItem retur = mapReturs.get(String.valueOf(i));
                 intent = new Intent(ReturPenjualanActivity.this, EditReturActivity.class);
-                intent.putExtra(Retur.TABLE, retur);
+                intent.putExtra(ReturItem.TABLE, retur);
                 startActivityForResult(intent, VIEW_EDIT_STOCK_ACTIVITY);
                 break;
         }
@@ -182,8 +185,8 @@ public class ReturPenjualanActivity extends ActionBarActivity implements android
 
             case (VIEW_EDIT_STOCK_ACTIVITY): {
                 if (resultCode == Activity.RESULT_OK) {
-                    Retur resultRetur = (Retur) data.getSerializableExtra(Retur.TABLE);
-                    Retur retur = mapReturs.get(String.valueOf(resultRetur.getId()));
+                    ReturItem resultRetur = (ReturItem) data.getSerializableExtra(ReturItem.TABLE);
+                    ReturItem retur = mapReturs.get(String.valueOf(resultRetur.getId()));
                     retur.setNamaBarang(resultRetur.getNamaBarang());
                     retur.setHarga(resultRetur.getHarga());
                     retur.setQty(resultRetur.getQty());
@@ -199,7 +202,7 @@ public class ReturPenjualanActivity extends ActionBarActivity implements android
                     TextView textSummary = (TextView) selectedRow.getChildAt(4);
                     textSummary.setText(format.format(retur.getQty() * retur.getHarga()).toString());
 
-                    calculateTotal(new ArrayList<Retur>(mapReturs.values()));
+                    calculateTotal(new ArrayList<ReturItem>(mapReturs.values()));
                 }
                 break;
             }
@@ -208,7 +211,7 @@ public class ReturPenjualanActivity extends ActionBarActivity implements android
 
     @Override
     public void onClick(View view) {
-        Retur retur = new Retur();
+        ReturItem retur = new ReturItem();
         int padding_in_dp = 1;  // 6 dps
         final float scale = getResources().getDisplayMetrics().density;
         int padding_in_px = (int) (padding_in_dp * scale + 0.5f);
@@ -314,7 +317,6 @@ public class ReturPenjualanActivity extends ActionBarActivity implements android
                     tableRow.addView(labelQty);
                     retur.setQty(Integer.valueOf(tvQty.getText().toString()));
                     retur.setUnit(unitSpinner.getSelectedItem().toString());
-                    retur.setKodeOutlet(customerID);
 
                     //Summary
                     TextView labelSummary = new TextView(this);
@@ -354,8 +356,7 @@ public class ReturPenjualanActivity extends ActionBarActivity implements android
     }
 
     private void saveAllRetur() {
-        List<Retur> returs = new ArrayList<Retur>(mapReturs.values());
-        returRepo.insertAll(returs);
+        returBO.insertAll(customerID, new ArrayList<ReturItem>(mapReturs.values()));
     }
 
     private void showToast(String msg) {
@@ -363,19 +364,19 @@ public class ReturPenjualanActivity extends ActionBarActivity implements android
         error.show();
     }
 
-    private void addTotal(Retur retur) {
+    private void addTotal(ReturItem retur) {
         total = total + (retur.getQty() * retur.getHarga());
         tvTotal.setText(getResources().getString(R.string.currency_symbol) + " " + format.format(total).toString());
     }
 
-    private void subTotal(Retur retur) {
+    private void subTotal(ReturItem retur) {
         total = total - (retur.getQty() * retur.getHarga());
         tvTotal.setText(getResources().getString(R.string.currency_symbol) + " " + format.format(total).toString());
     }
 
-    private void calculateTotal(List<Retur> returs) {
+    private void calculateTotal(List<ReturItem> returs) {
         total = 0d;
-        for (Retur retur : returs) {
+        for (ReturItem retur : returs) {
             total = total + (retur.getQty() * retur.getHarga());
         }
         tvTotal.setText(getResources().getString(R.string.currency_symbol) + " " + format.format(total).toString());

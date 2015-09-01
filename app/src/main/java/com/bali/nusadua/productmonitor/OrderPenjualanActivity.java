@@ -24,11 +24,12 @@ import android.widget.TableRow;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bali.nusadua.productmonitor.businessObject.OrderBO;
 import com.bali.nusadua.productmonitor.model.Customer;
+import com.bali.nusadua.productmonitor.model.OrderHeader;
 import com.bali.nusadua.productmonitor.model.OrderItem;
 import com.bali.nusadua.productmonitor.model.StockBilling;
 import com.bali.nusadua.productmonitor.model.StockPrice;
-import com.bali.nusadua.productmonitor.repo.OrderRepo;
 import com.bali.nusadua.productmonitor.repo.StockBillingRepo;
 
 import java.math.BigDecimal;
@@ -57,7 +58,7 @@ public class OrderPenjualanActivity extends ActionBarActivity implements android
 
     private Map<String, OrderItem> mapOrders = new HashMap<String, OrderItem>();
     private Map<String, Integer> mapCheckBoxs = new HashMap<String, Integer>();
-    private OrderRepo orderRepo = new OrderRepo(this);
+    private OrderBO orderBO = new OrderBO(this);
     private StockBillingRepo stockBillingRepo = new StockBillingRepo(this);
     private NumberFormat format = NumberFormat.getInstance(Locale.GERMAN);
     private Menu actionBarMenu;
@@ -220,6 +221,8 @@ public class OrderPenjualanActivity extends ActionBarActivity implements android
     @Override
     public void onClick(View view) {
         OrderItem order = new OrderItem();
+        OrderHeader orderHeader = new OrderHeader();
+
         int padding_in_dp = 1;  // 8 = 6 dps
         final float scale = getResources().getDisplayMetrics().density;
         int padding_in_px = (int) (padding_in_dp * scale + 0.5f);
@@ -325,7 +328,7 @@ public class OrderPenjualanActivity extends ActionBarActivity implements android
                     tableRow.addView(labelQty);
                     order.setQty(Integer.valueOf(tvQty.getText().toString()));
                     order.setUnit(unitSpinner.getSelectedItem().toString());
-                    order.setKodeOutlet(customerID);
+                    orderHeader.setKodeOutlet(customerID);
 
                     //Summary
                     TextView labelSummary = new TextView(this);
@@ -340,74 +343,6 @@ public class OrderPenjualanActivity extends ActionBarActivity implements android
                     Double summary = order.getQty() * order.getHarga();
                     labelSummary.setText(format.format(summary).toString());
                     tableRow.addView(labelSummary);
-
-                    /*tableRow.setOnLongClickListener(
-                            new View.OnLongClickListener() {
-                                @Override
-                                public boolean onLongClick(View v) {
-                                    final TableRow selectedRow = (TableRow) v;
-                                    TextView labelCode = (TextView) findViewById(200 + selectedRow.getId());
-                                    final String tvOrderCode = labelCode.getText().toString().split("\\|")[0].trim();
-                                    final OrderItem order = mapOrders.get(tvOrderCode);
-
-                                    // custom dialog
-                                    final Dialog dialog = new Dialog(context);
-                                    dialog.setContentView(R.layout.popup_edit_order);
-                                    dialog.setTitle(getResources().getString(R.string.pop_up_order_edit));
-
-                                    // set the custom dialog components - text, image and button
-                                    final EditText edOrderCode = (EditText) dialog.findViewById(R.id.popup_order_code);
-                                    edOrderCode.setText(order.getKode());
-                                    edOrderCode.setEnabled(false);
-                                    final EditText edOrderNamaBrg = (EditText) dialog.findViewById(R.id.popup_nama_brg);
-                                    edOrderNamaBrg.setText(order.getNamaBarang());
-                                    final EditText edOrderPrice = (EditText) dialog.findViewById(R.id.popup_order_price);
-                                    edOrderPrice.setText(String.valueOf(order.getHarga()));
-                                    final EditText edOrderQty = (EditText) dialog.findViewById(R.id.popup_order_qty);
-                                    edOrderQty.setText(String.valueOf(order.getQty()));
-
-                                    Button popupSaveButton = (Button) dialog.findViewById(R.id.popup_btn_save_data);
-                                    Button popupDeleteButton = (Button) dialog.findViewById(R.id.popup_btn_delete_data);
-
-                                    // if button is clicked, close the custom dialog
-                                    popupSaveButton.setOnClickListener(new View.OnClickListener() {
-                                        @Override
-                                        public void onClick(View v) {
-                                            OrderItem order = mapOrders.get(edOrderCode.getText().toString());
-                                            order.setNamaBarang(edOrderNamaBrg.getText().toString());
-                                            order.setHarga(Double.parseDouble(edOrderPrice.getText().toString()));
-                                            order.setQty(Integer.valueOf(edOrderQty.getText().toString()));
-
-                                            TextView labelCode = (TextView) findViewById(200 + selectedRow.getId());
-                                            labelCode.setText(order.getKode() + " | " + order.getNamaBarang());
-                                            TextView labelPrice = (TextView) findViewById(300 + selectedRow.getId());
-                                            labelPrice.setText(order.getHarga().toString());
-                                            TextView labelQty = (TextView) findViewById(400 + selectedRow.getId());
-                                            labelQty.setText(String.valueOf(order.getQty()) + "/" + order.getUnit());
-                                            TextView labelSummary = (TextView) findViewById(500 + selectedRow.getId());
-                                            Double summary = order.getQty() * order.getHarga();
-                                            labelSummary.setText(summary.toString());
-
-                                            dialog.dismiss();
-                                        }
-                                    });
-
-                                    popupDeleteButton.setOnClickListener(new View.OnClickListener() {
-                                        @Override
-                                        public void onClick(View v) {
-                                            OrderItem removeorder = mapOrders.get(edOrderCode.getText().toString());
-                                            subTotal(removeorder);
-                                            mapOrders.remove(edOrderCode.getText().toString());
-                                            theGrid.removeView(selectedRow);
-                                            dialog.dismiss();
-                                        }
-                                    });
-
-                                    dialog.show();
-                                    return true;
-                                }
-                            }
-                    );*/
 
                     theGrid.addView(tableRow, new TableLayout.LayoutParams(TableLayout.LayoutParams.MATCH_PARENT, TableLayout.LayoutParams.WRAP_CONTENT));
                     mapOrders.put(String.valueOf(tableRow.getId()), order);
@@ -432,7 +367,7 @@ public class OrderPenjualanActivity extends ActionBarActivity implements android
     }
 
     private void saveAllOrder() {
-        orderRepo.insertAll(new ArrayList<OrderItem>(mapOrders.values()));
+        orderBO.insertAll(customerID, new ArrayList<OrderItem>(mapOrders.values()));
     }
 
     private void showToast(String msg) {

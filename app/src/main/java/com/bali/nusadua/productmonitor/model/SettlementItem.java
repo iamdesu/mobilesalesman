@@ -3,26 +3,26 @@ package com.bali.nusadua.productmonitor.model;
 import java.io.Serializable;
 import java.util.Date;
 
-public class Settlement implements Serializable {
-    public static final String TABLE = "Settlement";
+public class SettlementItem implements Serializable {
+    public static final String TABLE = "SettlementItem";
     public static final String ID = "id";
     public static final String GUID = "guid";
+    public static final String SETTLEMENT_HEADER_ID = "settlement_header_id";
     public static final String INVOICE_NUMBER = "invoice_number";
     public static final String INVOICE_DATE = "invoice_date";
     public static final String CREDIT = "credit";
     public static final String PAYMENT_METHOD = "payment_method";
     public static final String NOMINAL_PAYMENT = "nominal_payment";
-    public static final String KODE_OUTLET = "kode_outlet";
     public static final String CREATE_DATE = "create_date";
 
     private int id;
     private String guid;
+    private int settlementHeaderId;
     private String invoiceNumber;
     private Date invoiceDate;
     private Long credit;
     private String paymentMethod;
     private Long nominalPayment;
-    private String kodeOutlet;
     private Date createdDate;
 
     /* Object aggregate */
@@ -42,6 +42,14 @@ public class Settlement implements Serializable {
 
     public void setGuid(String guid) {
         this.guid = guid;
+    }
+
+    public int getSettlementHeaderId() {
+        return settlementHeaderId;
+    }
+
+    public void setSettlementHeaderId(int settlementHeaderId) {
+        this.settlementHeaderId = settlementHeaderId;
     }
 
     public String getInvoiceNumber() {
@@ -84,14 +92,6 @@ public class Settlement implements Serializable {
         this.nominalPayment = nominalPayment;
     }
 
-    public String getKodeOutlet() {
-        return kodeOutlet;
-    }
-
-    public void setKodeOutlet(String kodeOutlet) {
-        this.kodeOutlet = kodeOutlet;
-    }
-
     public Date getCreatedDate() {
         return createdDate;
     }
@@ -117,12 +117,12 @@ public class Settlement implements Serializable {
         String CREATE_TABLE = "CREATE TABLE " + TABLE + " ( "
                 + ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
                 + GUID + " TEXT, "
+                + SETTLEMENT_HEADER_ID + " INTEGER, "
                 + INVOICE_NUMBER + " TEXT, "
                 + INVOICE_DATE + " TEXT, "
                 + CREDIT + " INTEGER, "
                 + PAYMENT_METHOD + " TEXT, "
                 + NOMINAL_PAYMENT + " INTEGER, "
-                + KODE_OUTLET + " TEXT, "
                 + CREATE_DATE + " TEXT ) ";
 
         return CREATE_TABLE;

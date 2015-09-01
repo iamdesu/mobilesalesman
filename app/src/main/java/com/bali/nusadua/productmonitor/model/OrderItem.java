@@ -10,7 +10,7 @@ public class OrderItem implements Serializable {
     public static final String TABLE = "OrderItem";
     public static final String ID = "id";
     public static final String GUID = "guid";
-    public static final String ORDER_HEADER_GUID = "orderHeaderGuid";
+    public static final String ORDER_HEADER_ID = "order_header_id";
     public static final String KODE = "kode";
     public static final String NAMA_BARANG = "nama_barang";
     public static final String HARGA = "harga";
@@ -25,7 +25,7 @@ public class OrderItem implements Serializable {
 
     private int id;
     private String guid;
-    private String orderHeaderGuid;
+    private int orderHeaderId;
     private String kode;
     private String namaBarang;
     private Double harga;
@@ -52,12 +52,12 @@ public class OrderItem implements Serializable {
         this.guid = guid;
     }
 
-    public String getOrderHeaderGuid() {
-        return orderHeaderGuid;
+    public int getOrderHeaderId() {
+        return orderHeaderId;
     }
 
-    public void setOrderHeaderGuid(String orderHeaderGuid) {
-        this.orderHeaderGuid = orderHeaderGuid;
+    public void setOrderHeaderId(int orderHeaderId) {
+        this.orderHeaderId = orderHeaderId;
     }
 
     public String getKode() {
@@ -125,7 +125,7 @@ public class OrderItem implements Serializable {
         String CREATE_TABLE = "CREATE TABLE " + TABLE + " ( "
                 + ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
                 + GUID + " TEXT, "
-                + ORDER_HEADER_GUID + " TEXT, "
+                + ORDER_HEADER_ID + " INTEGER, "
                 + KODE + " TEXT, "
                 + NAMA_BARANG + " TEXT, "
                 + HARGA + " REAL, "

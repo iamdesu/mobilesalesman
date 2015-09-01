@@ -1,5 +1,6 @@
 package com.bali.nusadua.productmonitor;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
@@ -14,12 +15,16 @@ import android.widget.EditText;
 import android.widget.ListView;
 
 import com.bali.nusadua.productmonitor.model.Customer;
+import com.bali.nusadua.productmonitor.model.StockBilling;
+import com.bali.nusadua.productmonitor.model.StockPrice;
 import com.bali.nusadua.productmonitor.repo.CustomerRepo;
 
 /**
  * Created by desu on 6/28/15.
  */
 public class ViewOutletActivity extends ActionBarActivity {
+    private static final int TRANSACTION_ACTIVITY = 1;
+
     private CustomerListViewAdapter adapter;
 
     private ListView lv;
@@ -47,7 +52,8 @@ public class ViewOutletActivity extends ActionBarActivity {
                 Intent intent = new Intent(ViewOutletActivity.this, TransactionActivity.class);
                 intent.putExtra(Customer.CUST_ID, customer.getCustomerId());
 
-                startActivity(intent);
+                //startActivity(intent);
+                startActivityForResult(intent, TRANSACTION_ACTIVITY);
             }
         });
 

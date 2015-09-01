@@ -10,11 +10,6 @@ public class OrderHeaderItemView {
     private OrderHeader orderHeader;
     private OrderItem orderItem;
 
-    public OrderHeaderItemView() {
-        this.orderHeader = new OrderHeader();
-        this.orderItem = new OrderItem();
-    }
-
     public OrderHeader getOrderHeader() {
         return orderHeader;
     }

@@ -3,16 +3,16 @@ package com.bali.nusadua.productmonitor.model;
 import java.io.Serializable;
 import java.util.Date;
 
-public class Retur implements Serializable {
+public class ReturItem implements Serializable {
     public static final String TABLE = "ReturPenjualan";
     public static final String ID = "id";
     public static final String GUID = "guid";
+    public static final String RETUR_HEADER_ID = "order_header_id";
     public static final String KODE = "kode";
     public static final String NAMA_BARANG = "nama_barang";
     public static final String HARGA = "harga";
     public static final String QTY = "qty";
     public static final String UNIT = "unit";
-    public static final String KODE_OUTLET = "kode_outlet";
     public static final String CREATE_DATE = "create_date";
 
     public static final String LOOKUP_DUS = "dus";
@@ -23,16 +23,36 @@ public class Retur implements Serializable {
 
     private int id;
     private String guid;
+    private int returHeaderId;
     private String kode;
     private String namaBarang;
     private Double harga;
     private int qty;
     private String unit;
-    private String kodeOutlet;
     private Date createDate;
 
     /* Object aggregate */
     private Outlet outlet;
+
+    /**
+     * This method to generate Database
+     *
+     * @return String
+     */
+    public static String CREATE_TABLE() {
+        String CREATE_TABLE = "CREATE TABLE " + TABLE + " ( "
+                + ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
+                + GUID + " TEXT, "
+                + RETUR_HEADER_ID + " INTEGER, "
+                + KODE + " TEXT, "
+                + NAMA_BARANG + " TEXT, "
+                + HARGA + " REAL, "
+                + QTY + " INTEGER, "
+                + UNIT + " TEXT, "
+                + CREATE_DATE + " TEXT ) ";
+
+        return CREATE_TABLE;
+    }
 
     public int getId() {
         return id;
@@ -48,6 +68,14 @@ public class Retur implements Serializable {
 
     public void setGuid(String guid) {
         this.guid = guid;
+    }
+
+    public int getReturHeaderId() {
+        return returHeaderId;
+    }
+
+    public void setReturHeaderId(int returHeaderId) {
+        this.returHeaderId = returHeaderId;
     }
 
     public String getKode() {
@@ -90,14 +118,6 @@ public class Retur implements Serializable {
         this.unit = unit;
     }
 
-    public String getKodeOutlet() {
-        return kodeOutlet;
-    }
-
-    public void setKodeOutlet(String kodeOutlet) {
-        this.kodeOutlet = kodeOutlet;
-    }
-
     public Date getCreateDate() {
         return createDate;
     }
@@ -106,31 +126,11 @@ public class Retur implements Serializable {
         this.createDate = createDate;
     }
 
-    public void setOutlet(Outlet outlet) {
-        this.outlet = outlet;
-    }
-
     public Outlet getOutlet() {
         return outlet;
     }
 
-    /**
-     * This method to generate Database
-     *
-     * @return String
-     */
-    public static String CREATE_TABLE() {
-        String CREATE_TABLE = "CREATE TABLE " + TABLE + " ( "
-                + ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
-                + GUID + " TEXT, "
-                + KODE + " TEXT, "
-                + NAMA_BARANG + " TEXT, "
-                + HARGA + " REAL, "
-                + QTY + " INTEGER, "
-                + UNIT + " TEXT, "
-                + KODE_OUTLET + " TEXT, "
-                + CREATE_DATE + " TEXT ) ";
-
-        return CREATE_TABLE;
+    public void setOutlet(Outlet outlet) {
+        this.outlet = outlet;
     }
 }

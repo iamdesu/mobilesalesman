@@ -4,10 +4,10 @@ import java.util.Date;
 import java.util.List;
 
 /**
- * Created by desu on 8/23/15.
+ * Created by desu on 8/30/15.
  */
-public class OrderHeader {
-    public static final String TABLE = "OrderHeader";
+public class SettlementHeader {
+    public static final String TABLE = "SettlementHeader";
     public static final String ID = "id";
     public static final String KODE_OUTLET = "kode_outlet"; //CustomerID
     public static final String CREATE_DATE = "create_date";
@@ -17,7 +17,7 @@ public class OrderHeader {
     private String kodeOutlet;
     private Date createDate;
     private Date updateDate;
-    private List<OrderItem> orderItems;
+    private List<SettlementItem> settlementItems;
 
     /**
      * This method to generate Database
@@ -66,11 +66,11 @@ public class OrderHeader {
         this.updateDate = updateDate;
     }
 
-    public List<OrderItem> getOrderItems() {
-        return orderItems;
+    public List<SettlementItem> getSettlementItems() {
+        return settlementItems;
     }
 
-    public void setOrderItems(List<OrderItem> orderItems) {
-        this.orderItems = orderItems;
+    public void setSettlementItems(List<SettlementItem> settlementItems) {
+        this.settlementItems = settlementItems;
     }
 }

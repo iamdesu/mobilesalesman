@@ -6,10 +6,13 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 import com.bali.nusadua.productmonitor.model.Billing;
 import com.bali.nusadua.productmonitor.model.Customer;
+import com.bali.nusadua.productmonitor.model.OrderHeader;
 import com.bali.nusadua.productmonitor.model.OrderItem;
 import com.bali.nusadua.productmonitor.model.Outlet;
-import com.bali.nusadua.productmonitor.model.Retur;
-import com.bali.nusadua.productmonitor.model.Settlement;
+import com.bali.nusadua.productmonitor.model.ReturHeader;
+import com.bali.nusadua.productmonitor.model.ReturItem;
+import com.bali.nusadua.productmonitor.model.SettlementHeader;
+import com.bali.nusadua.productmonitor.model.SettlementItem;
 import com.bali.nusadua.productmonitor.model.StaffBilling;
 import com.bali.nusadua.productmonitor.model.StockBilling;
 import com.bali.nusadua.productmonitor.model.StockPrice;
@@ -34,26 +37,14 @@ public class DBHelper extends SQLiteOpenHelper{
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-        /*String CREATE_TABLE_TEAM = "CREATE TABLE " + Team.TABLE + "( "
-                + Team.ID +  " INTEGER PRIMARY KEY AUTOINCREMENT, "
-                + Team.GUID + " TEXT, "
-                + Team.NAME + " TEXT )";
-
-        db.execSQL(CREATE_TABLE_TEAM);
-
-        String CREATE_TABLE_OUTLET = "CREATE TABLE " + Outlet.TABLE + " ( "
-                + Outlet.ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
-                + Outlet.GUID + " TEXT, "
-                + Outlet.KODE + " TEXT, "
-                + Outlet.NAME + " TEXT ) ";
-
-        db.execSQL(CREATE_TABLE_OUTLET);*/
-
         db.execSQL(Team.CREATE_TABLE());
         db.execSQL(Outlet.CREATE_TABLE());
+        db.execSQL(OrderHeader.CREATE_TABLE());
         db.execSQL(OrderItem.CREATE_TABLE());
-        db.execSQL(Retur.CREATE_TABLE());
-        db.execSQL(Settlement.CREATE_TABLE());
+        db.execSQL(ReturHeader.CREATE_TABLE());
+        db.execSQL(ReturItem.CREATE_TABLE());
+        db.execSQL(SettlementHeader.CREATE_TABLE());
+        db.execSQL(SettlementItem.CREATE_TABLE());
         db.execSQL(StaffBilling.CREATE_TABLE());
         db.execSQL(StockBilling.CREATE_TABLE());
         db.execSQL(StockPrice.CREATE_TABLE());
@@ -88,8 +79,8 @@ public class DBHelper extends SQLiteOpenHelper{
         db.execSQL("DROP TABLE IF EXISTS " + Team.TABLE);
         db.execSQL("DROP TABLE IF EXISTS " + Outlet.TABLE);
         db.execSQL("DROP TABLE IF EXISTS " + OrderItem.TABLE);
-        db.execSQL("DROP TABLE IF EXISTS " + Retur.TABLE);
-        db.execSQL("DROP TABLE IF EXISTS " + Settlement.TABLE);
+        db.execSQL("DROP TABLE IF EXISTS " + ReturItem.TABLE);
+        db.execSQL("DROP TABLE IF EXISTS " + SettlementItem.TABLE);
         db.execSQL("DROP TABLE IF EXISTS " + StaffBilling.TABLE);
         db.execSQL("DROP TABLE IF EXISTS " + StockBilling.TABLE);
         db.execSQL("DROP TABLE IF EXISTS " + StockPrice.TABLE);

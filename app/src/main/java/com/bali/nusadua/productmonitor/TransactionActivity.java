@@ -13,25 +13,20 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bali.nusadua.productmonitor.businessObject.OrderBO;
+import com.bali.nusadua.productmonitor.businessObject.ReturBO;
+import com.bali.nusadua.productmonitor.businessObject.SettlementBO;
 import com.bali.nusadua.productmonitor.dropbox.DropboxHelper;
 import com.bali.nusadua.productmonitor.dropbox.UploadOutletFileToDropbox;
 import com.bali.nusadua.productmonitor.model.Customer;
-import com.bali.nusadua.productmonitor.model.OrderItem;
-import com.bali.nusadua.productmonitor.model.Retur;
-import com.bali.nusadua.productmonitor.model.Settlement;
 import com.bali.nusadua.productmonitor.repo.CustomerRepo;
-import com.bali.nusadua.productmonitor.repo.OrderRepo;
-import com.bali.nusadua.productmonitor.repo.ReturRepo;
-import com.bali.nusadua.productmonitor.repo.SettlementRepo;
 import com.dropbox.client2.DropboxAPI;
 import com.dropbox.client2.android.AndroidAuthSession;
-
-import java.util.List;
 
 public class TransactionActivity extends ActionBarActivity implements View.OnClickListener {
 
     private RelativeLayout orderCard, returCard, settlementCard, summaryCard;
-    private TextView labelOrderData, labelReturData, labelSettlementData, companyName, companyAddress;
+    private TextView labelOrderData, labelOrderItem, labelReturData, labelReturItem, labelSettlementData, labelSettlementItem, companyName, companyAddress;
     private Customer customer = null;
 
     private DropboxAPI<AndroidAuthSession> dropboxApi;
@@ -59,8 +54,11 @@ public class TransactionActivity extends ActionBarActivity implements View.OnCli
         companyName = (TextView) findViewById(R.id.company_name);
         companyAddress = (TextView) findViewById(R.id.company_address);
         labelOrderData = (TextView) findViewById(R.id.label_order_data);
+        labelOrderItem = (TextView) findViewById(R.id.label_order_item_data);
         labelReturData = (TextView) findViewById(R.id.label_retur_data);
+        labelReturItem = (TextView) findViewById(R.id.label_retur_item_data);
         labelSettlementData = (TextView) findViewById(R.id.label_settlement_data);
+        labelSettlementItem = (TextView) findViewById(R.id.label_settlement_item_data);
 
         orderCard.setOnClickListener(this);
         returCard.setOnClickListener(this);
@@ -151,20 +149,26 @@ public class TransactionActivity extends ActionBarActivity implements View.OnCli
     }
 
     private void setTransactionCount() {
-        OrderRepo orderRepo = new OrderRepo(getApplicationContext());
-        List<OrderItem> orders = orderRepo.getOrderByCustomer(customer.getCustomerId());
-        labelOrderData.setText(String.valueOf(orders.size()));
+        OrderBO orderBO = new OrderBO(getApplicationContext());
+        Integer orderHeadCount = orderBO.getOrderHeaderCountByCustomer(customer.getCustomerId());
+        labelOrderData.setText(orderHeadCount == null ? "0" : String.valueOf(orderHeadCount));
+        Integer orderItemCount = orderBO.getOrderItemCountByCustomer(customer.getCustomerId());
+        labelOrderItem.setText(orderItemCount == null ? "0" : String.valueOf(orderItemCount));
 
-        ReturRepo returRepo = new ReturRepo(getApplicationContext());
-        List<Retur> returs = returRepo.getReturByCustomer(customer.getCustomerId());
-        labelReturData.setText(String.valueOf(returs.size()));
+        ReturBO returBO = new ReturBO(getApplicationContext());
+        Integer returHeaderCount = returBO.getReturHeaderCountByCustomer(customer.getCustomerId());
+        labelReturData.setText(returHeaderCount == null ? "0" : String.valueOf(returHeaderCount));
+        Integer returItemCount = returBO.getReturItemCountByCustomer(customer.getCustomerId());
+        labelReturItem.setText(returItemCount == null ? "0" : String.valueOf(returItemCount));
 
-        SettlementRepo settlementRepo = new SettlementRepo(getApplicationContext());
-        List<Settlement> settlements = settlementRepo.getSettlementByCustomer(customer.getCustomerId());
-        labelSettlementData.setText(String.valueOf(settlements.size()));
+        SettlementBO settlementBO = new SettlementBO(getApplicationContext());
+        Integer settlementHeaderCount = settlementBO.getSettlementHeaderCountByCustomer(customer.getCustomerId());
+        labelSettlementData.setText(settlementHeaderCount == null ? "0" : String.valueOf(settlementHeaderCount));
+        Integer settlementItemCount = settlementBO.getSettlementItemCountByCustomer(customer.getCustomerId());
+        labelSettlementItem.setText(settlementItemCount == null ? "0" : String.valueOf(settlementItemCount));
     }
 
-    private void uploadOutletFile () {
+    private void uploadOutletFile() {
         progressBar = new ProgressDialog(TransactionActivity.this);
         progressBar.setCancelable(false);
         progressBar.setMessage(getResources().getString(R.string.file_uploading));

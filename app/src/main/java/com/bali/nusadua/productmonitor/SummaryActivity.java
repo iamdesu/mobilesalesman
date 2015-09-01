@@ -25,7 +25,7 @@ public class SummaryActivity extends FragmentActivity {
         mTabHost.setup(this, getSupportFragmentManager(), android.R.id.tabcontent);
 
         mTabHost.addTab(mTabHost.newTabSpec("tabOrder").setIndicator("OrderItem", null), SummaryOrderFragmentTab.class, null);
-        mTabHost.addTab(mTabHost.newTabSpec("tabRetur").setIndicator("Retur", null), SummaryReturFragmentTab.class, null);
+        mTabHost.addTab(mTabHost.newTabSpec("tabRetur").setIndicator("ReturItem", null), SummaryReturFragmentTab.class, null);
         mTabHost.addTab(mTabHost.newTabSpec("tabLunas").setIndicator("Lunas", null), SummarySettlementFragmentTab.class, null);
     }
 

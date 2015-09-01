@@ -4,9 +4,10 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.util.Log;
 
+import com.bali.nusadua.productmonitor.model.OrderHeader;
 import com.bali.nusadua.productmonitor.model.OrderItem;
-import com.bali.nusadua.productmonitor.model.Outlet;
 import com.bali.nusadua.productmonitor.sqlitedb.DBHelper;
 
 import java.text.ParseException;
@@ -29,7 +30,7 @@ public class OrderRepo {
         ContentValues values = new ContentValues();
         order.setGuid(UUID.randomUUID().toString());
         values.put(OrderItem.GUID, order.getGuid());
-        values.put(OrderItem.ORDER_HEADER_GUID, order.getOrderHeaderGuid());
+        values.put(OrderItem.ORDER_HEADER_ID, order.getOrderHeaderId());
         values.put(OrderItem.KODE, order.getKode());
         values.put(OrderItem.NAMA_BARANG, order.getNamaBarang());
         values.put(OrderItem.HARGA, order.getHarga());
@@ -53,12 +54,12 @@ public class OrderRepo {
             order = orders.get(i);
             order.setGuid(UUID.randomUUID().toString());
             contentValues.put(OrderItem.GUID, order.getGuid());
+            contentValues.put(OrderItem.ORDER_HEADER_ID, order.getOrderHeaderId());
             contentValues.put(OrderItem.KODE, order.getKode());
             contentValues.put(OrderItem.NAMA_BARANG, order.getNamaBarang());
             contentValues.put(OrderItem.HARGA, order.getHarga());
             contentValues.put(OrderItem.QTY, order.getQty());
             contentValues.put(OrderItem.UNIT, order.getUnit());
-            contentValues.put(OrderItem.KODE_OUTLET, order.getKodeOutlet());
             contentValues.put(OrderItem.CREATE_DATE, sdf.format(new Date()));
 
             db.insert(OrderItem.TABLE, null, contentValues);
@@ -81,7 +82,6 @@ public class OrderRepo {
         values.put(OrderItem.HARGA, order.getHarga());
         values.put(OrderItem.QTY, order.getQty());
         values.put(OrderItem.UNIT, order.getUnit());
-        values.put(OrderItem.KODE_OUTLET, order.getKodeOutlet());
 
         // It's a good practice to use parameter ?, instead of concatenate string
         db.update(OrderItem.TABLE, values, OrderItem.GUID + "= ?", new String[]{order.getGuid()});
@@ -93,12 +93,12 @@ public class OrderRepo {
         String selectQuery = "SELECT " +
                 OrderItem.ID + ", " +
                 OrderItem.GUID + ", " +
+                OrderItem.ORDER_HEADER_ID + ", " +
                 OrderItem.KODE + ", " +
                 OrderItem.NAMA_BARANG + ", " +
                 OrderItem.HARGA + ", " +
                 OrderItem.QTY + ", " +
                 OrderItem.UNIT + ", " +
-                OrderItem.KODE_OUTLET + ", " +
                 OrderItem.CREATE_DATE + " FROM " +
                 OrderItem.TABLE + " WHERE " +
                 OrderItem.GUID + " = ?";
@@ -110,12 +110,12 @@ public class OrderRepo {
             do {
                 order.setId(cursor.getInt(cursor.getColumnIndex(OrderItem.ID)));
                 order.setGuid(cursor.getString(cursor.getColumnIndex(OrderItem.GUID)));
+                order.setOrderHeaderId(cursor.getInt(cursor.getColumnIndex(OrderItem.ORDER_HEADER_ID)));
                 order.setKode(cursor.getString(cursor.getColumnIndex(OrderItem.KODE)));
                 order.setNamaBarang(cursor.getString(cursor.getColumnIndex(OrderItem.NAMA_BARANG)));
                 order.setHarga(cursor.getDouble(cursor.getColumnIndex(OrderItem.HARGA)));
                 order.setQty(cursor.getInt(cursor.getColumnIndex(OrderItem.QTY)));
                 order.setUnit(cursor.getString(cursor.getColumnIndex(OrderItem.UNIT)));
-                order.setKodeOutlet(cursor.getString(cursor.getColumnIndex(OrderItem.KODE_OUTLET)));
 
                 try {
                     Date createDate = sdf.parse(cursor.getString(cursor.getColumnIndex(OrderItem.CREATE_DATE)));
@@ -149,9 +149,9 @@ public class OrderRepo {
                 order.setHarga(cursor.getDouble(cursor.getColumnIndex(OrderItem.HARGA)));
                 order.setNamaBarang(cursor.getString(cursor.getColumnIndex(OrderItem.NAMA_BARANG)));
                 order.setGuid(cursor.getString(cursor.getColumnIndex(OrderItem.GUID)));
+                order.setOrderHeaderId(cursor.getInt(cursor.getColumnIndex(OrderItem.ORDER_HEADER_ID)));
                 order.setQty(cursor.getInt(cursor.getColumnIndex(OrderItem.QTY)));
                 order.setKode(cursor.getString(cursor.getColumnIndex(OrderItem.KODE)));
-                order.setKodeOutlet(cursor.getString(cursor.getColumnIndex(OrderItem.KODE_OUTLET)));
 
                 try {
                     Date createDate = sdf.parse(cursor.getString(cursor.getColumnIndex(OrderItem.CREATE_DATE)));
@@ -169,7 +169,29 @@ public class OrderRepo {
         return listOrder;
     }
 
-    public List<OrderItem> getOrderByCustomer(String customerId) {
+    public Integer getCountByCustomer(String kodeOutlet) {
+        SQLiteDatabase db = dbHelper.getReadableDatabase();
+        String selectQuery = "SELECT COUNT (*) " +
+                "FROM " + OrderHeader.TABLE + " LEFT JOIN " + OrderItem.TABLE +
+                " ON " + OrderHeader.TABLE + "." + OrderHeader.ID + " = " + OrderItem.TABLE + "." + OrderItem.ORDER_HEADER_ID +
+                " WHERE " + OrderHeader.KODE_OUTLET + " = ? ";
+
+        Log.i("getCountByCustomer : ", selectQuery);
+
+        Cursor cursor = db.rawQuery(selectQuery, new String[]{kodeOutlet});
+        Integer count = 0;
+
+        //Looping through all rows and adding to list
+        if (cursor.moveToFirst()) {
+            count = cursor.getInt(0);
+        }
+
+        cursor.close();
+        db.close();
+        return count;
+    }
+
+    /*public List<OrderItem> getOrderByCustomer(String customerId) {
         SQLiteDatabase db = dbHelper.getReadableDatabase();
         String selectQuery = "SELECT " +
                 OrderItem.ID + ", " +
@@ -214,7 +236,7 @@ public class OrderRepo {
         cursor.close();
         db.close();
         return listOrder;
-    }
+    }*/
 
     /*public List<OrderItem> getAllWithOutlet() {
         SQLiteDatabase db = dbHelper.getReadableDatabase();
@@ -274,27 +296,5 @@ public class OrderRepo {
         cursor.close();
         db.close();
         return listOrder;
-    }*/
-
-    /*public List<String> getCustomerOnOrder() {
-        SQLiteDatabase db = dbHelper.getReadableDatabase();
-        String selectQuery = "SELECT DISTINCT " +
-                OrderItem.KODE_OUTLET + " FROM " +
-                OrderItem.TABLE;
-
-        List<String> listCustomerID = new ArrayList<String>();
-        Cursor cursor = db.rawQuery(selectQuery, null);
-
-        //Looping through all rows and adding to list
-        if (cursor.moveToFirst()) {
-            do {
-                String customerID = cursor.getString(cursor.getColumnIndex(OrderItem.KODE_OUTLET));
-                listCustomerID.add(customerID);
-            } while (cursor.moveToNext());
-        }
-
-        cursor.close();
-        db.close();
-        return listCustomerID;
     }*/
 }

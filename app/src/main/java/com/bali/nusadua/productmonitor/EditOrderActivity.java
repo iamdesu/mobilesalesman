@@ -109,12 +109,12 @@ public class EditOrderActivity extends ActionBarActivity implements android.view
         if (view == findViewById(R.id.button_save)) {
             OrderItem resultOrder = new OrderItem();
             resultOrder.setId(order.getId());
+            resultOrder.setOrderHeaderId(order.getOrderHeaderId());
             resultOrder.setKode(orderCode.getText().toString());
             resultOrder.setNamaBarang(orderName.getText().toString());
             resultOrder.setHarga(Double.parseDouble(price.getText().toString()));
             resultOrder.setQty(Integer.parseInt(qty.getText().toString()));
             resultOrder.setUnit(unit.getSelectedItem().toString());
-            resultOrder.setKodeOutlet(order.getKodeOutlet());
 
             Intent resultIntent = new Intent();
             resultIntent.putExtra(OrderItem.TABLE, resultOrder);
