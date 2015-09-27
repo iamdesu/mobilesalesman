@@ -84,8 +84,8 @@ public class UploadOutletFileToDropbox extends AsyncTask<Void, Void, Boolean> {
         if (result) {
             Toast.makeText(context, context.getResources().getString(R.string.upload_success),
                     Toast.LENGTH_LONG).show();
-            ((Activity)context).setResult(Activity.RESULT_OK, new Intent());
-            ((Activity)context).finish();
+            ((Activity) context).setResult(Activity.RESULT_OK, new Intent());
+            ((Activity) context).finish();
 
         } else {
             DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
